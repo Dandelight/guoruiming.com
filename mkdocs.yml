@@ -1,8 +1,8 @@
 theme:
     name: 'material'
     palette:
-        primary: light green
-        accent: orange
+        primary: orange
+        accent: light green
 site_name: My Docs
 site_url: http://guoruiming.com:8000
 markdown_extensions:
