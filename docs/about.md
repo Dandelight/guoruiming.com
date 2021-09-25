@@ -1,3 +1,3 @@
 # About ME
 
-Ruiming Guo, a college student.
+某大学2019级本科生
