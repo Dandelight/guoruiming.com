@@ -1,5 +1,19 @@
 # Mailing protocols: STMP, POP3, and IMAP
 
+## 邮件报文
+
+```
+To: example@example.com
+From: me@guoruiming.com
+Subject: Hello, World!
+
+This is a Mail.
+```
+
+地址结构是URL地址结构的一个子部分，{user}@{domain}.
+
+## 邮件系统
+
 互联网电子邮件系统由三部分组成：**user-agent** **mail-server** **Simple Mail Transfer Protocol**
 
 ![image-20210925173153073](media/Mail/image-20210925173153073.png)
@@ -18,13 +32,13 @@ Mail servers form the core of the e-mail infrastructure.
 
 SMTP是电子邮件最主要的应用层协议，其使用TCP协议簇，一种可靠的协议（你想你用UDP发，把邮件发丢一块算什么事）。SMTP协议由客户端和服务端组成，也类似于HTTP里的C/S模式。
 
-## SMTP
+## 协议
+
+### SMTP
 
 ![image-20210925180537641](media/Mail/image-20210925180537641.png)
 
 SMTP的报文和HTTP也非常的像
-
-
 
 ```http
 From: alice@crepes.fr
@@ -32,9 +46,21 @@ To: bob@hamburger.edu
 Subject: Searching for the meaning of life.
 ```
 
-**注意STMP只能传输ASCII，所以附件里的图片大多是Base64编码过的**
+相同点：
 
-## 邮件获取协议
+* 都使用TCP连接
+* 都可以采用持续连接
+* 都使用 命令/响应 交互模式
+
+不同点：
+
+* SMTP为推协议，通常是发送方发起请求，HTTP为拉协议，通常是接收方发起请求
+* SMTP只能使用7位ASCII码，HTTP没有限制
+* SMTP将所有对象封装在一个报文里，HTTP将每个对象封装在自己的http响应报文中
+
+### 邮件获取
+
+#### POP3&IMAP
 
 回到甲给乙发邮件的故事，当我们通过SMTP服务将报文发送到乙的邮件服务器上时，乙需要收邮件。收邮件当然是在自己的电脑或手机上。但有一个问题：如果乙的邮件服务器装在自己的电脑或手机上，一旦乙的服务器关了，那么谁的邮件也发不过来了，所以必须一直开机。所以有些互联网服务提供商提供邮件服务，比如163，用户的User-Agent使用SMTP或HTTP协议将邮件内容上传到服务器，由服务器通过SMTP协议发送到目的服务器。
 
@@ -42,4 +68,12 @@ Subject: Searching for the meaning of life.
 
 而IMAP提供webmail 与电子邮件客户端之间的双向通信，客户端的操作都会反馈到服务器上，对邮件进行的操作，服务器上的邮件也会做相应的动作。
 
-总之，**IMAP** 整体上为用户带来更为便捷和可靠的体验。**POP3** 更易丢失邮件或多次下载相同的邮件
+总之，**IMAP** 整体上为用户带来更为便捷和可靠的体验。**POP3** 更易丢失邮件或多次下载相同的邮件。
+
+## MIME（Multipurpose Internet Mail Extensions）
+
+刚刚说过，SMTP因为很Simple，所以只能发送ASCII码的可打印字符部分。由于互联网上传送非文本内容以及多语种的需求，以及因为SMTP会拒绝超过一定长度的邮件，MIME应运而生。注意它叫“Extension"，也就是说，MIME并没有取代SMTP，而是在SMTP上进行了扩展，在下面我们会看到扩展是如何进行的。
+
+![image-20210926133157555](media/Mail/image-20210926133157555.png)
+
+同时定义了5个新的Header字段，**注意STMP只能传输ASCII，所以附件里的图片大多是Base64编码过的**
