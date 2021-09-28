@@ -1,5 +1,7 @@
 # README
 
+经初步调研，人工智能应用在计算机辅助药物分子设计的技术有分子动力学方法和语言模型方法。
+
 ## 参考备忘
 
 [MindSPONGE](https://gitee.com/mindspore/mindscience/tree/master/MindSPONGE)基于华为`MindSpore`的开源深度学习分子模拟库
@@ -11,3 +13,4 @@
 
 
 [暨南大学MOOC](https://www.icourse163.org/course/JNU-1207113806)
+
