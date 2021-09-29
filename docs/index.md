@@ -2,13 +2,17 @@
 
 欢迎来到我的博客，在这里我会记录自己的学习与生活。
 
-网站服务器使用NginX（[自己写的那个](https://gitee.com/dandelight/enging/)在返回`Content-Type`时有问题已经在重制了），集成了`WebHooks`，不过因为`NginX`设置了10秒的缓存，所以刷新需要一段时间。
+网站服务器使用`NginX`（[自己写的那个](https://gitee.com/dandelight/enging/)在返回`Content-Type`时有问题已经在重制了），集成了`WebHooks`，不过因为`NginX`设置了10秒的缓存，所以刷新需要一段时间。
 
 ### 学习与项目
+
+列了一系列项目，自己没有充足的时间做的，希望有志同道合之人可以通同行。`Gitee`地址：https://gitee.com/dandelight。
 
 Automated Recyclable Garbage Sorting System，生活垃圾资源化系统
 
 基于深度学习的计算机辅助药物设计
+
+
 
 ### 课程
 
