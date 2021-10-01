@@ -6,7 +6,7 @@
 
 ### `Up-Sampling`
 
-There are three major ways of upsampling: bilinear interpolation, transposed convolutionand unpooling.
+There are four major ways of upsampling: bilinear interpolation, transposed convolution, unpooling and dilated convolution.
 
 #### Bilinear Interpolation
 
@@ -26,7 +26,51 @@ $$
 
 #### Deconvolution
 
-Deconvolution又称Transposed Convolution，
+Deconvolution又称Transposed Convolution
+
+假设我们有一个$3 \times 3$的卷积核，
+$$
+k = \pmatrix{
+	w_{0, 0} & w_{0, 0} & w_{0, 0} \\
+	w_{0, 0} & w_{0, 0} & w_{0, 0} \\
+	w_{0, 0} & w_{0, 0} & w_{0, 0}
+}
+$$
+TODO: 用一张纸算算这些$w$都是哪跟哪
+$$
+\begin{pmatrix}
+w_{0,0} & 0 & 0 & 0 \\
+w_{0,1} & w_{0,0} & 0 & 0 \\
+w_{0,2} & w_{0,1} & 0 & 0 \\
+0 & w_{0,2} & 0 & 0 \\
+w_{1,0} & 0 & w_{0,0} & 0 \\
+w_{1,1} & w_{1,0} & w_{0,1} & w_{0,0} \\
+w_{1,2} & w_{1,1} & w_{0,2} & w_{0,1} \\
+0 & w_{1,2} & 0 & w_{0,2} \\
+w_{2,0} & 0 & w_{1,0} & 0 \\
+w_{2,1} & w_{2,0} & w_{1,1} & w_{1,0} \\
+w_{2,2} & w_{2,1} & w_{1,2} & w_{1,1} \\
+0 & w_{2,2} & 0 & w_{1,2} \\
+0 & 0 & w_{2,0} & 0 \\
+0 & 0 & w_{2,1} & w_{2,0} \\
+0 & 0 & w_{2,2} & w_{2,1} \\
+0 & 0 & 0 & w_{2,2}
+\end{pmatrix} ^ \intercal
+$$
+![trans_conv](media/UNet3+/trans_conv.svg)
+
+Q: 转置卷积会更新权值吗？反向传播公式？
+
+#### Unpooling
+
+That's comparably easier.
+
+#### Dilated Convolution
+
+
 
 ### `Down-Sampling`
 
+
+
+TODO: Tesla系列和GTX系列性能对比
