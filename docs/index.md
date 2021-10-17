@@ -10,8 +10,6 @@
 
 生活垃圾资源化系统（Automated Recyclable Garbage Sorting System，ARGSS）
 
-基于深度学习的计算机辅助药物设计
-
 LISTEN耳阅读屏
 
 UNet+++++

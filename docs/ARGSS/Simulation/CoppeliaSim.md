@@ -11,3 +11,11 @@
 在`CoppeliaSim`中，我们可以导入设计好的机械结构，对其进行仿真验证。
 
 ![image-20211004104443744](media/CoppeliaSim/image-20211004104443744.png)
+
+
+
+
+
+## References
+
+https://cloud.tencent.com/developer/inventory/491
