@@ -24,19 +24,15 @@ https://ieeexplore.ieee.org/document/8954887/ 水面清洁无人船？
 
 机械臂抓取开源项目总结
 
-转自知乎[Zhihao](https://www.zhihu.com/people/AI-Robotic)
-
-AI Robotic
-
-111 人赞同了该文章
+转自知乎 [Zhihao](https://www.zhihu.com/people/AI-Robotic)
 
 基础入门
 
-\1. 首先对机械臂的整体认识:
+1. 首先对机械臂的整体认识:
 
 [http://blog.exbot.net/archives/3337](https://link.zhihu.com/?target=http%3A//blog.exbot.net/archives/3337)
 
-2.CSDN上一个博主写的抓取、机械臂控制、机械臂抓取的代码解析：
+2. CSDN上一个博主写的抓取、机械臂控制、机械臂抓取的代码解析：
 
 [https://blog.csdn.net/zzu_seu/article/details/94617814](https://link.zhihu.com/?target=https%3A//blog.csdn.net/zzu_seu/article/details/94617814)
 
@@ -44,11 +40,9 @@ AI Robotic
 
 [https://blog.csdn.net/zzu_seu/article/details/91347757](https://link.zhihu.com/?target=https%3A//blog.csdn.net/zzu_seu/article/details/91347757)
 
-
-
 进阶攻略
 
-1.项目主要为了确定抓取位置，物体的哪个位置最容易抓取，最适合抓取，所产生的结果如下图所示，最好的抓取位置通过一个长方形框出。
+1. 项目主要为了确定抓取位置，物体的哪个位置最容易抓取，最适合抓取，所产生的结果如下图所示，最好的抓取位置通过一个长方形框出。
 
 代码地址：[https://github.com/tnikolla/robot-grasp-detection](https://link.zhihu.com/?target=https%3A//github.com/tnikolla/robot-grasp-detection)
 
@@ -58,7 +52,7 @@ AI Robotic
 
 
 
-\2. 分别通过VERP仿真、UR5，实现了机械臂的抓取。
+2. 分别通过VERP仿真、UR5，实现了机械臂的抓取。
 
 代码地址：[https://github.com/andyzeng/visual-pushing-grasping](https://link.zhihu.com/?target=https%3A//github.com/andyzeng/visual-pushing-grasping)
 
@@ -66,7 +60,7 @@ AI Robotic
 
 ![img](media/Mechanical/v2-21d76bd81c064a1cb016ad9719694a14_720w.jpg)
 
-\3. 代码地址：[https://github.com/mirsking/Deep_learning_for_detectin_robotic_grasps/tree/master/deepGraspingCode](https://link.zhihu.com/?target=https%3A//github.com/mirsking/Deep_learning_for_detectin_robotic_grasps/tree/master/deepGraspingCode)
+3. 代码地址：[https://github.com/mirsking/Deep_learning_for_detectin_robotic_grasps/tree/master/deepGraspingCode](https://link.zhihu.com/?target=https%3A//github.com/mirsking/Deep_learning_for_detectin_robotic_grasps/tree/master/deepGraspingCode)
 
 论文：Deep Learning for Detecting Robotic Grasps
 
@@ -74,13 +68,13 @@ AI Robotic
 
 ![img](media/Mechanical/v2-4d30efa4e9890d4f45f7a7b4c035f351_720w.jpg)
 
-4.代码地址：[https://github.com/dougsm/ggcnn](https://link.zhihu.com/?target=https%3A//github.com/dougsm/ggcnn)
+4. 代码地址：[https://github.com/dougsm/ggcnn](https://link.zhihu.com/?target=https%3A//github.com/dougsm/ggcnn)
 
 论文：Closing the Loop for Robotic Grasping: A Real-time, Generative Grasp Synthesis Approach
 
 
 
-5.在GAZEBO仿真中，实现的机器人抓取
+5. 在GAZEBO仿真中，实现的机器人抓取
 
 [https://github.com/jsbruglie/grasp](https://link.zhihu.com/?target=https%3A//github.com/jsbruglie/grasp)
 
@@ -88,7 +82,7 @@ AI Robotic
 
 
 
-\6. 此项目在[Amazon Robotics Challenge](https://www.zhihu.com/question/268984064#/roboticschallenge)2017（[https://www.amazonrobotics.com/#/](https://www.zhihu.com/question/268984064#/)）中拿到了第一名。
+6. 此项目在[Amazon Robotics Challenge](https://www.zhihu.com/question/268984064#/roboticschallenge)2017（[https://www.amazonrobotics.com/#/](https://www.zhihu.com/question/268984064#/)）中拿到了第一名。
 
 代码地址：[https://github.com/caomw/arc-robot-vision](https://link.zhihu.com/?target=https%3A//github.com/caomw/arc-robot-vision)
 
@@ -96,17 +90,17 @@ AI Robotic
 
 ![img](media/Mechanical/v2-c7262230a028787cb1c3d27d1a2d1667_720w.jpg)
 
-\7. 通过ROS2实现的机器人抓取
+7. 通过ROS2实现的机器人抓取
 
 [https://github.com/JuFengWu/techman_robot_grasp_ros2](https://link.zhihu.com/?target=https%3A//github.com/JuFengWu/techman_robot_grasp_ros2)
 
-8.通过ROS实现UR机器人抓取。
+8. 通过ROS实现UR机器人抓取。
 
 [https://github.com/chjohnkim/MaskRCNN_Grasp_Detection/tree/master/maskrcnn](https://link.zhihu.com/?target=https%3A//github.com/chjohnkim/MaskRCNN_Grasp_Detection/tree/master/maskrcnn)
 
-9.通过ROS实现带有机械臂的移动机器人抓取。
+9. 通过ROS实现带有机械臂的移动机器人抓取。
 
-[https://github.com/nkuzqy/move_and_grasp](https://link.zhihu.com/?target=https%3A//github.com/nkuzqy/move_and_grasp)
+[https://github.com/nkuzqy/move_and_grasp]()
 
 发布于 2020-02-11
 
