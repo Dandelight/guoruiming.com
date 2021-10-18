@@ -109,3 +109,19 @@ https://ieeexplore.ieee.org/document/8954887/ 水面清洁无人船？
 [机器人](https://www.zhihu.com/topic/19551273)
 
 [机械手抓取](https://www.zhihu.com/topic/20077057)
+
+
+
+
+
+一系列CoppeliaSim参考
+
+[Vrep机器人动力学建模仿真-知乎专栏](https://zhuanlan.zhihu.com/c_156026799)
+
+[V-REP（CoppeliaSim）自学笔记-腾讯云](https://cloud.tencent.com/developer/inventory/491)
+
+
+
+
+
+[DYOR](http://dyor.roboticafacil.es/)：葡萄牙[Armesto Ángel, Leopoldo](http://www.upv.es/ficha-personal/leoaran)做的一个开源机器人，可以在CoppeliaSim里做出来。[视频教程（YouTube）](https://www.youtube.com/playlist?list=PLjzuoBhdtaXOoqkJUqhYQletLLnJP8vjZ) [B站搬运](https://www.bilibili.com/video/BV1uK4y137sN)
