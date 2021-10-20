@@ -6,7 +6,7 @@
 
 ### 学习与项目
 
-列了一系列项目，有自己做的，有自己没有充足的时间做的，**不是挖坑不填，实在填不过来**，希望有志同道合之人可与我同行。`Gitee`地址：https://gitee.com/dandelight。
+列了一系列项目，有自己做的，有自己没有充足的时间做的，**不是挖坑不填，实在填不过来**，希望有志同道合之人可与我同行。`Gitee`地址：[https://gitee.com/dandelight/](https://gitee.com/dandelight/)。
 
 生活垃圾资源化系统（Automated Recyclable Garbage Sorting System，ARGSS）
 
