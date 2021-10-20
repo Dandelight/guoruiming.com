@@ -1,10 +1,10 @@
 theme:
     name: 'material'
     palette:
-        primary: orange
+        primary: green
         accent: light green
-site_name: My Docs
-site_url: http://guoruiming.com:8000
+site_name: 郭睿明的小屋
+site_url: http://guoruiming.com
 markdown_extensions:
     - pymdownx.arithmatex:
         generic: true
