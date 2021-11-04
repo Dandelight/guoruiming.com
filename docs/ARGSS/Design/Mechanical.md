@@ -124,4 +124,38 @@ https://ieeexplore.ieee.org/document/8954887/ 水面清洁无人船？
 
 
 
-[DYOR](http://dyor.roboticafacil.es/)：葡萄牙[Armesto Ángel, Leopoldo](http://www.upv.es/ficha-personal/leoaran)做的一个开源机器人，可以在CoppeliaSim里做出来。[视频教程（YouTube）](https://www.youtube.com/playlist?list=PLjzuoBhdtaXOoqkJUqhYQletLLnJP8vjZ) [B站搬运](https://www.bilibili.com/video/BV1uK4y137sN)
+[DYOR](http://dyor.roboticafacil.es/)：葡萄牙[Armesto Ángel, Leopoldo](http://www.upv.es/ficha-personal/leoaran)做的一个开源机器人，可以在CoppeliaSim里做出来。[视频教程（YouTube）](https://www.youtube.com/playlist?list=PLjzuoBhdtaXOoqkJUqhYQletLLnJP8vjZ) [B站搬运](https://www.bilibili.com/video/BV1uK4y137sN)
+
+
+
+```
+Scopus
+导出日期:2021-11-04
+
+Yu, Q., Shang, W., Zhao, Z., Cong, S., Li, Z.
+56067482600;23470800900;57208215166;7005067661;57218308705;
+Robotic Grasping of Unknown Objects Using Novel Multilevel Convolutional Neural Networks: From Parallel Gripper to Dexterous Hand
+(2021) IEEE Transactions on Automation Science and Engineering, 18 (4), pp. 1730-1741. 
+https://www.scopus.com/inward/record.uri?eid=2-s2.0-85090452520&doi=10.1109%2fTASE.2020.3017022&partnerID=40&md5=719814a5140511d1d5a5878cf8987756
+
+DOI: 10.1109/TASE.2020.3017022
+文献类型: Article
+出版阶段： Final
+来源出版物: Scopus
+```
+
+```
+Scopus
+导出日期:2021-11-04
+
+Jiang, D., Li, G., Sun, Y., Hu, J., Yun, J., Liu, Y.
+57194035495;13408307700;57191647189;57199837914;57214990509;57217425906;
+Manipulator grabbing position detection with information fusion of color image and depth image using deep learning
+(2021) Journal of Ambient Intelligence and Humanized Computing, 12 (12), pp. 10809-10822. 被引用 18 次.
+https://www.scopus.com/inward/record.uri?eid=2-s2.0-85098598248&doi=10.1007%2fs12652-020-02843-w&partnerID=40&md5=502c69e8dc6d79d0b75bb71dd94978cc
+
+DOI: 10.1007/s12652-020-02843-w
+文献类型: Article
+出版阶段： Final
+来源出版物: Scopus
+```
