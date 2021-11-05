@@ -4,6 +4,14 @@
 
 <details>
     <summary>没看见</summary>
-    你看见了
+    <code>
+                 (__) 
+                 (oo) 
+           /------\/ 
+          / |    ||   
+         *  /\---/\ 
+            ~~   ~~   
+..."Have you mooed today?"...
+    </code>
 </details>
 
