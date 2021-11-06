@@ -1,16 +1,19 @@
 theme:
     name: 'material'
-    palette:
-        primary: green
-        accent: light green
+    # palette:
+    #     primary: green
+    #     accent: light green
+    language: zh
 site_name: 郭睿明的小屋
 site_url: http://guoruiming.com
 markdown_extensions:
     - pymdownx.arithmatex:
         generic: true
+extra_css:
+  - stylesheets/extra.css
+
 extra_javascript:
   - javascripts/config.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-
-
+copyright: Copyleft. All wrongs reversed.
