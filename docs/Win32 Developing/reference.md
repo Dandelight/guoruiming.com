@@ -18,7 +18,7 @@ http://www.wfuyu.com/php/25482.html 这位的代码格式化风格独特但可�
 
 https://www.it610.com/search/Win32%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/1.htm 还有这里
 
-https://hub.packtpub.com/game-development-using-c/ 这博客主要是为了卖下边这本书
+https://hub.packtpub.com/game-development-using-c/ 这博客主要是为了卖下边这本书
 
 [C++ Game Development Cookbook](https://www.packtpub.com/product/c-game-development-cookbook/9781785882722)参考书
 
