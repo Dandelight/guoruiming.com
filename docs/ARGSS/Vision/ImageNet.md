@@ -1,4 +1,4 @@
-前往[ImageNet](https://image-net.org/)官网下载ILSVRC 2012数据集（需要使用学校的邮箱注册账号并同意协议）
+前往[ImageNet](https://image-net.org/)官网下载ILSVRC 2012数据集（需要使用学校的邮箱注册账号并同意使用协议）
 
 下载之后，
 
@@ -20,6 +20,5 @@ cd /path/to/your/dataset/val
 tar -xvf ILSVRC2012_img_val.tar
 # wget -qO- https://raw.githubusercontent.com/soumith/imagenetloader.torch/master/valprep.sh | bash
 # 或者
-
 # wget -qO- https://files-cdn.cnblogs.com/files/luruiyuan/valprep.sh | bash
 ```
