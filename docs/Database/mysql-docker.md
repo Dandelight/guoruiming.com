@@ -18,9 +18,11 @@ systemctl start docker
 
 这里用的是网易的源，其他源如下：
 
-- `Docker`中国区官方镜像：`https://registry.docker-cn.com`
-- 中科大：`https://docker.mirrors.ustc.edu.cn`
-- 阿里云：每个人不同，需要到阿里云容器服务创建
+- 阿里云：https://help.aliyun.com/document_detail/60750.html
+- 网易：http://hub-mirror.c.163.com
+- 官方中国镜像：https://registry.docker-cn.com
+- ustc ：https://docker.mirrors.ustc.edu.cn
+- daocloud（需注册）：https://www.daocloud.io/mirror#accelerator-doc
 
 ## 拉取镜像
 
