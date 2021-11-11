@@ -112,3 +112,44 @@ LABEL <key>=<value> <key>=<value> <key>=<value> ...
 
 首先安装：
 
+```shell
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```
+
+### 熟悉
+
+`Compose`是一个用于定义并运行由多个`Docker`容器聚合成的应用的工具，广泛用于生产、测试、开发、CI工作流等环节。相当于把鲸鱼装进了冰箱。
+
+要把鲸鱼装冰箱，一共分三步：
+
+1. 使用`Dockerfile`构建应用镜像
+2. 在`docker-compose.yml`文件中用镜像组织服务。
+3. `docker compose up`一键启动服务（加上`-d`参数后台运行）
+
+`docker-compose`文件为`YAML`格式，范例如下：
+
+```yaml
+version: "3.9"  # optional since v1.27.0
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+      - logvolume01:/var/log
+    links:
+      - redis
+  redis:
+    image: redis
+volumes:
+  logvolume01: {}
+```
+
+总之，`docker compose`是介于`docker build`和`docker run`之间的中间件，既可以指定`arg`、`env`、`entrypoint`、`expose`等`Dockerfile`中的标定，又可以进行镜像的运行和组网，是生产自动化的高效工具。
+
+中间的内容，随着项目的进行会不断增加，欢迎关注~
+
+
+
+不过话说回来，知识是会贬值的，学到的不赶紧用就浪费了。
