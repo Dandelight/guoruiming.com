@@ -22,3 +22,9 @@ tar -xvf ILSVRC2012_img_val.tar
 # 或者
 # wget -qO- https://files-cdn.cnblogs.com/files/luruiyuan/valprep.sh | bash
 ```
+
+------
+
+如何在真实的深度学习环境中测试自己的GPU？
+
+https://lambdalabs.com/gpu-workstations/vector
