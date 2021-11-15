@@ -28,3 +28,33 @@ tar -xvf ILSVRC2012_img_val.tar
 如何在真实的深度学习环境中测试自己的GPU？
 
 https://lambdalabs.com/gpu-workstations/vector
+
+关于在`Docker`中训练使用`num_worker=4`导致如下错误：
+
+```
+ataLoader worker (pid 8639) is killed by signal: Bus error. It is possible that dataloader's workers are out of shared memory. Please try to raise your shared memory limit.
+```
+
+解决方案：https://github.com/pytorch/pytorch/issues/2244
+
+```
+Okay. I think I solved it. Looks like the shared memory of the docker container wasn't set high enough. Setting a higher amount by adding --shm-size 8G to the docker run command seems to be the trick as mentioned here. Let me fully test it, if solved I'll close issue.
+```
+
+除了命令行之外，我们通常使用`docker-compose`部署自己的服务。`docker-compose`中这样设置：
+
+If you're using docker-compose, you can set the `your_service.shm_size` value if you want your container to use that /dev/shm size when *running* or `your_service.build.shm_size` when *building*.
+
+Example:
+
+```
+version: '3.5'
+services:
+  your_service:
+    build:
+      context: .
+      shm_size: '2gb' <-- this will set the size when BUILDING
+    shm_size: '2gb' <-- when RUNNING 
+```
+
+https://stackoverflow.com/questions/30210362/how-to-increase-the-size-of-the-dev-shm-in-docker-container
