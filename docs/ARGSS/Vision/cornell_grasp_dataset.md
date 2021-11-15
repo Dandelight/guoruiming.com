@@ -117,3 +117,13 @@ DATA ascii
 
 好吧，很多时候瓶子比酒有意思，that's life。
 
+---
+
+聊了这么多，下面就是字符串处理时间了？
+
+别想了，自己做字符串处理是最费力不讨好的事情。想一想，这么有影响力的数据格式，怎么可能没有专门**进行读写的库**呢？
+
+[`MATLAB pcread`](https://ww2.mathworks.cn/help/vision/ref/pcread.html)只支持`PCD 0.7`，有`pcread`就有`pcwrite`。
+
+`Python`有`open3d`库做三维图，还有`pypcd`（停更了）
+
