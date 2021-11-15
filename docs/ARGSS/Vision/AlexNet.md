@@ -8,6 +8,23 @@ Loss：
 
 ![loss](media/AlexNet/loss.svg)
 
+比较有趣的是学习率的设置，第一次迁移学习`lr`设置为`5e-3`，结果模型的准确率停留在0.06，只有6%的结果是正确的。训练到200 epoch是这样，估计再训练下去也不会有太大进展。将学习率调节为`1e-5`后得出以上结果，但看到到后期模型可能也出现了和第一次类似的问题（`lr`过大），所以找了文章学习更新权值的方案。
+
+最后没有跑一遍`validation`，下次注意。
+$$
+\begin{aligned}
+v_{i+1} &:=0.9 \cdot v_{i}-0.0005 \cdot \epsilon \cdot w_{i}-\epsilon \cdot\left\langle\left.\frac{\partial L}{\partial w}\right|_{w_{i}}\right\rangle_{D_{i}} \\
+w_{i+1} &:=w_{i}+v_{i+1}
+\end{aligned}
+$$
+原文用了$0.0005$的`weight decay`，当时没有`Adam`，所以用了$0.9$的`momentum`，
+
+然后发现Alexander用的相同学习率。还是早期的神经网络呀。
+
+`cosine`学习率下降是什么？有哪些学习率下降的方法？
+
+------
+
 感谢SCU Maker提供的NVIDIA 2080 Ti GPU支持。
 
 TODO：模型拿出来用用
