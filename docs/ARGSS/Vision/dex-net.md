@@ -153,3 +153,94 @@ gqcnn:
   relu_coeff: 0.0
 ```
 
+上边是全卷积的，这是原味的：
+
+```yaml
+### GQCNN CONFIG ###
+gqcnn:
+  # basic data metrics
+  im_height: 96
+  im_width: 96
+  im_channels: 1
+  debug: *debug
+  seed: *seed
+
+  # needs to match input data mode that was used for training, determines the pose dimensions for the network
+  gripper_mode: parallel_jaw
+
+  # method by which to integrate depth into the network
+  input_depth_mode: pose_stream
+
+  # used for training with multiple angular predictions
+  angular_bins: 0
+
+  # prediction batch size, in training this will be overriden by the val_batch_size in the optimizer's config file
+  batch_size: *val_batch_size
+
+  # architecture
+  architecture:
+    im_stream:
+      conv1_1:
+        type: conv
+        filt_dim: 9
+        num_filt: 16
+        pool_size: 1
+        pool_stride: 1
+        pad: VALID
+        norm: 0
+        norm_type: local_response
+      conv1_2:
+        type: conv
+        filt_dim: 5
+        num_filt: 16
+        pool_size: 2
+        pool_stride: 2
+        pad: VALID
+        norm: 0
+        norm_type: local_response
+      conv2_1:
+        type: conv
+        filt_dim: 5
+        num_filt: 16
+        pool_size: 1
+        pool_stride: 1
+        pad: VALID
+        norm: 0
+        norm_type: local_response
+      conv2_2:
+        type: conv
+        filt_dim: 5
+        num_filt: 16
+        pool_size: 2
+        pool_stride: 2
+        pad: VALID
+        norm: 0
+        norm_type: local_response
+      fc3:
+        type: fc
+        out_size: 128
+    pose_stream:
+      pc1:
+        type: pc
+        out_size: 16
+      pc2:
+        type: pc
+        out_size: 0
+    merge_stream:
+      fc4:
+        type: fc_merge
+        out_size: 128
+      fc5:
+        type: fc
+        out_size: 2
+
+  # architecture normalization constants
+  radius: 2
+  alpha: 2.0e-05
+  beta: 0.75
+  bias: 1.0
+
+  # leaky relu coefficient
+  relu_coeff: 0.0
+```
+
