@@ -145,3 +145,9 @@ pcshow(ptCloud);
 在`MATLAB`中，点云处理处于`Computer Vision Toolbox`的一部分，详见https://ww2.mathworks.cn/help/vision/point-cloud-processing.html。
 
 要不，咱们先跑一个点云上的分类？
+
+
+
+
+
+TODO：跟原作者要一张背景图片

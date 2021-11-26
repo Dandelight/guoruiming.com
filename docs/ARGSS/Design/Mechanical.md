@@ -159,3 +159,17 @@ DOI: 10.1007/s12652-020-02843-w
 出版阶段： Final
 来源出版物: Scopus
 ```
+
+Comprehensive Review on Reaching and Grasping of Objects in Robotics
+
+基于改进CenterNet的机械臂抓取检测
+
+Robot grasp detection using multimodal deep convolutional neural networks
+
+Robotic grasping: from wrench space heuristics to deep learning policies
+
+Robotic Grasping of Unknown Objects Using Novel Multilevel Convolutional Neural Networks: From Parallel Gripper to Dexterous Hand
+
+Robotic picking in dense clutter via domain invariant learning from synthetic dense cluttered rendering[Formula presented]
+
+Manipulator grabbing position detection with information fusion of color image and depth image using deep learning
