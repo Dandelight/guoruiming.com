@@ -120,4 +120,25 @@ $$
 &\mathbf{z}^{l+1}=\operatorname{MLP}\left(\textrm{LN}\left(\hat{\mathbf{z}}^{l+1}\right)\right)+\hat{\mathbf{z}}^{l+1}
 \end{aligned}
 $$
-$\hat{\mathbf z}^l$指第$l$层(S)W-MSA输出的特征向量，$\hat{\mathbf z}^l$
+$\hat{\mathbf z}^l$指第$l$层(S)W-MSA输出的特征向量，$\hat{\mathbf z}^l$指第$l+1$层MLP输出的特征向量
+
+但是可以看到，Shifted window会产生更多的window，也就是周围一圈大小小于$M\times M$的window，故采用cylic shifting，也就是，循环移位，也就是，一个window里有好多sub-window，然后在self-attention计算的时候将sub-window使用mask提取出来。
+
+### 相对偏置
+
+在计算自注意力时，相较于原方法，在每个头上加了一个relative position embedding的偏置$B \in \mathbb{R}^{M^2\times M^2}$的偏置，修正后的公式如下：
+$$
+\operatorname{Attention}(Q, K, V) = \operatorname{SoftMax}(\frac{QK^\top}{\sqrt{d}}+B)V
+$$
+$d$是*query/key* dimension
+
+### 结构变种
+
+上文介绍主要基于Swin Transformer Tiny，还有Small，Big，Large等大小。~~（移动端的，PC端的，服务器端的，用来刷榜的）~~
+
+## 实验结果
+
+在各数据集上的测试、与ViT、ResNeXt的对比、消融实验（Ablation study），略
+
+## 总结
+
