@@ -1,6 +1,7 @@
 ![img](media/transformation/v2-fc062f8ea80bec759403e46e601c58ed_1440w.jpg)
 
 总结来说就是相似三角形，$\frac{x_{c}}{x}=\frac{y_{c}}{y}=\frac{z_{c}}{f}$，通过变换可得$x=\frac{x_{c}}{z_{c}} f, y=\frac{y_{c}}{z_{c}} f$，由此得其增广形式
+
 $$
 \left(\begin{array}{l}
 x \\
@@ -17,9 +18,11 @@ z_{c} \\
 1
 \end{array}\right)
 $$
+
 相机坐标系到机械臂坐标就是一个平移加旋转，一个矩阵搞定的，一个不够就连乘
 
 如下是绕$z$轴旋转
+
 $$
 \left(\begin{array}{l}
 x_{c} \\
@@ -38,8 +41,6 @@ z_{w} \\
 1
 \end{array}\right)
 $$
-
-
 
 $$
 \left[\begin{array}{l}
@@ -102,6 +103,7 @@ z^{\prime}
 $$
 
 可得到旋转矩阵$R=R_1R_2R_3$
+
 $$
 \left[\begin{array}{l}
 X_{c} \\
@@ -134,6 +136,7 @@ $$
 ![img](media/transformation/20190729162355618.png)
 
 齐次Homogeneous coordinate system
+
 $$
 \begin{aligned}
 (1,2,3) & \Rightarrow\left(\frac{1}{3}, \frac{2}{3}\right) \\
@@ -143,7 +146,9 @@ $$
 (1 a, 2 a, 3 a) & \Rightarrow\left(\frac{1 a}{3 a}, \frac{2 a}{3 a}\right)=\left(\frac{1}{3}, \frac{2}{3}\right)
 \end{aligned}
 $$
+
 平移变换
+
 $$
 \left[\begin{array}{lll}
 x^{\prime} & y^{\prime} & 1
@@ -155,7 +160,9 @@ x & y & 1
 \mathrm{~d} x & \mathrm{~d} y & 1
 \end{array}\right|
 $$
+
 旋转变换
+
 $$
 \left[\begin{array}{lll}
 x^{\prime} & y^{\prime} & 1
@@ -167,7 +174,9 @@ x & y & 1
 0 & 0 & 1
 \end{array}\right|
 $$
+
 缩放变换
+
 $$
 \left[\begin{array}{lll}
 x^{\prime} & y^{\prime} & 1
@@ -179,7 +188,9 @@ S_{x} & 0 & 0 \\
 0 & 0 & 1
 \end{array}\right|
 $$
+
 相机的内参矩阵
+
 $$
 K = \begin{bmatrix}
 f_x & s & s_0 \\
@@ -187,6 +198,7 @@ f_x & s & s_0 \\
 0 & 0 & 1
 \end{bmatrix}
 $$
+
 $f_x, f_y$为焦距，$x_0, y_0$为原点坐标，$s$为坐标轴倾斜参数
 
 ------------------
@@ -194,17 +206,20 @@ $f_x, f_y$为焦距，$x_0, y_0$为原点坐标，$s$为坐标轴倾斜参数
 **从世界坐标系到相机坐标系**
 
 设某点在世界坐标系下坐标为$P_w=(x_w, y_w, z_w)^\top$，在相机坐标系下的坐标为$P_c=(x_c, y_c, z_c)^\top$，则
+
 $$
 P_c = \begin{bmatrix}
 R & T \\
 0 & 1
 \end{bmatrix} P_w
 $$
+
 其中，$R$为正交旋转矩阵，$T$为平移矩阵
 
 **从相机坐标系到图像坐标系**
 
 假设空间点$X_c$在相机坐标系下，$P_c = (x_c, y_c, z_c, 1)^\top$，其像点$m$在图像坐标系下的齐次坐标为$m = (x_p, y_p, 1)$，由相似三角形可得
+
 $$
 \left\{
 \begin{array}{}
@@ -213,7 +228,9 @@ y_p = \frac{fy_c}{z_c}
 \end{array}
 \right.
 $$
+
 矩阵表示为
+
 $$
 z_{c} m=\left[\begin{array}{llll}
 f & 0 & 0 & 0 \\
@@ -221,11 +238,15 @@ f & 0 & 0 & 0 \\
 0 & 0 & 1 & 0
 \end{array}\right] P_{c}
 $$
+
 实际中，主点可能不在图像坐标系原点，若主点在图像中的坐标为
+
 $$
 p = (x_0, y_0, 1)^\top
 $$
+
 则
+
 $$
 z_{c} m=\left[\begin{array}{c}
 f x \\
@@ -238,10 +259,10 @@ f & 0 & x_{0} & 0 \\
 \end{array}\right] P_{c}
 $$
 
-
 从图像坐标系到像素坐标系
 
 假设一个像素的长和宽分别为$dx， dy$，设像素坐标$Pix = (u, v, 1)^\top$，则
+
 $$
 \left[\begin{array}{l}
 u \\
@@ -257,7 +278,9 @@ y_{p} \\
 1
 \end{array}\right]
 $$
+
 结合相机到图像的变换，相机到像素的变换为：
+
 $$
 K=\left[\begin{array}{ccc}
 1 / d_{x} & 0 & 0 \\
@@ -273,9 +296,11 @@ f_{x} & 0 & u_{0} \\
 0 & 0 & 1
 \end{array}\right]
 $$
+
 其中，$f_x = f/dx, y = f/dy$成为相机在$u$轴和$v$轴方向上的尺度因子，相机主点为$(u_0, v_0)^\top = (x_0/dx, y_0/dy)^\top$
 
 从世界坐标系到像素坐标系的变换为：
+
 $$
 z_{c}\left[\begin{array}{l}
 u \\
@@ -291,7 +316,6 @@ z_{w} \\
 1
 \end{array}\right]
 $$
-
 
 16个相机参数：
 
@@ -434,3 +458,4 @@ $$
 
 
 ![img](media/transformation/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMzY5OTI2,size_16,color_FFFFFF,t_70.png)
+
