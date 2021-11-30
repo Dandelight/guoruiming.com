@@ -1,5 +1,7 @@
 > 各位小伙伴们，大家下午好。下周四（2021年11月26日）我将进行研读论文的题目是《Res2Net: A New Multi-Scale Backbone Architecture》和《Swin Transformer: Hierarchical Vision Transformer Using Shifted Windows》，论文PDF已上传至群文件，请感兴趣的小伙伴自行查阅。
 
+[http://scuvis.org/2021autumnpaper-1202/](http://scuvis.org/2021autumnpaper-1202/)
+
 ```tex
 @InProceedings{Liu_2021_ICCV,
     author    = {Liu, Ze and Lin, Yutong and Cao, Yue and Hu, Han and Wei, Yixuan and Zhang, Zheng and Lin, Stephen and Guo, Baining},
@@ -11,7 +13,7 @@
 }
 ```
 
-Transformer是在自然语言处理领域大获成功的RNN模型，并且在计算机视觉任务中也表现出优异的成绩。但是，因为CV和NLP两个领域中的不同点，比如，CV中视觉实体的尺度变化更大、像素的分辨率比文字更高等，都给Transformer在CV的应用带来了挑战。为了解决此问题，作者提出了一种层级化的Transformer网络，并使用Shifted Windows方法进行representation的计算。Shifted Windows（简称Swin）方法将自注意力的计算限制在不重叠的局部窗口中，通过shift（位移）操作实现跨窗口信息连接。网络的层级化结构使得网络能够适应多种尺度的视觉目标，并且Swin的计算只有线性时间复杂度。以Swin Transformer作为骨干网络的模型在多个计算机视觉任务中取得了SOTA的成绩。
+Transformer是在自然语言处理领域大获成功的RNN模型，并且在计算机视觉任务中也表现出优异的成绩。但是，相较于文本，视觉实体的尺度变化更大、分辨率更高等特点，都给Transformer的在计算机视觉上的应用带来了挑战。为了解决此问题，作者提出了一种层级化的Transformer网络，并使用Shifted Windows方法进行representation的计算。Shifted Windows（简称Swin）方法将自注意力的计算限制在不重叠的局部窗口中，通过shifted window方法实现跨窗口信息连接。网络的层级化结构使得网络能够适应多种尺度的视觉目标，并且Swin的计算只有线性时间复杂度。以Swin Transformer作为骨干网络的模型在多个计算机视觉任务中取得了SOTA的成绩。
 
 ## 背景引入
 
@@ -37,7 +39,7 @@ $$
 
 卷积神经网络的本质是特征提取，但卷积并不是最好的特征提取器（其实没有最好），一定程度上因为卷积核大小固定，难以提取图像的多尺度信息
 
-在2019年微软亚洲研究研究院的LR-Net，在26层的LR-Net超过26层的ResNet 3个百分点（这背后是两大互联网巨头的较量）
+在2019年微软亚洲研究研究院的LR-Net，在26层的LR-Net超过26层的ResNet 3个百分点
 
 ![fig2_local_relation_layer](media/Swin-Transformer/fig2_local_relation_layer-16378441549171.png)
 
@@ -75,7 +77,7 @@ linear complexity to image size <= The numbers of patches in each window is fixe
 
 ## Method
 
-Swin Transformer Tiny结构如(a)，选取$4\times4$大小的patch，Linear Embedding（是个全连接层吗？看代码）将patch投影成一个$C$维向量。Stage 1的Swin Transformer Block维护一定数量的$\left(\frac H4 \times \frac W4\right)$的token。
+Swin Transformer Tiny结构如(a)，选取$4\times4$大小的patch（3个通道，一共48个像素），Linear Embedding（是个全连接层吗？看代码）将patch投影成一个$C$维向量。Stage 1的Swin Transformer Block维护一定数量的$\left(\frac H4 \times \frac W4\right)$的token。
 
 为了得到层级式的表达，token的数目在每两个Swin Transformer Block之间会经过Patch Merging减到原来的$1/4$，也就是$2\times 2$的patch会被融合成一个$4C$大小的向量，然后经过一个全连接（linear layer），输出维度为$2C$的向量。Stage 2的Swin Transformer Block的分辨率就是$\left(\frac H8 \times \frac W8\right)$；Stage 3和4与2相同，所以他们的输出分别是$\left(\frac H{16} \times \frac W{16}\right)$和$\left(\frac H{32} \times \frac W{32}\right)$。该网络可以和ResNet、VGGNet产生相同分辨率的feature map，可以方便地替换之而成为新的backbone。
 
@@ -130,11 +132,11 @@ $\hat{\mathbf z}^l$指第$l$层(S)W-MSA输出的特征向量，$\hat{\mathbf z}^
 $$
 \operatorname{Attention}(Q, K, V) = \operatorname{SoftMax}(\frac{QK^\top}{\sqrt{d}}+B)V
 $$
-$d$是*query/key* dimension
+$d$是*query/key* dimension
 
 ### 结构变种
 
-上文介绍主要基于Swin Transformer Tiny，还有Small，Big，Large等大小。~~（移动端的，PC端的，服务器端的，用来刷榜的）~~
+上文介绍主要基于Swin Transformer Tiny，还有Small，Big，Large等大小。<del>（移动端的，PC端的，服务器端的，用来刷榜的）</del>
 
 ## 实验结果
 
@@ -142,3 +144,10 @@ $d$是*query/key* dimension
 
 ## 总结
 
+
+
+
+
+代码解读可参考：https://zhuanlan.zhihu.com/p/401661320
+
+Marr Prize
