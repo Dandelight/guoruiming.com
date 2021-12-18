@@ -12,9 +12,13 @@ markdown_extensions:
   - pymdownx.highlight:
       use_pygments: false
 
+repo_url: https://gitee.com/dandelight/blog
+repo_name: dandelight/blog
+
 plugins:
   - search
   - mermaid2
+  - git-revision-date
 
 extra_css:
   - https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css
