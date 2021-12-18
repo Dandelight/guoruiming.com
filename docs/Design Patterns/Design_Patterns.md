@@ -411,7 +411,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 需求：类似于网购的界面，每一件商品都有描述图片，部分商品描述图片是相同的，再加载一遍会浪费大量时间和资源。
+ * 需求：手机网购App的界面，每一件商品都有描述图片，部分商品描述图片是相同的，再加载一遍会浪费大量时间和资源。
  * 同时因为没有本地缓存，每次打开应用需要重新加载，非常浪费资源。
  */
 public class Main {
@@ -615,13 +615,173 @@ AOP应用场景举例：
 
 > Avoid coupling the sender of a request to its receiver by giving more that one chance to handle the request. Chain the receiving objects and pass the request along the chain until an object handles it.
 
+为了避免请求发送者与多个请求处理者耦合在一起，于是将所有请求的处理者通过**前一对象记住其下一个对象的引用而连成一条链**；当有请求发生时，可将请求沿着这条链传递，直到有对象处理它为止。
+
+职责链模式存在以下两种情况。
+
+**纯的职责链模式：**一个请求必须被某一个处理者对象所接收，且一个具体处理者对某个请求的处理只能采用以下两种行为之一：自己处理（承担责任）；把责任推给下家处理。
+
+```java
+public class Main {
+  public static void main(String[] args) {
+    //组装责任链
+    Handler handler1 = new ConcreteHandler1();
+    Handler handler2 = new ConcreteHandler2();
+    handler1.setNext(handler2);
+    //提交请求
+    handler1.handleRequest("two");
+  }
+}
+
+//抽象处理者角色
+abstract class Handler {
+  private Handler next;
+  public void setNext(Handler next) {
+    this.next = next;
+  }
+  public Handler getNext() {
+    return next;
+  }
+  //处理请求的方法
+  public abstract void handleRequest(String request);
+}
+
+//具体处理者角色1
+class ConcreteHandler1 extends Handler {
+  public void handleRequest(String request) {
+    if (request.equals("one")) {
+      System.out.println("具体处理者1负责处理该请求！");
+    } else {
+      if (getNext() != null) {
+        getNext().handleRequest(request);
+      } else {
+        System.out.println("没有人处理该请求！");
+      }
+    }
+  }
+}
+
+class ConcreteHandler2 extends Handler {
+  public void handleRequest(String request) {
+    if (request.equals("two")) {
+      System.out.println("具体处理者2负责处理该请求！");
+    } else {
+      if (getNext() != null) {
+        getNext().handleRequest(request);
+      } else {
+        System.out.println("没有人处理该请求！");
+      }
+    }
+  }
+}
+```
+
+**不纯的职责链模式：**允许出现某一个具体处理者对象在承担了请求的一部分责任后又将剩余的责任传给下家的情况，且一个请求可以最终不被任何接收端对象所接收。
+
+```java
+public class MemberService {
+  public void login(String userName, String password) {
+    Handler validateHandler = new ValidateHandler();
+    Handler loginHandler = new LoginHandler();
+    Handler authHandler = new AuthHandler();
+    validateHandler.next(loginHandler);
+    loginHandler.next(authHandler);
+    validateHandler.doHandler(new Member(userName, password));
+  }
+}
+
+public abstract class Handler {
+  protected Handler chain;
+  public void next(Handler handler) {
+    this.chain = handler;
+  }
+  public abstract void doHandler(Member member);
+}
+
+public class LoginHandler extends Handler {
+  public void doHandler(Member member) {
+    System.out.println("登录成功！");
+    member.setRoleName("管理员");
+    chain.doHandler(member);
+  }
+}
+
+public class AuthHandler extends Handler {
+  public void doHandler(Member member) {
+    if (!"管理员".equals(member.getRoleName())) {
+      System.out.println("您不是管理员，没有操作权限");
+      return;
+    }
+    System.out.println("您是管理员，允许操作");
+  }
+}
+
+public class ValidateHandler extends Handler {
+  public void doHandler(Member member) {
+    if (StringUtils.isEmpty(member.getUsername()) || StringUtils.isEmpty(member.getPassword())) {
+      System.out.println("用户名和密码为空");
+      return;
+    }
+    System.out.println("用户名和密码不为空");
+    System.out.println("用户名：" + member.getUsername() + ",密码：" + member.getPassword());
+    chain.doHandler(member);
+  }
+}
+```
+
+n 优点
+
+•降低了对象之间的耦合度。该模式使得一个对象无须知道到底是哪一个对象处理其请求以及链的结构，发送者和接收者也无须拥有对方的明确信息。
+
+•增强了系统的可扩展性。可以根据需要增加新的请求处理类，满足开闭原则。
+
+•增强了给对象指派职责的灵活性。当工作流程发生变化，可以动态地改变链内的成员或者调动它们的次序，也可动态地新增或者删除责任。
+
+•责任链简化了对象之间的连接。每个对象只需保持一个指向其后继者的引用，不需保持其他所有处理者的引用，这避免了使用众多的 if 或者 if···else 语句。
+
+•责任分担。每个类只需要处理自己该处理的工作，不该处理的传递给下一个对象完成，明确各类的责任范围，符合类的单一职责原则。
+
+n 缺点
+
+•不能保证每个请求一定被处理。由于一个请求没有明确的接收者，所以不能保证它一定会被处理，该请求可能一直传到链的末端都得不到处理。
+
+•对比较长的职责链，请求的处理可能涉及多个处理对象，系统性能将受到一定影响。
+
+•职责链建立的合理性要靠客户端来保证，增加了客户端的复杂性，可能会由于职责链的错误设置而导致系统出错，如可能会造成循环调用。
+
 ### Command 命令模式
 
 > Encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations.
 
+将**一个请求封装为一个对象**，使**发出请求的责任**和**执行请求的责任**分割开。这样**两者之间通过命令对象进行沟通**，这样方便将命令对象进行储存、传递、调用、增加与管理。
+
+图形化界面中，按钮按下时的回调函数就说明了这一点
+
+<div><button onclick="alert('Hello')">clickme!</button></div>
+
+n 优点
+
+•通过引入中间件（抽象接口）降低系统的耦合度。
+
+•**扩展性良好**，增加或删除命令非常方便。采用命令模式增加与删除命令不会影响其他类，且**满足“开闭原则”**。
+
+•可以实现宏命令。命令模式可以与组合模式结合，将多个命令装配成一个组合命令，即宏命令。
+
+•**方便实现** **Undo** 和 **Redo** **操作**。命令模式可以与后面介绍的备忘录模式结合，实现命令的撤销与恢复。
+
+•可以在现有命令的基础上，增加额外功能。比如日志记录，结合装饰器模式会更加灵活。
+
+n 缺点
+
+•可能产生大量具体的命令类。因为每一个具体操作都需要设计一个具体命令类，这会增加系统的复杂性。
+
+•命令模式的结果其实就是接收方的执行结果，但是为了以命令的形式进行架构、解耦请求与实现，引入了额外类型结构（引入了请求方与抽象命令接口），增加了理解上的困难。不过这也是设计模式的通病，抽象必然会额外增加类的数量，代码抽离肯定比代码聚合更加难理解。
+
 ### Interpreter 解释器模式
 
 > Given a language, define a representation for its grammar along with an interpreter that uses the representation to interpret sentences in the language.
+
+想想SQL。
 
 ### Iterator 迭代器模式
 
@@ -629,11 +789,92 @@ AOP应用场景举例：
 
 这个最不用讲了。
 
-
-
 ### Mediator 中介者模式
 
 > Define an object that encapsulates how a set of objects interact. Mediator promotes loose coupling by keeping objects from referring to each other explicitly, and it lets you vary their interaction independently.
+
+•定义一个中介对象来封装一系列对象之间的交互，使原有对象之间的耦合松散，且可以独立地改变它们之间的交互。中介者模式又叫调停模式，它是迪米特法则的典型应用。
+
+![image-20211218195350474](media/Design_Patterns/image-20211218195350474.png)
+
+![image-20211218195357087](media/Design_Patterns/image-20211218195357087.png)
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+  public static void main(String[] args) {
+    Mediator md = new ConcreteMediator();
+    Colleague c1, c2;
+    c1 = new ConcreteColleague1();
+    c2 = new ConcreteColleague2();
+    md.register(c1);
+    md.register(c2);
+    c1.send();
+    System.out.println("-------------");
+    c2.send();
+  }
+}
+
+//抽象中介者
+abstract class Mediator {
+  public abstract void register(Colleague colleague);
+  public abstract void relay(Colleague cl); //转发
+}
+
+//具体中介者
+class ConcreteMediator extends Mediator {
+  private List<Colleague> colleagues = new ArrayList<Colleague>();
+  public void register(Colleague colleague) {
+    if (!colleagues.contains(colleague)) {
+      colleagues.add(colleague);
+      colleague.setMedium(this);
+    }
+  }
+  public void relay(Colleague cl) {
+    for (Colleague ob : colleagues) {
+      if (!ob.equals(cl)) {
+        ((Colleague) ob).receive();
+      }
+    }
+  }
+}
+
+//抽象同事类
+abstract class Colleague {
+  protected Mediator mediator;
+  public void setMedium(Mediator mediator) {
+    this.mediator = mediator;
+  }
+  public abstract void receive();
+  public abstract void send();
+}
+
+//具体同事类1
+class ConcreteColleague1 extends Colleague {
+  public void receive() {
+    System.out.println("具体同事类1收到请求。");
+  }
+  public void send() {
+    System.out.println("具体同事类1发出请求。");
+    mediator.relay(this); //请中介者转发
+  }
+}
+
+//具体同事类2
+class ConcreteColleague2 extends Colleague {
+  public void receive() {
+    System.out.println("具体同事类2收到请求。");
+  }
+  public void send() {
+    System.out.println("具体同事类2发出请求。");
+    mediator.relay(this);
+  }
+}
+```
+
+
 
 ### Memento 备忘录模式
 
@@ -647,13 +888,134 @@ AOP应用场景举例：
 
 > Allow an object to alter its behavior when its internal state changes. The object will appear to change its class.
 
+#### 基本思想
+
+对有状态的对象，把复杂的“判断逻辑”提取到不同的状态对象中，允许状态对象在其内部状态发生改变时改变其行为。
+
+传统的解决方案是：将这些所有可能发生的情况全都考虑到，然后使用 if-else 或 switch-case 语句来做状态判断，再进行不同情况的处理。但是显然这种做法对复杂的状态判断存在天然弊端，条件判断语句会过于臃肿，可读性差，且不具备扩展性，维护难度也大。且增加新的状态时要添加新的 if-else 语句，这违背了“开闭原则”，不利于程序的扩展。
+
+#### 应用场景
+
+当一个对象的行为取决于它的状态，并且它必须在运行时根据状态改变它的行为时，就可以考虑使用状态模式。
+
+一个操作中含有庞大的分支结构，并且这些分支决定于对象的状态时。
+
+
+
+环境类（Context）角色：它定义了客户端需要的接口，内部维护一个当前状态，并负责具体状态的切换。
+
+抽象状态（State）角色：定义一个接口，用以封装环境对象中的特定状态所对应的行为，可以有一个或多个行为。
+
+具体状态（Concrete State）角色：实现抽象状态所对应的行为，并且在需要的情况下进行状态切换。
+
 ### Strategy 策略模式
 
 > Define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithm vary independently from clients that use it.
 
+```java
+public class Main {
+  public static void main(String[] args) {
+    Context c = new Context();
+    Strategy s = new ConcreteStrategyA();
+    c.setStrategy(s);
+    c.strategyMethod();
+    System.out.println("-----------------");
+    s = new ConcreteStrategyB();
+    c.setStrategy(s);
+    c.strategyMethod();
+  }
+}
+
+//抽象策略类
+interface Strategy {
+  public void strategyMethod(); //策略方法
+}
+
+//具体策略类A
+class ConcreteStrategyA implements Strategy {
+  public void strategyMethod() {
+    System.out.println("具体策略A的策略方法被访问！");
+  }
+}
+//具体策略类B
+class ConcreteStrategyB implements Strategy {
+  public void strategyMethod() {
+    System.out.println("具体策略B的策略方法被访问！");
+  }
+}
+
+//环境类
+class Context {
+  private Strategy strategy;
+  public Strategy getStrategy() {
+    return strategy;
+  }
+  public void setStrategy(Strategy strategy) {
+    this.strategy = strategy;
+  }
+  public void strategyMethod() {
+    strategy.strategyMethod();
+  }
+}
+
+```
+
 ### Template Method 模板方法模式
 
 > Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm's structure.
+
+![image-20211218201711777](media/Design_Patterns/image-20211218201711777.png)
+
+
+
+```java
+public class Main {
+  public static void main(String[] args) {
+    AbstractClass tm = new ConcreteClass();
+    tm.TemplateMethod();
+  }
+}
+
+//抽象类
+abstract class AbstractClass {
+  //模板方法
+  public void TemplateMethod() {
+    SpecificMethod();
+    abstractMethod1();
+    abstractMethod2();
+  }
+  //具体方法
+  public void SpecificMethod() {
+    System.out.println("抽象类中的具体方法被调用...");
+  }
+  //抽象方法1
+  public abstract void abstractMethod1();
+  //抽象方法2
+  public abstract void abstractMethod2();
+}
+
+//具体子类
+class ConcreteClass extends AbstractClass {
+  public void abstractMethod1() {
+    System.out.println("抽象方法1的实现被调用...");
+  }
+  public void abstractMethod2() {
+    System.out.println("抽象方法2的实现被调用...");
+  }
+}
+```
+
+优点
+
+* 它封装了不变部分，扩展可变部分。它把认为是不变部分的算法封装到父类中实现，而把可变部分算法由子类继承实现，便于子类继续扩展。
+* 它在父类中提取了公共的部分代码，便于代码复用。
+* 部分方法是由子类实现的，因此子类可以通过扩展方式增加相应的功能，符合开闭原则。
+
+缺点
+
+* 对每个不同的实现都需要定义一个子类，这会导致类的个数增加，系统更加庞大，设计也更加抽象，间接地增加了系统实现的复杂度。
+* 父类中的抽象方法由子类实现，子类执行的结果会影响父类的结果，这导致一种反向的控制结构，它提高了代码阅读的难度。
+* 由于继承关系自身的缺点，如果父类添加新的抽象方法，则所有子类都要改一遍。
 
 ### Visitor 访问者模式
 
@@ -662,3 +1024,5 @@ AOP应用场景举例：
 ## 参考文献
 
 [^liaoxuefeng]: 廖雪峰的Java教程 https://www.liaoxuefeng.com/wiki/1252599548343744/1281319417937953
+
+Gamma, Erich, Helm, Richard, Author, and Johnson, Ralph, Author. *Design Patterns : Elements of Reusable Object-oriented Software*.
