@@ -42,7 +42,7 @@ mysql -u root -p
 
 ## 配置文件
 
-根据官网文档（链接[戳这里](https://link.zhihu.com/?target=https%3A//hub.docker.com/_/mysql)），默认的配置文件位置为`/etc/mysql/my.cnf`，自定义的配置文件位置可以为`/etc/mysql/conf.d`或`/etc/mysql/mysql.conf.d`，因此将宿主机的`/etc/mysql`挂载到容器的`/etc/mysql/conf.d`，`MySQL`会自动合并默认的配置文件`/etc/mysql/my.cnf`与自定义的配置文件（这里是`/etc/mysql/conf.d/my.cnf`）。
+根据[官网文档](https://hub.docker.com/_/mysql)，默认的配置文件位置为`/etc/mysql/my.cnf`，自定义的配置文件位置可以为`/etc/mysql/conf.d`或`/etc/mysql/mysql.conf.d`，因此将宿主机的`/etc/mysql`挂载到容器的`/etc/mysql/conf.d`，`MySQL`会自动合并默认的配置文件`/etc/mysql/my.cnf`与自定义的配置文件（这里是`/etc/mysql/conf.d/my.cnf`）。
 
 ## 使用`docker-compose`
 
@@ -52,7 +52,7 @@ mysql -u root -p
 mkdir -p /apps/mysql/{mydir,datadir,conf,source}
 ```
 
-2、编写docker-compose.yaml
+2、编写`docker-compose.yaml`
 
 ```text
 version: '3'
@@ -100,7 +100,7 @@ default-character-set=utf8
 启动容器的时候，需要先检查所使用的端口是否被占用。
 
 ```text
-$ ss -tunlp |grep 3306
+$ ss -tunlp | grep 3306
 $ docker-compose up -d
 $ docker-compose ps
 Name                 Command             State           Ports
@@ -113,7 +113,7 @@ mysql-lable   docker-entrypoint.sh mysqld   Up      0.0.0.0:3306->3306/tcp
 进入容器，使用密码登录数据库，并查看数据库有没有创建所指定的库，库里面有没有导入你的sql数据
 
 ```text
-### docker exec -it 容器ID(使用docker ps查看) /bin/bash
+### docker exec -it {容器ID | 容器名(使用docker ps查看)} /bin/bash
 $ docker exec -it e592ac9bfa70 /bin/bash
 # root@e592ac9bfa70:/# mysql -uroot -p
 Enter password:
@@ -148,12 +148,6 @@ mysql> use mysql_data_test  #这个是我自己的恢复数据文件
 mysql> show tables;
 .......
 ```
-
-到这里mysql就算搭建完成了。。
-
-
-
-
 
 ---
 

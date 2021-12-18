@@ -75,3 +75,4 @@ public class MySQLDemo {
 }
 ```
 
+以上仅展示了`JDBC`原理，更优雅的写法要数`Spring Boot`的`JDBCUtils`类。
