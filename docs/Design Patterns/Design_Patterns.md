@@ -303,6 +303,19 @@ class Singleton {
 
 > Decouple an abstraction from its implementation so that the two can vary independently.
 
+当一个设计有一种抽象和多种实现时，常见的方法是让实现继承抽象。但这样复用性差。桥接模式的基本思想是将**抽象和实现分离**，让两者可以相互独立地变化。
+
+![image-20211218153235516](media/Design_Patterns/image-20211218153235516.png)
+
+#### 角色
+
+* 抽象Abstraction
+* 修正抽象Refined Abstraction
+* 实现Implementation
+* 具体实现Concrete Implementation
+
+![image-20211218153358214](media/Design_Patterns/image-20211218153358214.png)
+
 ### Composite 组合模式
 
 > Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly
@@ -311,17 +324,187 @@ class Singleton {
 
 > Attach additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality.
 
+```java
+public class Main {
+  public static void main(String[] args) {
+    Base base = new ConcreteBase();
+
+    base = new ConcreteDecorator(base);
+    base.operation();
+  }
+}
+
+interface Base {
+  void operation();
+}
+
+interface Decorator extends Base {}
+
+class ConcreteBase implements Base {
+  @Override
+  public void operation() {
+    System.out.println("Concrete base");
+  }
+}
+
+class ConcreteDecorator implements Decorator {
+  Base base;
+  public ConcreteDecorator(Base base) {
+    this.base = base;
+  }
+  @Override
+  public void operation() {
+    base.operation();
+    System.out.println("And there's more");
+  }
+}
+```
+
+
+
 ### Facade 门面模式
 
 > Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use.
+
+用户在调用系统暴露在外的一两个接口时，系统内调用了一系列的接口。
+
+将系统内部的复杂接口用统一、简单的接口暴露给外部
+
+![image-20211218155737212](media/Design_Patterns/image-20211218155737212.png)
+
+![image-20211218155927026](media/Design_Patterns/image-20211218155927026.png)
+
+#### 角色
+
+* 门面Facade
+* 子系统Subsystem
+
+![image-20211218160138475](media/Design_Patterns/image-20211218160138475.png)
 
 ### Flyweight 享元模式
 
 > Use sharing to support large numbers of fine-grained objects efficiently.
 
+享元即通过共享对象池的机制对频繁创建删除的细粒度对象进行管理，以期提高系统效率
+
+![image-20211218160420764](media/Design_Patterns/image-20211218160420764.png)
+
+#### 角色
+
+* 享元Flyweight：享元的接口
+* 具体享元ConcreteFlyweight：共享享元
+* 非共享具体享元：并非每个享元都是共享的
+* 享元工厂FlyweightFactory
+* 用户Client维护一个享元的引用并计算或存储享元的内部状态
+
+> 不会写了呀……
+
 ### Proxy 代理模式
 
 > Provide a surrogate or placeholder for another object to control access to it.
+
+根据代理创建的时期，我们将代理分为静态代理和动态代理。
+
+**静态代理**由程序员创建代理类，由程序员创建代理类或特定工具自动生成源代码再对其编译，在程序运行前代理类的 `.class` 文件就已经存在了。
+
+```java
+ //真实主题
+class RealSubject implements ISubject {
+    public void Request() {
+        System.out.println("访问真实主题方法...");
+    }
+}
+
+class Proxy implements ISubject {
+    private RealSubject realSubject;
+    public void Request() {
+        if (realSubject == null) {
+            realSubject = new RealSubject(); }
+        preRequest();
+        realSubject.Request();
+        postRequest();
+    }
+    /* ... */
+}
+```
+
+**动态代理在程序运行时，运用反射机制动态创建而成**
+
+```java
+import java.lang.reflect.*;
+
+public class Main {
+  public static void main(String[] args) {
+    JDKAOP aop = new JDKAOP();
+    ISubject subject = (ISubject) aop.getInstance(new RealSubject());
+    subject.Request();
+  }
+}
+
+class JDKAOP implements InvocationHandler {
+  private Object target;
+
+  public Object getInstance(Object target) {
+    this.target = target;
+    Class<?> clazz = target.getClass();
+    return Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), this);
+  }
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    before();
+    Object o = method.invoke(this.target, args);
+    after();
+    return o;
+  }
+
+  private void before() {
+    System.out.println("JDKAOP.before()");
+  }
+
+  private void after() {
+    System.out.println("JDKAOP.after()");
+  }
+}
+
+interface ISubject {
+  public void Request();
+}
+
+//真实主题
+class RealSubject implements ISubject {
+  public void Request() {
+    System.out.println("Real Subject");
+  }
+}
+```
+
+#### AOP(Aspect Oriented Programming，面向切面编程)
+
+程序在运行时，动态的将代码切入到类的指定方法或者说指定位置上
+
+在 AOP 中模块化单元是切面（Aspect）
+
+将影响多个类的共同行为封装到一个可重用的模块中
+
+切面抽象描述
+
+在什么时候对哪些类的哪些行为执行进行拦截（切点），并使用封装好的可重用模块里面的行为（通知）对其拦截的业务行为进行功能增强
+
+不需要修改业务模块的代码
+
+AOP应用场景举例：
+
+1. 系统的性能检测
+2. 访问控制
+3. 事务管理
+4. 日志记录
+
+优点：
+
+业务代码简洁  例如：当需要在业务行为前后做一些事情时，只需要在该行为前后配置切面进行处理，无须修改当前业务行为代码
+
+切面逻辑封装性好，可以被复用  例如：将日志逻辑封装为一个切面，可以在多个相关或者不相关的类的多个方法上配置该切面
 
 ## Behavioral Patterns 行为型设计模式
 
@@ -368,3 +551,6 @@ class Singleton {
 ### Visitor 访问者模式
 
 > Represent an operation to be preformed on elements of an object structure. Visitor lets you define a new operation without changing the classes of the elements on which it operates.
+
+## 参考文献
+
