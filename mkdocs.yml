@@ -6,6 +6,7 @@ site_url: http://guoruiming.com
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.magiclink
 
 plugins:
   - search
