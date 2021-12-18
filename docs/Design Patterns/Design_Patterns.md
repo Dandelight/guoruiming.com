@@ -385,7 +385,9 @@ class ConcreteDecorator implements Decorator {
 
 > Use sharing to support large numbers of fine-grained objects efficiently.
 
-享元即通过共享对象池的机制对频繁创建删除的细粒度对象进行管理，以期提高系统效率
+享元即通过共享对象池的机制的细粒度对象进行管理，以期提高系统效率。每个享元有外部状态和内部状态，可以被多个对象共享：被共享的享元的内部状态在享元内部维护，由其持有者分别维护其外部状态。
+
+> 如果一个对象实例一经创建就不可变，那么反复创建相同的实例就没有必要，直接向调用方返回一个共享的实例就行，[^liaoxuefeng]
 
 ![image-20211218160420764](media/Design_Patterns/image-20211218160420764.png)
 
@@ -397,7 +399,108 @@ class ConcreteDecorator implements Decorator {
 * 享元工厂FlyweightFactory
 * 用户Client维护一个享元的引用并计算或存储享元的内部状态
 
-> 不会写了呀……
+```java
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 需求：类似于网购的界面，每一件商品都有描述图片，部分商品描述图片是相同的，再加载一遍会浪费大量时间和资源。
+ * 同时因为没有本地缓存，每次打开应用需要重新加载，非常浪费资源。
+ */
+public class Main {
+  public static void main(String[] args) {
+    ImagePool imagePool = new ImagePool();
+    Image image = imagePool.getImage("123456");
+    System.out.println(image);
+    image = imagePool.getImage("123456");
+    image = imagePool.getImage("123456");
+    image = imagePool.getImage("876543");
+  }
+}
+
+class ImagePool {
+  // 每张图片有三个状态：未加载、加载中、已加载
+  // 目前先实现"未加载"和"已加载"两个功能。
+  // "已加载"又分为"加载到本地存储"与"加载到内存"
+
+  Map<String, Image> buffer = new HashMap<>();
+
+  public Image getImage(String checksum) {
+    Image result = null;
+    result = getImageFromBuffer(checksum);
+    if (result == null)
+      result = getImageFromLocalStorage(checksum);
+    if (result == null)
+      result = getImageFromServer(checksum);
+    return result;
+  }
+
+  private Image getImageFromServer(String checksum) {
+    System.out.println("Got image from server");
+    Image result =
+        new Image(checksum, "Image{" + checksum + "}"); // Pretend to have everything on server
+    storeInBuffer(checksum, result);
+    storeLocally(checksum, result);
+    return result;
+  }
+
+  private Image getImageFromLocalStorage(String checksum) {
+    Image result = null;
+    try (InputStream input = new FileInputStream("images/" + checksum)) {
+      result = new Image(checksum, new String(input.readAllBytes()));
+    } catch (Exception e) {
+      result = null;
+    }
+    if (result != null) {
+      System.out.println("Got image from local storage");
+      storeInBuffer(checksum, result);
+    }
+    return result;
+  }
+
+  private Image getImageFromBuffer(String checksum) {
+    Image result = null;
+    result = buffer.get(checksum);
+    if (result != null) {
+      System.out.println("Got image from buffer");
+    }
+    return result;
+  }
+
+  private void storeInBuffer(String checksum, Image image) {
+    buffer.put(checksum, image);
+  }
+
+  private void storeLocally(String checksum, Image image) {
+    try (Writer output = new FileWriter("images/" + checksum)) {
+      output.write(image.content);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+}
+
+class Image {
+  public String checksum;
+  public String content;
+  Image(String checksum, String content) {
+    this.checksum = checksum;
+    this.content = content;
+  }
+
+  @Override
+  public String toString() {
+    return content;
+  }
+}
+```
 
 ### Proxy 代理模式
 
@@ -524,6 +627,10 @@ AOP应用场景举例：
 
 > Provide a way to access the elements of a aggregate object sequentially without exposing its underlying representation.
 
+这个最不用讲了。
+
+
+
 ### Mediator 中介者模式
 
 > Define an object that encapsulates how a set of objects interact. Mediator promotes loose coupling by keeping objects from referring to each other explicitly, and it lets you vary their interaction independently.
@@ -554,3 +661,4 @@ AOP应用场景举例：
 
 ## 参考文献
 
+[^liaoxuefeng]: 廖雪峰的Java教程 https://www.liaoxuefeng.com/wiki/1252599548343744/1281319417937953
