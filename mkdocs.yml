@@ -1,22 +1,31 @@
 theme:
   name: 'material'
   language: zh
+  features:
+    - navigation.instant
 site_name: 郭睿明的小屋
 site_url: http://guoruiming.com
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.magiclink
+  - pymdownx.highlight:
+      use_pygments: false
 
 plugins:
   - search
   - mermaid2
 
 extra_css:
+  - https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css
   - stylesheets/extra.css
 extra_javascript:
-  - javascripts/config.js
+  - javascripts/mathjax.js
+  - javascripts/highlight.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-  - https://unpkg.com/mermaid/dist/mermaid.min.js
+  - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js
+  - https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.3.1/highlight.min.js
+  # - javascripts/config.js
+
 copyright: 'Copyleft. All wrongs reversed.<br/><a href="https://beian.miit.gov.cn">冀ICP备2021025718号</a>'
