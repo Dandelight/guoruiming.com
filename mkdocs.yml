@@ -24,12 +24,13 @@ extra_css:
   - https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css
   - stylesheets/extra.css
 extra_javascript:
-  - javascripts/mathjax.js
-  - javascripts/highlight.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
+  # - https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js
+  - javascripts/config.js
+  # - javascripts/mathjax.js
+  # - javascripts/highlight.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js
   - https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.3.1/highlight.min.js
-  # - javascripts/config.js
 
 copyright: 'Copyleft. All wrongs reversed.<br/><a href="https://beian.miit.gov.cn">冀ICP备2021025718号</a>'

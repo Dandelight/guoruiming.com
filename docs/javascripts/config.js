@@ -1,7 +1,9 @@
+// MathJax
+
 window.MathJax = {
   tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['$$ ', ' $$'], ['\\[', '\\]']],
+    inlineMath: [['\\(', '\\)'], ['$', '$']],
+    displayMath: [['\\[', '\\]'], ['$$', '$$']],
     processEscapes: true,
     processEnvironments: true
   },
@@ -9,3 +11,10 @@ window.MathJax = {
 };
 
 document$.subscribe(() => {MathJax.typesetPromise()})
+
+// highlight.js
+document$.subscribe(() => {hljs.highlightAll()})
+
+// mermaid.js
+// 每次Instant Reload之后重渲染Mermaid
+document$.subscribe(() => {mermaid.init()})
