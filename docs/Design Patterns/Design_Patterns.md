@@ -966,7 +966,25 @@ class Context {
 
 ![image-20211218201711777](media/Design_Patterns/image-20211218201711777.png)
 
-
+```mermaid
+ classDiagram
+      AbstractClass <|-- ConcreteClass
+      TemplateMethodPattern ..|> AbstractClass
+      class AbstractClass {
+          +TemplateMethod() void
+          +SpecificMethod() void
+          +abstractMethod1() void
+          +abstractMethod2() void
+      }
+      class TemplateMethodPattern {
+          -templateMethod: AbstractClass
+          +main(String [] args) void
+      }
+      class ConcreteClass {
+          +abstractMethod1() void
+          +abstractMethod2() void
+      }
+```
 
 ```java
 public class Main {
