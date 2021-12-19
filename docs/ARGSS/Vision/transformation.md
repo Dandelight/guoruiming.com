@@ -135,7 +135,7 @@ $$
 
 ![img](media/transformation/20190729162355618.png)
 
-齐次Homogeneous coordinate system
+齐次 Homogeneous coordinate system
 
 $$
 \begin{aligned}
@@ -201,7 +201,7 @@ $$
 
 $f_x, f_y$为焦距，$x_0, y_0$为原点坐标，$s$为坐标轴倾斜参数
 
-------------------
+---
 
 **从世界坐标系到相机坐标系**
 
@@ -317,30 +317,30 @@ z_{w} \\
 \end{array}\right]
 $$
 
-16个相机参数：
+16 个相机参数：
 
-* 10个内部参数
-  * 五个内部矩阵参数$K$：$f, dx, dy, u_0, v_0$（也可视作四个参数$f_x, f_y, u_0, v_0$
-  * 五个畸变参数：$D$：$k_1, k_2, k_3, p_1, p_2$
-* 6个外部参数
-  * 3个旋转参数$R$
-  * 3个平移参数$T$
+- 10 个内部参数
+  - 五个内部矩阵参数$K$：$f, dx, dy, u_0, v_0$（也可视作四个参数$f_x, f_y, u_0, v_0$
+  - 五个畸变参数：$D$：$k_1, k_2, k_3, p_1, p_2$
+- 6 个外部参数
+  - 3 个旋转参数$R$
+  - 3 个平移参数$T$
 
 ```python
 import cv2
 import numpy as np
- 
+
 #读取相机内参
 with np.load('C:\\Users\\wlx\\Documents\\py_study\\camera calibration\\data\\intrinsic_parameters.npz') as X:
     mtx,dist = [X[i] for i in ('mtx','dist')]
- 
+
 def draw(img, corners, imgpts):
     corner = tuple(corners[0].ravel())
     img = cv2.line(img, corner, tuple(imgpts[0].ravel()), (255,0,0), 5)
     img = cv2.line(img, corner, tuple(imgpts[1].ravel()), (0,255,0), 5)
     img = cv2.line(img, corner, tuple(imgpts[2].ravel()), (0,0,255), 5)
     return img
- 
+
 #标定图像保存路径
 photo_path = "C:\\Users\\wlx\\Documents\\py_study\\camera calibration\\image\\6.jpg"
 #标定图像
@@ -357,9 +357,9 @@ def calibration_photo(photo_path):
     axis = np.float32([[3,0,0], [0,3,0], [0,0,-3]]).reshape(-1,3)
     #设置角点查找限制
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER,30,0.001)
- 
+
     image = cv2.imread(photo_path)
- 
+
     gray = cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
     #查找角点
     ok,corners = cv2.findChessboardCorners(gray,(x_nums,y_nums),)
@@ -367,25 +367,23 @@ def calibration_photo(photo_path):
     if ok:
         #获取更精确的角点位置
         exact_corners = cv2.cornerSubPix(gray,corners,(11,11),(-1,-1),criteria)
- 
+
         #获取外参
         _,rvec, tvec, inliers = cv2.solvePnPRansac(world_point, exact_corners, mtx, dist)
- 
+
         imgpts, jac = cv2.projectPoints(axis, rvec, tvec, mtx, dist)
         #可视化角点
         img = draw(image, corners, imgpts)
         cv2.imshow('img', img)
- 
- 
+
+
 if __name__ == '__main__':
     calibration_photo(photo_path)
     cv2.waitKey()
     cv2.destroyAllWindows()
 ```
 
-
-
-------------------------
+---
 
 $$
 \text { camera matrix }=\left[\begin{array}{ccc}
@@ -434,28 +432,25 @@ Z \\
 \end{array}\right]
 $$
 
-> 问题1：相机标定内参的时候通过calibrateCamera()函数能够获得旋转矢量rvec和平移向量tvec；在本章中，我们使用solvePnPRansac()函数又一次获得旋转矢量rvec和平移向量tvec。这是为什么呢？
+> 问题 1：相机标定内参的时候通过 calibrateCamera()函数能够获得旋转矢量 rvec 和平移向量 tvec；在本章中，我们使用 solvePnPRansac()函数又一次获得旋转矢量 rvec 和平移向量 tvec。这是为什么呢？
 >
-> calibrateCamera()函数求取的旋转矢量rvec和平移向量tvec，是在获取了相机内参mtx, dist之后，通过内部调用solvePnPRansac()函数获得的。也就是说，如果对于只有一张标定图像的情况，alibrateCamera()函数求取的旋转矢量rvec和平移向量tvec，与solvePnPRansac()函数求取的旋转矢量rvec和平移向量tvec是一样的（这是确定的）。但是我们在标定相机内参的时候，为了得到较为准确的标定结果，所以拍摄了多张（10~20）不同角度的标定图，在这些标定图一起作用下，求出了相机的内参。所以当在一个确定的场景下，想要获得相机的外参时，我们需要重新求取旋转矩阵和平移向量，于是我们用了solvePnPRansac()函数（为什么不用calibrateCamera()函数了？因为calibrateCamera()函数就是调用的solvePnPRansac()函数）。
+> calibrateCamera()函数求取的旋转矢量 rvec 和平移向量 tvec，是在获取了相机内参 mtx, dist 之后，通过内部调用 solvePnPRansac()函数获得的。也就是说，如果对于只有一张标定图像的情况，alibrateCamera()函数求取的旋转矢量 rvec 和平移向量 tvec，与 solvePnPRansac()函数求取的旋转矢量 rvec 和平移向量 tvec 是一样的（这是确定的）。但是我们在标定相机内参的时候，为了得到较为准确的标定结果，所以拍摄了多张（10~20）不同角度的标定图，在这些标定图一起作用下，求出了相机的内参。所以当在一个确定的场景下，想要获得相机的外参时，我们需要重新求取旋转矩阵和平移向量，于是我们用了 solvePnPRansac()函数（为什么不用 calibrateCamera()函数了？因为 calibrateCamera()函数就是调用的 solvePnPRansac()函数）。
 >
-> 问题2:得出的rvec怎么是3*1的矩阵？
+> 问题 2:得出的 rvec 怎么是 3\*1 的矩阵？
 >
-> 调用solvePnPRansac()函数得到的rvec是一个旋转矢量，需要使用cv2.Rodrigues(src,dst,jacobian=None)
+> 调用 solvePnPRansac()函数得到的 rvec 是一个旋转矢量，需要使用 cv2.Rodrigues(src,dst,jacobian=None)
 >
-> src:输入的矩阵可以是（3*1或1*3）也可以是3*3
+> src:输入的矩阵可以是（3*1 或 1*3）也可以是 3\*3
 >
-> dst:输出的矩阵，对应输入3*3,或者（3*1或1*3）
+> dst:输出的矩阵，对应输入 3*3,或者（3*1 或 1\*3）
 >
 > jacobian:也是一个输出，该输出表明了输入矩阵和输出矩阵的的雅可比
 >
 > 转换后的矩阵就和前面的旋转矩阵对应了，然后就能求出相机的俯仰角、偏航角、滚轮角。（不过对于实际应用中，知道旋转矩阵不就行了？）
 >
-> OK，相机内外参数都弄明白了，相机标定告一段落。
-> ------------------------------------------------
-> 版权声明：本文为CSDN博主「Levi_wlx」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+> ## OK，相机内外参数都弄明白了，相机标定告一段落。
+>
+> 版权声明：本文为 CSDN 博主「Levi_wlx」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
 > 原文链接：https://blog.csdn.net/weilixin88/article/details/91603319
 
-
-
 ![img](media/transformation/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMzY5OTI2,size_16,color_FFFFFF,t_70.png)
-

@@ -8,11 +8,11 @@
 
 #### SMILES
 
-Simplified Molecular Input Line Entry Specification，即简化分析线性输入规范以ASCII编码字符串
+Simplified Molecular Input Line Entry Specification，即简化分析线性输入规范以 ASCII 编码字符串
 
 #### SMARTS
 
-SMARTS（SMiles ARbitrary Target Specification）是一种用于描述分子模式和属性的语言。SMILES所有的符号和属性在SMARTS中同样适用，因此它也是SMILES的延伸。此外，SMARTS还包括了逻辑操作符和额外的分子描述符
+SMARTS（SMiles ARbitrary Target Specification）是一种用于描述分子模式和属性的语言。SMILES 所有的符号和属性在 SMARTS 中同样适用，因此它也是 SMILES 的延伸。此外，SMARTS 还包括了逻辑操作符和额外的分子描述符
 
 #### Wiswesser Line Notation（WLN）
 
@@ -28,8 +28,6 @@ The ECFP is a fingerprint which is a bit vector made by chemical structure infor
 
 #### `GraphConv`
 
-
-
 ## 数据库
 
 ### `ChEMBL`
@@ -38,13 +36,9 @@ ChEMBL is a manually curated database of bioactive molecules with drug-like prop
 
 #### World Protein Data Bank
 
-
-
 ## 方法
 
 ### 同源建模法
-
-
 
 ## 工具软件
 
@@ -54,7 +48,7 @@ ChEMBL is a manually curated database of bioactive molecules with drug-like prop
 
 ### `DeepChem`
 
-DeepChem是一个用于Python的专用于化学的深度学习库
+DeepChem 是一个用于 Python 的专用于化学的深度学习库
 
 ### `PyMol`
 
@@ -62,7 +56,4 @@ DeepChem是一个用于Python的专用于化学的深度学习库
 
 ### `ChemDraw`
 
-
-
 ## Structure Diagram Generation Algorithms
-

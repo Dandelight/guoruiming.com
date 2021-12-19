@@ -11,12 +11,12 @@
 <details>
     <summary>没看见</summary>
     <code>
-                 (__) 
-                 (oo) 
-           /------\/ 
-          / |    ||   
-         *  /\---/\ 
-            ~~   ~~   
+                 (__)
+                 (oo)
+           /------\/
+          / |    ||
+         *  /\---/\
+            ~~   ~~
 ..."Have you mooed today?"...
     </code>
 </details>

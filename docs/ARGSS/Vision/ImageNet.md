@@ -1,4 +1,4 @@
-前往[ImageNet](https://image-net.org/)官网下载ILSVRC 2012数据集（需要使用学校的邮箱注册账号并同意使用协议）
+前往[ImageNet](https://image-net.org/)官网下载 ILSVRC 2012 数据集（需要使用学校的邮箱注册账号并同意使用协议）
 
 下载之后，
 
@@ -23,9 +23,9 @@ tar -xvf ILSVRC2012_img_val.tar
 # wget -qO- https://files-cdn.cnblogs.com/files/luruiyuan/valprep.sh | bash
 ```
 
-------
+---
 
-如何在真实的深度学习环境中测试自己的GPU？
+如何在真实的深度学习环境中测试自己的 GPU？
 
 https://lambdalabs.com/gpu-workstations/vector
 
@@ -43,7 +43,7 @@ Okay. I think I solved it. Looks like the shared memory of the docker container 
 
 除了命令行之外，我们通常使用`docker-compose`部署自己的服务。`docker-compose`中这样设置：
 
-If you're using docker-compose, you can set the `your_service.shm_size` value if you want your container to use that /dev/shm size when *running* or `your_service.build.shm_size` when *building*.
+If you're using docker-compose, you can set the `your_service.shm_size` value if you want your container to use that /dev/shm size when _running_ or `your_service.build.shm_size` when _building_.
 
 Example:
 
@@ -54,7 +54,7 @@ services:
     build:
       context: .
       shm_size: '2gb' <-- this will set the size when BUILDING
-    shm_size: '2gb' <-- when RUNNING 
+    shm_size: '2gb' <-- when RUNNING
 ```
 
 https://stackoverflow.com/questions/30210362/how-to-increase-the-size-of-the-dev-shm-in-docker-container

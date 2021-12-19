@@ -23,7 +23,7 @@ conda init powershell
 
 此时`powershell`提示符从`PS E:\>`变成了`(base) PS E:\>`, 这说明我们成功进入了`conda`的`base`环境. 此时再启动`Python`就没有警告了.
 
-但是, 在输入`conda install tensorflow`之后又报了一个`inconsistent`错误, 大意是`tensorflow`及其依赖包与现有环境中的4个包不相容, 这就需要一个全新的`conda`环境, 
+但是, 在输入`conda install tensorflow`之后又报了一个`inconsistent`错误, 大意是`tensorflow`及其依赖包与现有环境中的 4 个包不相容, 这就需要一个全新的`conda`环境,
 
 不急, 先把镜像配上, ~~省得下载速度把自己感动到脱发~~, 具体操作见https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/
 
@@ -43,8 +43,6 @@ conda create -n tensorflow python=3.8 tensorflow
 
 不要把`python`版本设得太高, 也不要用`python 2.x`了.
 
-
-
 **注意**这里又是一个大坑, 如果在安装`Anaconda`的时候勾选了了`Add to PATH`选项, 现在`conda`就不会正常工作了. 具体说来, `Add to PATH`向`PATH`中添加的是`base`环境的包, 而当使用`conda activate tensorflow`切换到`tensorflow`环境之后使用`python`命令, 优先解析`PATH`中的`python`(即`Anaconda`目录下的亦即`base`环境中的`python`) 而不是`tensorflow`环境下的`python`, 此时, 如果`base`里没有`tensorflow`, 那么`import tensorflow`就会找不到`module`, 这就是开头的警告产生的原因.
 
 接下来再在新环境中安装一些开发用的包吧.
@@ -58,7 +56,6 @@ conda install jupyterlab spyder
 ```powershell
 echo "conda activate tensorflow" >> $profile
 ```
-
 
 总结:
 
@@ -74,4 +71,3 @@ echo "conda activate tensorflow" >> $profile
 conda create --name newname --clone oldname
 conda remove --name oldname --all
 ```
-

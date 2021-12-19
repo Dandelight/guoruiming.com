@@ -1,6 +1,6 @@
-伯克利大学的系列作品`Dex-Net`，号称能够达到95%的准确率。
+伯克利大学的系列作品`Dex-Net`，号称能够达到 95%的准确率。
 
-`dex-net 4.0`官网在[https://berkeleyautomation.github.io/dex-net/](https://berkeleyautomation.github.io/dex-net/)，训练使用的数据集可以在[这里](https://berkeley.app.box.com/s/6mnb2bzi5zfa7qpwyn7uq5atb7vbztng)下载到，文件极大（训练一个模型8GB数据，一共十多个模型），请在网络优良的情况下下载。
+`dex-net 4.0`官网在[https://berkeleyautomation.github.io/dex-net/](https://berkeleyautomation.github.io/dex-net/)，训练使用的数据集可以在[这里](https://berkeley.app.box.com/s/6mnb2bzi5zfa7qpwyn7uq5atb7vbztng)下载到，文件极大（训练一个模型 8GB 数据，一共十多个模型），请在网络优良的情况下下载。
 
 ---
 
@@ -14,13 +14,11 @@
 
 我也不知道为什么`dex-net 4.0`没有把
 
-
-
-我觉得可以做一个多head的输出。
+我觉得可以做一个多 head 的输出。
 
 ![image-20211118014501533](media/sendmail/image-20211118014501533.png)
 
-所以从这张图来看，`dex-net 4.0`最主要的改进是增加了`Abibdextrous Policy`以确定以何种机械臂执行抓取。从其目的来看很像一个Ensemble方法。
+所以从这张图来看，`dex-net 4.0`最主要的改进是增加了`Abibdextrous Policy`以确定以何种机械臂执行抓取。从其目的来看很像一个 Ensemble 方法。
 
 至于代码，洋洋洒洒几千行代码，大部分却是在填`TensorFlow`的坑。唯一看来有用的，就只有以下一段定义神经网络的`YAML`文件了：
 
@@ -39,7 +37,7 @@ gqcnn:
 
   # method by which to integrate depth into the network
   input_depth_mode: im_depth_sub
-  
+
   # used for training with multiple angular predictions
   angular_bins: 16
 
@@ -105,4 +103,3 @@ gqcnn:
   relu_coeff: 0.0
 
 ```
-

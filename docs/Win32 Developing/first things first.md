@@ -1,18 +1,16 @@
 哔哩哔哩倍速，懂得都懂。
 
 ```javascript
-document.querySelector('video').playbackRate = 3 
+document.querySelector("video").playbackRate = 3;
 ```
 
 首先让我们来看一看一个完整的`Windows`窗口程序是如何构成的。
 
-第一部分：Windows基础
+第一部分：Windows 基础
 
 第二部分：MDI、多线程、数据库
 
 第三部分：图片等
-
-
 
 https://docs.microsoft.com
 
@@ -25,11 +23,7 @@ int main() {
 }
 ```
 
-
-
 ## firstwindow
-
-
 
 ```cpp
 #include<windows.h>
@@ -40,11 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 }
 ```
 
-
-
-
-
-unicode 
+unicode
 
 ![image-20211114092232613](media/first things first/image-20211114092232613.png)
 
@@ -127,23 +117,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) 
 }
 ```
 
-
-
 Windows
 
-windows到处都是窗口编程
-
-
+windows 到处都是窗口编程
 
 ![image-20211114094242197](media/first things first/image-20211114094242197.png)
 
-
-
-Windows是一个事件驱动、基于消息的操作系统
+Windows 是一个事件驱动、基于消息的操作系统
 
 ![image-20211114094343447](media/first things first/image-20211114094343447.png)
-
-
 
 ![image-20211114101321216](media/first things first/image-20211114101321216.png)
 
@@ -153,7 +135,7 @@ Windows是一个事件驱动、基于消息的操作系统
 
 ![image-20211114103938296](media/first things first/image-20211114103938296.png)
 
-方法1适用于MS_PAINT，方法2适用于任何时候
+方法 1 适用于 MS_PAINT，方法 2 适用于任何时候
 
 ![image-20211114104153178](media/first things first/image-20211114104153178.png)
 
@@ -177,6 +159,4 @@ Windows是一个事件驱动、基于消息的操作系统
 
 ![image-20211114110101639](media/first things first/image-20211114110101639.png)
 
-
-
- ![image-20211114110514430](media/first things first/image-20211114110514430.png)
+![image-20211114110514430](media/first things first/image-20211114110514430.png)

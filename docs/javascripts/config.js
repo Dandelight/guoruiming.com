@@ -2,19 +2,31 @@
 
 window.MathJax = {
   tex: {
-    inlineMath: [['\\(', '\\)'], ['$', '$']],
-    displayMath: [['\\[', '\\]'], ['$$', '$$']],
+    inlineMath: [
+      ["\\(", "\\)"],
+      ["$", "$"],
+    ],
+    displayMath: [
+      ["\\[", "\\]"],
+      ["$$", "$$"],
+    ],
     processEscapes: true,
-    processEnvironments: true
+    processEnvironments: true,
   },
-  options: {ignoreHtmlClass: '.*|', processHtmlClass: 'arithmatex'}
+  options: { ignoreHtmlClass: ".*|", processHtmlClass: "arithmatex" },
 };
 
-document$.subscribe(() => {MathJax.typesetPromise()})
+document$.subscribe(() => {
+  MathJax.typesetPromise();
+});
 
 // highlight.js
-document$.subscribe(() => {hljs.highlightAll()})
+document$.subscribe(() => {
+  hljs.highlightAll();
+});
 
 // mermaid.js
 // 每次Instant Reload之后重渲染Mermaid
-document$.subscribe(() => {mermaid.init()})
+document$.subscribe(() => {
+  mermaid.init();
+});

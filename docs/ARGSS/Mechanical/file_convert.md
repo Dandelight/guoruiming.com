@@ -4,8 +4,6 @@
 
 还有，要养成时不时按<kbd>ctrl</kbd>+<kbd>s</kbd>的习惯。
 
-
-
 1. 在`SolidWorks`中安装`SimScape`插件
 2. 激活插件并设置成运行时自启动
 3. 建模

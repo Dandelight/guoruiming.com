@@ -40,7 +40,7 @@ COPY [--chown=<user>:<group>] {"<源路径1>",...  "<目标路径>"}
 
 #### `CMD`
 
-在`docker run`时默认执行，但`docker run`带有命令行参数时会被overridden。
+在`docker run`时默认执行，但`docker run`带有命令行参数时会被 overridden。
 
 #### `ENTRYPOINT`
 
@@ -118,7 +118,7 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-
 
 ### 熟悉
 
-`Compose`是一个用于定义并运行由多个`Docker`容器聚合成的应用的工具，广泛用于生产、测试、开发、CI工作流等环节。相当于把鲸鱼装进了冰箱。
+`Compose`是一个用于定义并运行由多个`Docker`容器聚合成的应用的工具，广泛用于生产、测试、开发、CI 工作流等环节。相当于把鲸鱼装进了冰箱。
 
 要把鲸鱼装冰箱，一共分三步：
 
@@ -129,7 +129,7 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-
 `docker-compose`文件为`YAML`格式，范例如下：
 
 ```yaml
-version: "3.9"  # optional since v1.27.0
+version: "3.9" # optional since v1.27.0
 services:
   web:
     build: .
@@ -146,10 +146,8 @@ volumes:
   logvolume01: {}
 ```
 
-总之，`docker compose`是介于`docker build`和`docker run`之间的中间件，既可以指定`arg`、`env`、`entrypoint`、`expose`等`Dockerfile`中的标定，又可以进行镜像的运行和组网，是生产自动化的高效工具。
+总之，`docker compose`是介于`docker build`和`docker run`之间的中间件，既可以指定`arg`、`env`、`entrypoint`、`expose`等`Dockerfile`中的标定，又可以进行镜像的运行和组网，是生产自动化的高效工具。
 
 中间的内容，随着项目的进行会不断增加，欢迎关注~
-
-
 
 不过话说回来，知识是会贬值的，学到的不赶紧用就浪费了。

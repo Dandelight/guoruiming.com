@@ -4,7 +4,7 @@
 
 ## 数据集获取
 
-[官方的下载地址](http://pr.cs.cornell.edu/deepgrasping)连它的域名一起挂掉了，只有[Kaggle上可以下载到](https://www.kaggle.com/oneoneliu/cornell-grasp)。
+[官方的下载地址](http://pr.cs.cornell.edu/deepgrasping)连它的域名一起挂掉了，只有[Kaggle 上可以下载到](https://www.kaggle.com/oneoneliu/cornell-grasp)。
 
 ## 数据格式
 
@@ -96,7 +96,7 @@ DATA ascii
 
 `COUNT`：每个`field`的数据数，也就是对应多少列
 
-`WIDTH`和`HEIGHT`：如果`height`为1，则`width`为数据点的数目；否则，两个数是正常的图片宽高。
+`WIDTH`和`HEIGHT`：如果`height`为 1，则`width`为数据点的数目；否则，两个数是正常的图片宽高。
 
 `VIEWPOINT`：视点，观测者的位置，以`translation (tx ty tz) + quaternion (qw qx qy qz)`的形式表达，默认值是`0 0 0 1 0 0 0`。
 
@@ -145,9 +145,5 @@ pcshow(ptCloud);
 在`MATLAB`中，点云处理处于`Computer Vision Toolbox`的一部分，详见https://ww2.mathworks.cn/help/vision/point-cloud-processing.html。
 
 要不，咱们先跑一个点云上的分类？
-
-
-
-
 
 TODO：跟原作者要一张背景图片

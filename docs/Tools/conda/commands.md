@@ -23,9 +23,9 @@ conda env export >> environment.yml
 conda env create -f environment.yml
 ```
 
-安装模块包下载速度过慢或安装失败问题可使用国内conda源加速。
+安装模块包下载速度过慢或安装失败问题可使用国内 conda 源加速。
 
-**国内知名conda源**：
+**国内知名 conda 源**：
 
 - 清华开源软件镜像网站：https://mirror.tuna.tsinghua.edu.cn/
 - 中科大开源软件镜像：https://mirrors.ustc.edu.cn/anaconda
@@ -36,20 +36,17 @@ conda env create -f environment.yml
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/# 搜索时显示通道地址conda config --set show_channel_urls yes
 ```
 
-
 ```
 #切换中科大源:
 conda config --add channels https://mirrors.ustc.edu.cn/anaconda/pkgs/main/conda config --add channels https://mirrors.ustc.edu.cn/anaconda/pkgs/free/conda config --add channels https://mirrors.ustc.edu.cn/anaconda/cloud/conda-forge/conda config --add channels https://mirrors.ustc.edu.cn/anaconda/cloud/msys2/conda config --add channels https://mirrors.ustc.edu.cn/anaconda/cloud/bioconda/# 搜索时显示通道地址 conda config --set show_channel_urls yes
 ```
-
 
 ```
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
 conda config --set show_channel_urls yes
 ```
 
-
-## pip常用命令:
+## pip 常用命令:
 
 ```shell
 #安装模块包：

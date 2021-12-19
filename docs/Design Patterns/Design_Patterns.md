@@ -142,10 +142,10 @@ class NoSuchCourseException extends Exception {
 
 #### 参与者
 
--   Builder：抽象建造者
--   Concrete Builder：具体建造者
--   Director：指挥者
--   Product：产品
+- Builder：抽象建造者
+- Concrete Builder：具体建造者
+- Director：指挥者
+- Product：产品
 
 ```java
 public class Main {
@@ -199,10 +199,10 @@ class Manufactor {
 
 #### 角色
 
--   抽象工厂：所有工厂类的接口
--   具体工厂：负责创建具体对象
--   抽象产品：被程序依赖
--   具体产品：具体执行工作的产品
+- 抽象工厂：所有工厂类的接口
+- 具体工厂：负责创建具体对象
+- 抽象产品：被程序依赖
+- 具体产品：具体执行工作的产品
 
 ![image-20211218143808459](media/Design_Patterns/image-20211218143808459.png)
 
@@ -335,10 +335,10 @@ class Singleton {
 
 #### 角色
 
--   抽象 Abstraction
--   修正抽象 Refined Abstraction
--   实现 Implementation
--   具体实现 Concrete Implementation
+- 抽象 Abstraction
+- 修正抽象 Refined Abstraction
+- 实现 Implementation
+- 具体实现 Concrete Implementation
 
 ![image-20211218153358214](media/Design_Patterns/image-20211218153358214.png)
 
@@ -404,8 +404,8 @@ class ConcreteDecorator implements Decorator {
 
 #### 角色
 
--   门面 Facade
--   子系统 Subsystem
+- 门面 Facade
+- 子系统 Subsystem
 
 ![image-20211218160138475](media/Design_Patterns/image-20211218160138475.png)
 
@@ -424,11 +424,11 @@ class ConcreteDecorator implements Decorator {
 
 #### 角色
 
--   享元 Flyweight：享元的接口
--   具体享元 ConcreteFlyweight：共享享元
--   非共享具体享元：并非每个享元都是共享的
--   享元工厂 FlyweightFactory
--   用户 Client 维护一个享元的引用并计算或存储享元的内部状态
+- 享元 Flyweight：享元的接口
+- 具体享元 ConcreteFlyweight：共享享元
+- 非共享具体享元：并非每个享元都是共享的
+- 享元工厂 FlyweightFactory
+- 用户 Client 维护一个享元的引用并计算或存储享元的内部状态
 
 ```java
 import java.io.FileInputStream;
@@ -1101,19 +1101,19 @@ class ConcreteClass extends AbstractClass {
 
 优点
 
--   它封装了不变部分，扩展可变部分。它把认为是不变部分的算法封装到父类中实现，而
-    把可变部分算法由子类继承实现，便于子类继续扩展。
--   它在父类中提取了公共的部分代码，便于代码复用。
--   部分方法是由子类实现的，因此子类可以通过扩展方式增加相应的功能，符合开闭原则
-    。
+- 它封装了不变部分，扩展可变部分。它把认为是不变部分的算法封装到父类中实现，而
+  把可变部分算法由子类继承实现，便于子类继续扩展。
+- 它在父类中提取了公共的部分代码，便于代码复用。
+- 部分方法是由子类实现的，因此子类可以通过扩展方式增加相应的功能，符合开闭原则
+  。
 
 缺点
 
--   对每个不同的实现都需要定义一个子类，这会导致类的个数增加，系统更加庞大，设计
-    也更加抽象，间接地增加了系统实现的复杂度。
--   父类中的抽象方法由子类实现，子类执行的结果会影响父类的结果，这导致一种反向的
-    控制结构，它提高了代码阅读的难度。
--   由于继承关系自身的缺点，如果父类添加新的抽象方法，则所有子类都要改一遍。
+- 对每个不同的实现都需要定义一个子类，这会导致类的个数增加，系统更加庞大，设计
+  也更加抽象，间接地增加了系统实现的复杂度。
+- 父类中的抽象方法由子类实现，子类执行的结果会影响父类的结果，这导致一种反向的
+  控制结构，它提高了代码阅读的难度。
+- 由于继承关系自身的缺点，如果父类添加新的抽象方法，则所有子类都要改一遍。
 
 ### Visitor 访问者模式
 

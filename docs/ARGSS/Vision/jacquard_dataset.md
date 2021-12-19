@@ -1,7 +1,5 @@
 [JACQUARD dataset](https://jacquard.liris.cnrs.fr/)
 
-
-
 > Standford Grasping：10 object，13747 RGB Images，13747 Depth Images
 >
 > Cornell Grasping：240 object，885 RGB Images，885 Depth Images
@@ -34,6 +32,7 @@
 >
 > 3、Deep reinforcement learning for vision-based robotic grasping: Asimulated comparative evaluation of offpolicy methods.
 >
-> ------------------------------------------------
-> 版权声明：本文为CSDN博主「3Ｄ视觉工坊」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+> ---
+>
+> 版权声明：本文为 CSDN 博主「3 Ｄ视觉工坊」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
 > 原文链接：https://blog.csdn.net/Yong_Qi2015/article/details/104352197

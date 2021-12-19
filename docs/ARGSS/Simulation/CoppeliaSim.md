@@ -12,10 +12,6 @@
 
 ![image-20211004104443744](media/CoppeliaSim/image-20211004104443744.png)
 
-
-
-
-
 ## References
 
 https://cloud.tencent.com/developer/inventory/491

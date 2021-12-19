@@ -12,7 +12,7 @@ systemctl start docker
 
 ```json
 {
-    "registry-mirrors": ["http://hub-mirror.c.163.com"]
+  "registry-mirrors": ["http://hub-mirror.c.163.com"]
 }
 ```
 
@@ -110,7 +110,7 @@ mysql-lable   docker-entrypoint.sh mysqld   Up      0.0.0.0:3306->3306/tcp
 
 5、测试
 
-进入容器，使用密码登录数据库，并查看数据库有没有创建所指定的库，库里面有没有导入你的sql数据
+进入容器，使用密码登录数据库，并查看数据库有没有创建所指定的库，库里面有没有导入你的 sql 数据
 
 ```text
 ### docker exec -it {容器ID | 容器名(使用docker ps查看)} /bin/bash

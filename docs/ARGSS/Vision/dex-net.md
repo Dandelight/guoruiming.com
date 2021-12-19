@@ -1,4 +1,4 @@
-伯克利大学研发的`dex-net`系列宣称对不规则物体的抓取率达到了99%，在`dex-net 4.0`称对不规则物体的抓取成功率达到了95%，对于仓储物流业等需要分拣大量物体的行业来说无疑是个非常重要的技术突破。
+伯克利大学研发的`dex-net`系列宣称对不规则物体的抓取率达到了 99%，在`dex-net 4.0`称对不规则物体的抓取成功率达到了 95%，对于仓储物流业等需要分拣大量物体的行业来说无疑是个非常重要的技术突破。
 
 `dex-net 1.0`采用多视角卷积神经网络。
 
@@ -87,7 +87,7 @@ gqcnn:
 
   # method by which to integrate depth into the network
   input_depth_mode: im_depth_sub
-  
+
   # used for training with multiple angular predictions
   angular_bins: 16
 
@@ -243,4 +243,3 @@ gqcnn:
   # leaky relu coefficient
   relu_coeff: 0.0
 ```
-

@@ -2,23 +2,20 @@
 
 [IEEE Xploer](https://ieeexplore.ieee.org/)暂时登录不上（HTTP 500），先把引文放在这里。【2021/10/17 12:55】
 
-Joseph Redmon的早期论文https://arxiv.org/abs/1412.3128v2中在[康奈尔抓取数据集](https://aistudio.baidu.com/aistudio/datasetdetail/27422)上进行实验，使用AlexNet作为骨干网络。对其进行[引文追踪](https://www.scopus.com/results/citedbyresults.uri?sort=plf-f&cite=2-s2.0-84938282388&src=s&imp=t&sid=3ef6556912b6717d7f7e21b6aeacb6e7&sot=cite&sdt=a&sl=0&origin=inward&editSaveSearch=&txGid=3b22f907e4bee2966cc2936b2225c198)，发现SOTA。
+Joseph Redmon 的早期论文https://arxiv.org/abs/1412.3128v2中在[康奈尔抓取数据集](https://aistudio.baidu.com/aistudio/datasetdetail/27422)上进行实验，使用AlexNet作为骨干网络。对其进行[引文追踪](https://www.scopus.com/results/citedbyresults.uri?sort=plf-f&cite=2-s2.0-84938282388&src=s&imp=t&sid=3ef6556912b6717d7f7e21b6aeacb6e7&sot=cite&sdt=a&sl=0&origin=inward&editSaveSearch=&txGid=3b22f907e4bee2966cc2936b2225c198)，发现SOTA。
 
-或者也可以去Papers with Code上看[排行榜]（https://paperswithcode.com/sota/robotic-grasping-on-cornell-grasp-dataset-1
+或者也可以去 Papers with Code 上看[排行榜]（https://paperswithcode.com/sota/robotic-grasping-on-cornell-grasp-dataset-1
 
 Comprehensive Review on Reaching and Grasping of Objects in Robotics https://www.cambridge.org/core/journals/robotica/article/comprehensive-review-on-reaching-and-grasping-of-objects-in-robotics/527CD405F6D4509DEF52FBA3A5E317FE
 
 https://ieeexplore.ieee.org/document/8954887/ 水面清洁无人船？
 
-
-
-> 在Cornell抓取的数据集中有两个正样本txt文件中标注是NaN，在进行训练时会导致出错，这两个文件分别为pcd0132cpos.txt和pcd0165cpos.txt。由于其标注方式为每行表示一个点，每4行表示一个抓取框，因此只需要删除掉标注为NaN所在的抓取框相关的4行即可。
-> 
-> ------------------------------------------------
-> 版权声明：本文为CSDN博主「不会写代码的完结」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+> 在 Cornell 抓取的数据集中有两个正样本 txt 文件中标注是 NaN，在进行训练时会导致出错，这两个文件分别为 pcd0132cpos.txt 和 pcd0165cpos.txt。由于其标注方式为每行表示一个点，每 4 行表示一个抓取框，因此只需要删除掉标注为 NaN 所在的抓取框相关的 4 行即可。
+>
+> ---
+>
+> 版权声明：本文为 CSDN 博主「不会写代码的完结」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
 > 原文链接：https://blog.csdn.net/qq_35218039/article/details/104296240
-
-
 
 转载一些机械臂控制的开源项目
 
@@ -32,7 +29,7 @@ https://ieeexplore.ieee.org/document/8954887/ 水面清洁无人船？
 
 [http://blog.exbot.net/archives/3337](https://link.zhihu.com/?target=http%3A//blog.exbot.net/archives/3337)
 
-2. CSDN上一个博主写的抓取、机械臂控制、机械臂抓取的代码解析：
+2. CSDN 上一个博主写的抓取、机械臂控制、机械臂抓取的代码解析：
 
 [https://blog.csdn.net/zzu_seu/article/details/94617814](https://link.zhihu.com/?target=https%3A//blog.csdn.net/zzu_seu/article/details/94617814)
 
@@ -50,9 +47,7 @@ https://ieeexplore.ieee.org/document/8954887/ 水面清洁无人船？
 
 ![img](media/Mechanical/v2-e24ce4067b34ebfce4154fa723f06f51_720w.jpg)
 
-
-
-2. 分别通过VERP仿真、UR5，实现了机械臂的抓取。
+2. 分别通过 VERP 仿真、UR5，实现了机械臂的抓取。
 
 代码地址：[https://github.com/andyzeng/visual-pushing-grasping](https://link.zhihu.com/?target=https%3A//github.com/andyzeng/visual-pushing-grasping)
 
@@ -64,7 +59,7 @@ https://ieeexplore.ieee.org/document/8954887/ 水面清洁无人船？
 
 论文：Deep Learning for Detecting Robotic Grasps
 
-通过matlab实现。
+通过 matlab 实现。
 
 ![img](media/Mechanical/v2-4d30efa4e9890d4f45f7a7b4c035f351_720w.jpg)
 
@@ -72,15 +67,11 @@ https://ieeexplore.ieee.org/document/8954887/ 水面清洁无人船？
 
 论文：Closing the Loop for Robotic Grasping: A Real-time, Generative Grasp Synthesis Approach
 
-
-
-5. 在GAZEBO仿真中，实现的机器人抓取
+5. 在 GAZEBO 仿真中，实现的机器人抓取
 
 [https://github.com/jsbruglie/grasp](https://link.zhihu.com/?target=https%3A//github.com/jsbruglie/grasp)
 
 ![img](media/Mechanical/v2-6a2445bf0667810108231d739850fded_720w.jpg)
-
-
 
 6. 此项目在[Amazon Robotics Challenge](https://www.zhihu.com/question/268984064#/roboticschallenge)2017（[https://www.amazonrobotics.com/#/](https://www.zhihu.com/question/268984064#/)）中拿到了第一名。
 
@@ -90,15 +81,15 @@ https://ieeexplore.ieee.org/document/8954887/ 水面清洁无人船？
 
 ![img](media/Mechanical/v2-c7262230a028787cb1c3d27d1a2d1667_720w.jpg)
 
-7. 通过ROS2实现的机器人抓取
+7. 通过 ROS2 实现的机器人抓取
 
 [https://github.com/JuFengWu/techman_robot_grasp_ros2](https://link.zhihu.com/?target=https%3A//github.com/JuFengWu/techman_robot_grasp_ros2)
 
-8. 通过ROS实现UR机器人抓取。
+8. 通过 ROS 实现 UR 机器人抓取。
 
 [https://github.com/chjohnkim/MaskRCNN_Grasp_Detection/tree/master/maskrcnn](https://link.zhihu.com/?target=https%3A//github.com/chjohnkim/MaskRCNN_Grasp_Detection/tree/master/maskrcnn)
 
-9. 通过ROS实现带有机械臂的移动机器人抓取。
+9. 通过 ROS 实现带有机械臂的移动机器人抓取。
 
 [https://github.com/nkuzqy/move_and_grasp]()
 
@@ -110,23 +101,13 @@ https://ieeexplore.ieee.org/document/8954887/ 水面清洁无人船？
 
 [机械手抓取](https://www.zhihu.com/topic/20077057)
 
+一系列 CoppeliaSim 参考
 
-
-
-
-一系列CoppeliaSim参考
-
-[Vrep机器人动力学建模仿真-知乎专栏](https://zhuanlan.zhihu.com/c_156026799)
+[Vrep 机器人动力学建模仿真-知乎专栏](https://zhuanlan.zhihu.com/c_156026799)
 
 [V-REP（CoppeliaSim）自学笔记-腾讯云](https://cloud.tencent.com/developer/inventory/491)
 
-
-
-
-
-[DYOR](http://dyor.roboticafacil.es/)：葡萄牙[Armesto Ángel, Leopoldo](http://www.upv.es/ficha-personal/leoaran)做的一个开源机器人，可以在CoppeliaSim里做出来。[视频教程（YouTube）](https://www.youtube.com/playlist?list=PLjzuoBhdtaXOoqkJUqhYQletLLnJP8vjZ) [B站搬运](https://www.bilibili.com/video/BV1uK4y137sN)
-
-
+[DYOR](http://dyor.roboticafacil.es/)：葡萄牙[Armesto Ángel, Leopoldo](http://www.upv.es/ficha-personal/leoaran)做的一个开源机器人，可以在 CoppeliaSim 里做出来。[视频教程（YouTube）](https://www.youtube.com/playlist?list=PLjzuoBhdtaXOoqkJUqhYQletLLnJP8vjZ) [B 站搬运](https://www.bilibili.com/video/BV1uK4y137sN)
 
 ```
 Scopus
@@ -135,7 +116,7 @@ Scopus
 Yu, Q., Shang, W., Zhao, Z., Cong, S., Li, Z.
 56067482600;23470800900;57208215166;7005067661;57218308705;
 Robotic Grasping of Unknown Objects Using Novel Multilevel Convolutional Neural Networks: From Parallel Gripper to Dexterous Hand
-(2021) IEEE Transactions on Automation Science and Engineering, 18 (4), pp. 1730-1741. 
+(2021) IEEE Transactions on Automation Science and Engineering, 18 (4), pp. 1730-1741.
 https://www.scopus.com/inward/record.uri?eid=2-s2.0-85090452520&doi=10.1109%2fTASE.2020.3017022&partnerID=40&md5=719814a5140511d1d5a5878cf8987756
 
 DOI: 10.1109/TASE.2020.3017022
@@ -162,7 +143,7 @@ DOI: 10.1007/s12652-020-02843-w
 
 Comprehensive Review on Reaching and Grasping of Objects in Robotics
 
-基于改进CenterNet的机械臂抓取检测
+基于改进 CenterNet 的机械臂抓取检测
 
 Robot grasp detection using multimodal deep convolutional neural networks
 

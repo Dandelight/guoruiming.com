@@ -10,7 +10,4 @@
 
 [还有一篇奇怪的文章](https://www.bilibili.com/read/cv12505828)
 
-
-
-[暨南大学MOOC](https://www.icourse163.org/course/JNU-1207113806)
-
+[暨南大学 MOOC](https://www.icourse163.org/course/JNU-1207113806)
