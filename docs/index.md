@@ -4,24 +4,21 @@
 
 网站服务器使用`NginX`（[自己写的那个](https://gitee.com/dandelight/enging/)在返回`Content-Type`时有问题已经在重制了），集成了`WebHooks`，不过因为`NginX`设置了10秒的缓存，所以刷新需要一段时间。
 
-### 学习与项目
+## 学习与项目
 
 列了一系列项目，有自己做的，有自己没有充足的时间做的，**不是挖坑不填，实在填不过来**，希望有志同道合之人可与我同行。`Gitee`地址：https://gitee.com/dandelight/。
 
-生活垃圾资源化系统（Automated Recyclable Garbage Sorting System，ARGSS）
+* 生活垃圾资源化系统（Automated Recyclable Garbage Sorting System，ARGSS）
+* LISTEN耳阅读屏
+* 基于PointNet的点云目标检测
 
-LISTEN耳阅读屏
+## Featured Research
 
-UNet+++++
+* 机械臂抓取位点的计算机视觉方法确定
 
-### Featured Research
+## 课程
 
-机械臂抓取位点的计算机视觉方法确定
-
-### 课程
-
-计算机网络
-
-现代软件工程
-
-数据库系统原理
+* 研究与开发实践
+* 计算机网络
+* 现代软件工程
+* 数据库系统原理
