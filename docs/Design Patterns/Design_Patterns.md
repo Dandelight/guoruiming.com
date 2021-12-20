@@ -117,6 +117,34 @@ class NoSuchCourseException extends Exception {
 
 ![image-20211218135116744](media/Design_Patterns/image-20211218135116744.png)
 
+```mermaid
+classDiagram
+	class AbstractProductA
+	class AbstractProductB
+	class ConcreteProductAWithFamilyA
+	class ConcreteProductBWithFamilyA
+	class ConcreteProductAWithFamilyB
+	class ConcreteProductBWithFamilyB
+	class AbstractFactory
+	class ConcreteFactoryA
+	class ConcreteFactoryB
+	class Client
+
+	Client ..> ConcreteFactoryA
+	Client ..> ConcreteFactoryB
+	ConcreteFactoryA ..|> AbstractFactory
+	ConcreteFactoryB ..|> AbstractFactory
+	ConcreteProductAWithFamilyA ..|> AbstractProductA
+    ConcreteProductBWithFamilyA ..|> AbstractProductB
+	ConcreteProductAWithFamilyB ..|> AbstractProductA
+    ConcreteProductBWithFamilyB ..|> AbstractProductB
+
+    ConcreteFactoryA --> ConcreteProductAWithFamilyA
+    ConcreteFactoryA --> ConcreteProductBWithFamilyA
+    ConcreteFactoryB --> ConcreteProductAWithFamilyB
+    ConcreteFactoryB --> ConcreteProductBWithFamilyB
+```
+
 抽象工厂用于由多个产品组成的产品族构建的系统的创建。系统应该与具体的产品独立，对
 于具体的产品，隐藏其实现而只暴露其接口。
 
