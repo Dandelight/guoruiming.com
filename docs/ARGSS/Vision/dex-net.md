@@ -14,6 +14,8 @@
 
 `dex-net 4.0`作为集成，提出了`Ambidextrous grasping`，在分别训练的`Parallel Jaw`和`Suction`机械臂头的基础上提出了`Ambidextrous Policy`，从两种机械臂中选取一种抓取成功率更高的进行抓取。
 
+> A robot with an overhead depth camera views a heap of novel objects in a bin. On grasp attempt t, a robot observes a point cloud $y_t$ from the depth camera. The robot uses a policy $u_t = p(y_t)$ to plan a grasp action $u_t$ for a gripper g consisting of a 3D rigid position and orientation of the gripper $T_g = (R_g, t_g) ∈ SE (3)$. Upon executing $u_t$, the robot receives a reward $R_t = 1$ if it successfully lifts and transports exactly one object from the bin to a receptacle and $R_t = 0$ otherwise.
+
 ![image-20211118021145462](media/dex-net/image-20211118021145462.png)
 
 至于`GQ-CNN`的代码，虽然说洋洋洒洒几千行，其实大多是给`TensorFlow`填本来该开发者填的坑。`TensorFlow 1`暴露了太多底层`API`，大部分代码都是用来编写自己的类的。我仔细阅读了一下，发现有用的只有下面一段`YAML`：
@@ -243,3 +245,6 @@ gqcnn:
   # leaky relu coefficient
   relu_coeff: 0.0
 ```
+
+[^dex-net4]: https://www.science.org/doi/10.1126/scirobotics.aau4984
+[^dex-net]: https://berkeleyautomation.github.io/dex-net/
