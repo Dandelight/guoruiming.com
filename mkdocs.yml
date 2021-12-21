@@ -1,5 +1,5 @@
 theme:
-  name: 'material'
+  name: "material"
   language: zh
   features:
     - navigation.instant
@@ -11,6 +11,33 @@ markdown_extensions:
   - pymdownx.magiclink
   - pymdownx.highlight:
       use_pygments: false
+  - admonition
+  # - codehilite:
+  #     guess_lang: false
+  #     linenums: true
+  - toc:
+      permalink: true
+  - footnotes
+  - meta
+  - def_list
+  # - pymdownx.betterem:
+  #     smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_png
+        # emoji_generator: !!python/name:pymdownx.emoji.to_svg
+        # emoji_generator: !!python/name:pymdownx.emoji.to_png_sprite
+        # emoji_generator: !!python/name:pymdownx.emoji.to_svg_sprite
+        # emoji_generator: !!python/name:pymdownx.emoji.to_awesome
+        # emoji_generator: !!python/name:pymdownx.emoji.to_alt
+
+  - pymdownx.inlinehilite
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.tasklist
+  - pymdownx.tilde
 
 repo_url: https://gitee.com/dandelight/blog
 repo_name: dandelight/blog
