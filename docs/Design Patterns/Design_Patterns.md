@@ -312,7 +312,7 @@ classDiagram
 	IProduct <|-- ProductB
 	IFactory <|-- FactoryA
 	IFactory <|-- FactoryB
-	
+
 	ProductA <.. FactoryA : Creates
 	ProductB <.. FactoryB : Creates
 ```
@@ -435,6 +435,33 @@ classDiagram
 
 实现目标接口，内部持有被适配对象实例
 
+```java
+public class Main {
+  public static void main(String[] args) {
+    Target target = new ClassAdapter();
+    target.request();
+  }
+}
+
+interface Target {
+  public void request();
+}
+
+class Adaptee {
+  public void specificRequest() {
+    System.out.println("Adaptee called!");
+  }
+}
+
+class ClassAdapter extends Adaptee implements Target {
+  @Override
+  public void request() {
+    specificRequest();
+    System.out.println("Adapted");
+  }
+}
+```
+
 #### 接口适配器
 
 接口适配器与类适配器、对象适配器不同，其目标主要是在目标接口过多时，简化接口
@@ -462,12 +489,12 @@ classDiagram
 classDiagram
 	class Implementor {<<interface>>}
 	class Abstraction
-	
+
 	Implementor <--* Abstraction
 	Implementor <|.. ConcreteImplA
 	Implementor <|.. ConcreteImplB
 	Abstraction <|-- RefinedAbst
-	
+
 	RefinedAbst <.. Client
 	ConcreteImplA <.. Client
 ```
@@ -534,8 +561,8 @@ classDiagram
 	Component <|-- ConcreteComponent
 	Decorator <|-- ConcreteDecoratorA
 	Decorator <|-- ConcreteDecoratorB
-	
-	
+
+
 	ConcreteDecoratorA <.. Client
 	ConcreteDecoratorB <.. Client
 	ConcreteComponent <.. Client
@@ -568,8 +595,6 @@ classDiagram
 	SubSystemC <--* Facade
 	Facade <.. Client : Creates
 ```
-
-
 
 ### Flyweight 享元模式
 
@@ -798,8 +823,6 @@ classDiagram
 	InvocationHandler <|.. JDKAOP
 ```
 
-
-
 #### AOP(Aspect Oriented Programming，面向切面编程)
 
 程序在运行时，动态的将代码切入到类的指定方法或者说指定位置上
@@ -967,19 +990,19 @@ public class ValidateHandler extends Handler {
 
 优点
 
-* 降低了对象之间的耦合度。该模式使得一个对象无须知道到底是哪一个对象处理其请求以
+- 降低了对象之间的耦合度。该模式使得一个对象无须知道到底是哪一个对象处理其请求以
   及链的结构，发送者和接收者也无须拥有对方的明确信息。
-* 增强了系统的可扩展性。可以根据需要增加新的请求处理类，满足开闭原则。
-* 增强了给对象指派职责的灵活性。当工作流程发生变化，可以动态地改变链内的成员或者调动它们的次序，也可动态地新增或者删除责任。
-* 责任链简化了对象之间的连接。每个对象只需保持一个指向其后继者的引用，不需保持其他所有处理者的引用，这避免了使用众多的 if 或者 if···else 语句。
-* 责任分担。每个类只需要处理自己该处理的工作，不该处理的传递给下一个对象完成，明确各类的责任范围，符合类的单一职责原则。
+- 增强了系统的可扩展性。可以根据需要增加新的请求处理类，满足开闭原则。
+- 增强了给对象指派职责的灵活性。当工作流程发生变化，可以动态地改变链内的成员或者调动它们的次序，也可动态地新增或者删除责任。
+- 责任链简化了对象之间的连接。每个对象只需保持一个指向其后继者的引用，不需保持其他所有处理者的引用，这避免了使用众多的 if 或者 if···else 语句。
+- 责任分担。每个类只需要处理自己该处理的工作，不该处理的传递给下一个对象完成，明确各类的责任范围，符合类的单一职责原则。
 
 缺点
 
-* 不能保证每个请求一定被处理。由于一个请求没有明确的接收者，所以不能保证它一定会
+- 不能保证每个请求一定被处理。由于一个请求没有明确的接收者，所以不能保证它一定会
   被处理，该请求可能一直传到链的末端都得不到处理。
-* 对比较长的职责链，请求的处理可能涉及多个处理对象，系统性能将受到一定影响。
-* 职责链建立的合理性要靠客户端来保证，增加了客户端的复杂性，可能会由于职责链的错误设置而导致系统出错，如可能会造成循环调用。
+- 对比较长的职责链，请求的处理可能涉及多个处理对象，系统性能将受到一定影响。
+- 职责链建立的合理性要靠客户端来保证，增加了客户端的复杂性，可能会由于职责链的错误设置而导致系统出错，如可能会造成循环调用。
 
 ### Command 命令模式
 
@@ -999,19 +1022,25 @@ public class ValidateHandler extends Handler {
 
 优点
 
-* 通过引入中间件（抽象接口）降低系统的耦合度。
-* **扩展性良好**，增加或删除命令非常方便。采用命令模式增加与删除命令不会影响其他
+- 通过引入中间件（抽象接口）降低系统的耦合度。
+- **扩展性良好**，增加或删除命令非常方便。采用命令模式增加与删除命令不会影响其他
   类，且**满足“开闭原则”**。
-* 可以实现宏命令。命令模式可以与组合模式结合，将多个命令装配成一个组合命令，即宏
+- 可以实现宏命令。命令模式可以与组合模式结合，将多个命令装配成一个组合命令，即宏
   命令。
-* **方便实现** **Undo** 和 **Redo** **操作**。命令模式可以与后面介绍的备忘录模式结合，实现命令的撤销与恢复。
-* 可以在现有命令的基础上，增加额外功能。比如日志记录，结合装饰器模式会更加灵活。
+- **方便实现** **Undo** 和 **Redo** **操作**。命令模式可以与后面介绍的备忘录模式结合，实现命令的撤销与恢复。
+- 可以在现有命令的基础上，增加额外功能。比如日志记录，结合装饰器模式会更加灵活。
 
 缺点
 
-* 可能产生大量具体的命令类。因为每一个具体操作都需要设计一个具体命令类，这会增加
+- 可能产生大量具体的命令类。因为每一个具体操作都需要设计一个具体命令类，这会增加
   系统的复杂性。
-* 命令模式的结果其实就是接收方的执行结果，但是为了以命令的形式进行架构、解耦请求与实现，引入了额外类型结构（引入了请求方与抽象命令接口），增加了理解上的困难。不过这也是设计模式的通病，抽象必然会额外增加类的数量，代码抽离肯定比代码聚合更加难理解。
+- 命令模式的结果其实就是接收方的执行结果，但是为了以命令的形式进行架构、解耦请求与实现，引入了额外类型结构（引入了请求方与抽象命令接口），增加了理解上的困难。不过这也是设计模式的通病，抽象必然会额外增加类的数量，代码抽离肯定比代码聚合更加难理解。
+
+### Delegate Pattern 委派模式
+
+委派模式不在 GoF 23 种设计模式之中。
+
+委派模式将过程交由受委派类完成，委派类可以调用具体的任务类完成任务，客户不需要关心委派类的具体实现，只需要分配任务。
 
 ### Interpreter 解释器模式
 
