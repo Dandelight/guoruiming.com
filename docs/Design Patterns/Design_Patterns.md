@@ -36,7 +36,7 @@ In general, a pattern has four essential elements:
 
 ## Creational Patterns 创建型设计模式
 
-### 简单工厂模式
+### Simple Factory 简单工厂模式
 
 简单工厂模式不在 GoF 23 大设计模式之列，但有着广泛的应用。现在面向对象的程序中，
 对象越来越复杂， 但我们需要将对象的创建过程变得更简单，这就是简单工厂模式的理念
@@ -108,6 +108,19 @@ class NoSuchCourseException extends Exception {
     super(msg);
   }
 }
+```
+
+```mermaid
+classDiagram
+	class IProduct {<<interface>>}
+	class ProductA
+	class ProductB
+	class SimpleFactory
+	IProduct <|.. ProductA
+	IProduct <|.. ProductB
+	ProductA <.. SimpleFactory : Creates
+	ProductB <.. SimpleFactory : Creates
+	SimpleFactory <.. client
 ```
 
 ### Abstract Factory 抽象工厂模式
@@ -217,6 +230,26 @@ class Manufactor {
 }
 ```
 
+```mermaid
+classDiagram
+	class ComputerBuilder {
+		<<interface>>
+		+addScreen(Screen)
+		+addKeyborad(Keyboard)
+		+Build() Computer
+	}
+	class LaptopBuilder {
+		+addScreen(Screen)
+		+addKeyborad(Keyboard)
+		+Build() Computer
+	}
+	class Manufactor {
+		+buildComputer(ComputerBuilder) Computer
+	}
+	ComputerBuilder <|-- LaptopBuilder
+	Manufactor --> ComputerBuilder
+```
+
 ### Factory Method 工厂方法模式
 
 > Define an interface for creating an object, but let subclasses decide witch
@@ -266,13 +299,30 @@ class ProductA implements IProduct {
 }
 ```
 
+```mermaid
+classDiagram
+	class IProduct {
+		<<interface>>
+	}
+	class IFactory {
+		<<interface>>
+		+makeProduct() IProduct
+	}
+	IProduct <|-- ProductA
+	IProduct <|-- ProductB
+	IFactory <|-- FactoryA
+	IFactory <|-- FactoryB
+	
+	ProductA <.. FactoryA : Creates
+	ProductB <.. FactoryB : Creates
+```
+
 ### Prototype 原型模式
 
 > Specify the kinds of objects to create using a prototypical instance, and
 > create new objects by copying this prototype.
 
-简单地说，对于大型复杂的对象，可以创建一个对象并以之为原型，通过复制的方式获取大
-量该对象。
+简单地说，对于大型复杂的对象，可以创建一个对象并以之为原型，通过复制的方式获取大量该对象。
 
 It hides the concrete product classes from the client, thereby reducing the
 number of names clients know about. Moreover, these patterns let a client work
@@ -314,6 +364,16 @@ public class Main {
 }
 ```
 
+```mermaid
+classDiagram
+	class Cloneable {
+		<<interface>>
+		+clone() Object
+	}
+	Cloneable <|.. ConcretePrototype
+	ConcretePrototype <.. Client : Creates
+```
+
 ### Singleton 单例模式
 
 > Ensure a class only has one instance, and provide a global point of access to
@@ -351,6 +411,34 @@ class Singleton {
 > Adapter lets classes work together that couldn't otherwise because of
 > incompatible interfaces.
 
+#### 类适配器
+
+实现目标接口，继承被适配的类
+
+```mermaid
+classDiagram
+	class ITarget {
+		<<interface>>
+		+request() Result
+	}
+	class Adaptee {
+		+specificRequest() SpecificResult
+	}
+	class Adapter {
+		+request() Result
+	}
+	ITarget <|.. Adapter
+	Adaptee <|-- Adapter
+```
+
+#### 对象适配器
+
+实现目标接口，内部持有被适配对象实例
+
+#### 接口适配器
+
+接口适配器与类适配器、对象适配器不同，其目标主要是在目标接口过多时，简化接口
+
 ### Bridge 桥接模式
 
 > Decouple an abstraction from its implementation so that the two can vary
@@ -364,11 +452,25 @@ class Singleton {
 #### 角色
 
 - 抽象 Abstraction
-- 修正抽象 Refined Abstraction
+- 修正抽象 Refined Abstraction：对抽象进行完善和扩展
 - 实现 Implementation
 - 具体实现 Concrete Implementation
 
 ![image-20211218153358214](media/Design_Patterns/image-20211218153358214.png)
+
+```mermaid
+classDiagram
+	class Implementor {<<interface>>}
+	class Abstraction
+	
+	Implementor <--* Abstraction
+	Implementor <|.. ConcreteImplA
+	Implementor <|.. ConcreteImplB
+	Abstraction <|-- RefinedAbst
+	
+	RefinedAbst <.. Client
+	ConcreteImplA <.. Client
+```
 
 ### Composite 组合模式
 
@@ -380,6 +482,10 @@ class Singleton {
 
 > Attach additional responsibilities to an object dynamically. Decorators
 > provide a flexible alternative to subclassing for extending functionality.
+
+装饰器继承被装饰类并且内部持有被装饰对象的实例
+
+这段还要再改一改。
 
 ```java
 public class Main {
@@ -417,6 +523,24 @@ class ConcreteDecorator implements Decorator {
 }
 ```
 
+```mermaid
+classDiagram
+
+	class Component
+	class Decorator {
+		-Component
+	}
+	Component <|--* Decorator
+	Component <|-- ConcreteComponent
+	Decorator <|-- ConcreteDecoratorA
+	Decorator <|-- ConcreteDecoratorB
+	
+	
+	ConcreteDecoratorA <.. Client
+	ConcreteDecoratorB <.. Client
+	ConcreteComponent <.. Client
+```
+
 ### Facade 门面模式
 
 > Provide a unified interface to a set of interfaces in a subsystem. Facade
@@ -436,6 +560,16 @@ class ConcreteDecorator implements Decorator {
 - 子系统 Subsystem
 
 ![image-20211218160138475](media/Design_Patterns/image-20211218160138475.png)
+
+```mermaid
+classDiagram
+	SubSystemA <--* Facade
+	SubSystemB <--* Facade
+	SubSystemC <--* Facade
+	Facade <.. Client : Creates
+```
+
+
 
 ### Flyweight 享元模式
 
@@ -457,6 +591,8 @@ class ConcreteDecorator implements Decorator {
 - 非共享具体享元：并非每个享元都是共享的
 - 享元工厂 FlyweightFactory
 - 用户 Client 维护一个享元的引用并计算或存储享元的内部状态
+
+
 
 ```java
 import java.io.FileInputStream;
@@ -560,6 +696,8 @@ class Image {
   }
 }
 ```
+
+或许这个例子用责任链模式更合适。
 
 ### Proxy 代理模式
 
@@ -666,11 +804,9 @@ AOP 应用场景举例：
 
 优点：
 
-业务代码简洁 例如：当需要在业务行为前后做一些事情时，只需要在该行为前后配置切面
-进行处理，无须修改当前业务行为代码
+业务代码简洁 例如：当需要在业务行为前后做一些事情时，只需要在该行为前后配置切面进行处理，无须修改当前业务行为代码
 
-切面逻辑封装性好，可以被复用 例如：将日志逻辑封装为一个切面，可以在多个相关或者
-不相关的类的多个方法上配置该切面
+切面逻辑封装性好，可以被复用 例如：将日志逻辑封装为一个切面，可以在多个相关或者不相关的类的多个方法上配置该切面
 
 ## Behavioral Patterns 行为型设计模式
 
@@ -683,6 +819,17 @@ AOP 应用场景举例：
 为了避免请求发送者与多个请求处理者耦合在一起，于是将所有请求的处理者通过**前一对
 象记住其下一个对象的引用而连成一条链**；当有请求发生时，可将请求沿着这条链传递，
 直到有对象处理它为止。
+
+```mermaid
+classDiagram
+	class Handler {
+		-nextHander: Handler
+		+handleRequest(Request)
+	}
+	Handler *-- Handler
+	Handler <|-- ConcreteHandlerA
+	Handler <|-- ConcreteHandlerB
+```
 
 职责链模式存在以下两种情况。
 
@@ -798,31 +945,21 @@ public class ValidateHandler extends Handler {
 }
 ```
 
-n 优点
+优点
 
-•降低了对象之间的耦合度。该模式使得一个对象无须知道到底是哪一个对象处理其请求以
-及链的结构，发送者和接收者也无须拥有对方的明确信息。
+* 降低了对象之间的耦合度。该模式使得一个对象无须知道到底是哪一个对象处理其请求以
+  及链的结构，发送者和接收者也无须拥有对方的明确信息。
+* 增强了系统的可扩展性。可以根据需要增加新的请求处理类，满足开闭原则。
+* 增强了给对象指派职责的灵活性。当工作流程发生变化，可以动态地改变链内的成员或者调动它们的次序，也可动态地新增或者删除责任。
+* 责任链简化了对象之间的连接。每个对象只需保持一个指向其后继者的引用，不需保持其他所有处理者的引用，这避免了使用众多的 if 或者 if···else 语句。
+* 责任分担。每个类只需要处理自己该处理的工作，不该处理的传递给下一个对象完成，明确各类的责任范围，符合类的单一职责原则。
 
-•增强了系统的可扩展性。可以根据需要增加新的请求处理类，满足开闭原则。
+缺点
 
-•增强了给对象指派职责的灵活性。当工作流程发生变化，可以动态地改变链内的成员或者
-调动它们的次序，也可动态地新增或者删除责任。
-
-•责任链简化了对象之间的连接。每个对象只需保持一个指向其后继者的引用，不需保持其
-他所有处理者的引用，这避免了使用众多的 if 或者 if···else 语句。
-
-•责任分担。每个类只需要处理自己该处理的工作，不该处理的传递给下一个对象完成，明
-确各类的责任范围，符合类的单一职责原则。
-
-n 缺点
-
-•不能保证每个请求一定被处理。由于一个请求没有明确的接收者，所以不能保证它一定会
-被处理，该请求可能一直传到链的末端都得不到处理。
-
-•对比较长的职责链，请求的处理可能涉及多个处理对象，系统性能将受到一定影响。
-
-•职责链建立的合理性要靠客户端来保证，增加了客户端的复杂性，可能会由于职责链的错
-误设置而导致系统出错，如可能会造成循环调用。
+* 不能保证每个请求一定被处理。由于一个请求没有明确的接收者，所以不能保证它一定会
+  被处理，该请求可能一直传到链的末端都得不到处理。
+* 对比较长的职责链，请求的处理可能涉及多个处理对象，系统性能将受到一定影响。
+* 职责链建立的合理性要靠客户端来保证，增加了客户端的复杂性，可能会由于职责链的错误设置而导致系统出错，如可能会造成循环调用。
 
 ### Command 命令模式
 
@@ -838,30 +975,21 @@ n 缺点
 
 <div><button onclick="alert('Hello')">clickme!</button></div>
 
-n 优点
+优点
 
-•通过引入中间件（抽象接口）降低系统的耦合度。
+* 通过引入中间件（抽象接口）降低系统的耦合度。
+* **扩展性良好**，增加或删除命令非常方便。采用命令模式增加与删除命令不会影响其他
+  类，且**满足“开闭原则”**。
+* 可以实现宏命令。命令模式可以与组合模式结合，将多个命令装配成一个组合命令，即宏
+  命令。
+* **方便实现** **Undo** 和 **Redo** **操作**。命令模式可以与后面介绍的备忘录模式结合，实现命令的撤销与恢复。
+* 可以在现有命令的基础上，增加额外功能。比如日志记录，结合装饰器模式会更加灵活。
 
-•**扩展性良好**，增加或删除命令非常方便。采用命令模式增加与删除命令不会影响其他
-类，且**满足“开闭原则”**。
+缺点
 
-•可以实现宏命令。命令模式可以与组合模式结合，将多个命令装配成一个组合命令，即宏
-命令。
-
-•**方便实现** **Undo** 和 **Redo** **操作**。命令模式可以与后面介绍的备忘录模式
-结合，实现命令的撤销与恢复。
-
-•可以在现有命令的基础上，增加额外功能。比如日志记录，结合装饰器模式会更加灵活。
-
-n 缺点
-
-•可能产生大量具体的命令类。因为每一个具体操作都需要设计一个具体命令类，这会增加
-系统的复杂性。
-
-•命令模式的结果其实就是接收方的执行结果，但是为了以命令的形式进行架构、解耦请求
-与实现，引入了额外类型结构（引入了请求方与抽象命令接口），增加了理解上的困难。不
-过这也是设计模式的通病，抽象必然会额外增加类的数量，代码抽离肯定比代码聚合更加难
-理解。
+* 可能产生大量具体的命令类。因为每一个具体操作都需要设计一个具体命令类，这会增加
+  系统的复杂性。
+* 命令模式的结果其实就是接收方的执行结果，但是为了以命令的形式进行架构、解耦请求与实现，引入了额外类型结构（引入了请求方与抽象命令接口），增加了理解上的困难。不过这也是设计模式的通病，抽象必然会额外增加类的数量，代码抽离肯定比代码聚合更加难理解。
 
 ### Interpreter 解释器模式
 
@@ -884,7 +1012,7 @@ n 缺点
 > promotes loose coupling by keeping objects from referring to each other
 > explicitly, and it lets you vary their interaction independently.
 
-•定义一个中介对象来封装一系列对象之间的交互，使原有对象之间的耦合松散，且可以独
+定义一个中介对象来封装一系列对象之间的交互，使原有对象之间的耦合松散，且可以独
 立地改变它们之间的交互。中介者模式又叫调停模式，它是迪米特法则的典型应用。
 
 ![image-20211218195350474](media/Design_Patterns/image-20211218195350474.png)
@@ -1068,6 +1196,8 @@ class Context {
 > subclasses. Template Method lets subclasses redefine certain steps of an
 > algorithm without changing the algorithm's structure.
 
+在抽象类中定义算法的公共部分，在子类中各自实现不同的部分
+
 ![image-20211218201711777](media/Design_Patterns/image-20211218201711777.png)
 
 ```mermaid
@@ -1151,9 +1281,6 @@ class ConcreteClass extends AbstractClass {
 
 ## 参考文献
 
-[^liaoxuefeng]:
-    廖雪峰的 Java 教程
-    https://www.liaoxuefeng.com/wiki/1252599548343744/1281319417937953
-
+[^liaoxuefeng]: 廖雪峰的 Java 教程 https://www.liaoxuefeng.com/wiki/1252599548343744/1281319417937953
 Gamma, Erich, Helm, Richard, Author, and Johnson, Ralph, Author. _Design
 Patterns : Elements of Reusable Object-oriented Software_.
