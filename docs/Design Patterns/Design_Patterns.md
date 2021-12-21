@@ -782,6 +782,24 @@ class RealSubject implements ISubject {
 }
 ```
 
+```mermaid
+classDiagram
+	class InvocationHandler {
+		<<interface>>
+		+invoke(Object proxy, Method method, Object[] args) Object
+	}
+	class JDKAOP {
+		-target: Object
+		+invoke(Object proxy, Method method, Object[] args) Object
+		+getInstance(Object target) Object
+		-before()
+		-after()
+	}
+	InvocationHandler <|.. JDKAOP
+```
+
+
+
 #### AOP(Aspect Oriented Programming，面向切面编程)
 
 程序在运行时，动态的将代码切入到类的指定方法或者说指定位置上
@@ -976,6 +994,8 @@ public class ValidateHandler extends Handler {
 图形化界面中，按钮按下时的回调函数就说明了这一点
 
 <div><button onclick="alert('Hello')">clickme!</button></div>
+
+![image-20211221165558283](media/Design_Patterns/image-20211221165558283.png)
 
 优点
 
