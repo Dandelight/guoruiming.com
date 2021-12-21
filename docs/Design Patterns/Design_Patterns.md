@@ -592,7 +592,7 @@ classDiagram
 - 享元工厂 FlyweightFactory
 - 用户 Client 维护一个享元的引用并计算或存储享元的内部状态
 
-
+TODO：享元模式类图
 
 ```java
 import java.io.FileInputStream;
@@ -707,6 +707,8 @@ class Image {
 
 **静态代理**由程序员创建代理类，由程序员创建代理类或特定工具自动生成源代码再对其
 编译，在程序运行前代理类的 `.class` 文件就已经存在了。
+
+TODO：代理模式类图
 
 ```java
  //真实主题
@@ -1133,8 +1135,24 @@ switch-case 语句来做状态判断，再进行不同情况的处理。但是�
 抽象状态（State）角色：定义一个接口，用以封装环境对象中的特定状态所对应的行为，
 可以有一个或多个行为。
 
-具体状态（Concrete State）角色：实现抽象状态所对应的行为，并且在需要的情况下进行
-状态切换。
+具体状态（Concrete State）角色：实现抽象状态所对应的行为，并且在需要的情况下进行状态切换。
+
+```mermaid
+classDiagram
+	class IState {
+		<<interface>>
+		+handle()
+	}
+	class Context {
+		-IState
+		+setState(IState)
+		+handle()
+	}
+	IState <|-- ConcreteStateA
+	IState <|-- ConcreteStateB
+	IState <--* Context
+	Context <-- Client
+```
 
 ### Strategy 策略模式
 
@@ -1282,5 +1300,6 @@ class ConcreteClass extends AbstractClass {
 ## 参考文献
 
 [^liaoxuefeng]: 廖雪峰的 Java 教程 https://www.liaoxuefeng.com/wiki/1252599548343744/1281319417937953
+
 Gamma, Erich, Helm, Richard, Author, and Johnson, Ralph, Author. _Design
 Patterns : Elements of Reusable Object-oriented Software_.
