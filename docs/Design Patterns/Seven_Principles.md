@@ -203,7 +203,7 @@ private void modifyUserInfo(String address){
 >
 > - 最明显的是会增加编写代码的复杂度。当我们按照职责把对象分解成更小的粒度之后，实际上也增大了这些对象之间相互联系的难度。
 
-## 接口隔离原则
+## 接口隔离原则 Interface Segregation Priciple
 
 指**使用多个专门的接口**，而不使用单一的总接口，客户端不应该依赖它不需要的接口。
 
@@ -232,9 +232,41 @@ public class Bird implements IAnimal{
 }
 ```
 
-## 迪米特法则（Law of Demeter，LoD）
+并不是很好。
 
-**一个对象应该对其他对象保持最少的了解**，又叫最少知道原则(Least Knowledge Principle, LKP)，尽量降低类与类之间的耦合。
+```mermaid
+classDiagram
+	class AnimalSwim {
+		<<interface>>
+		+swim()
+	}
+	class AnimalEat {
+		<<interface>>
+		+eat()
+	}
+	class AnimalFly {
+		<<interface>>
+		+fly()
+	}
+	class Dog {
+		+eat()
+		+swim()
+	}
+	class Bird {
+		+eat()
+		+fly()
+	}
+	Dog ..|> AnimalSwim
+	Dog ..|> AnimalEat
+	Bird ..|> AnimalEat
+	Bird ..|> AnimalFly
+```
+
+还有更优雅的做法，就是**策略模式**。
+
+## 迪米特法则 Law of Demeter
+
+**一个对象应该对其他对象保持最少的了解**，尽量降低类与类之间的耦合。又叫最少知道原则(Least Knowledge Principle, LKP)。
 
 主要强调*只和朋友交流，不和陌生人说话*。出现在成员变量、方法的输入、输出参数中的类都可以称之为成员朋友类，而出现在方法体内部的类不属于朋友类。
 
@@ -248,7 +280,7 @@ public class Bird implements IAnimal{
 >
 > - 过度使用迪米特法则**会使系统产生大量的中介类，从而增加系统的复杂性，使模块之间的通信效率降低**。所以，在釆用迪米特法则时需要反复权衡，确保高内聚和低耦合的同时，保证系统的结构清晰。
 
-## 里氏替换原则
+## 里氏替换原则 Liskov Substitution Principle
 
 定义
 
@@ -264,18 +296,42 @@ public class Bird implements IAnimal{
 
 里氏替换原则的引申含义是，子类**可以扩展**父类的功能，但**不能改变父类原有的功能**。
 
-1. 子类可以实现父类的抽象方法，但不能覆盖父类的非抽象方法。
-2. 子类中可以增加自己特有的方法。
-3. 当子类的方法重载父类的方法时，方法的前置条件（即方法的输入/入参）要比父类方法的输入参数更宽松。
-4. 当子类的方法实现父类的方法时（重写/重载或实现抽象方法），方法的后置条件（即方法的输出/返回值）要比父类更严格或相等。
+1. 子类**可以实现**父类的抽象方法，但**不能覆盖**父类的非抽象方法。
+2. 子类中**可以增加自己特有的方法**。
+3. 当子类的方法**重载**父类的方法时，方法的**前置条件**（即方法的输入/入参）要比父类方法的输入参数**更宽松**。
+4. 当子类的方法**实现**父类的方法时（重写/重载或实现抽象方法），方法的**后置条件**（即方法的输出/返回值）要比父类**相等或更严格**。
 
 当子类覆盖或实现父类的方法时，方法的前置条件（即方法的形参）要比父类方法的输入参数更宽松。
 
 ### 注意：重载 Overload 和重写 Override
 
-// 自己也不是很明白
+子类 Overload 父类是没有问题的，但 Override 父类时，要注意相同签名的方法，其表现不能不同。
 
-## 合成复用原则
+在`Java`中子类 Overload 一个方法不会覆盖父类的全部同名方法。（C++中会！）
+
+```java
+public class Main {
+  public static void main(String[] args) {
+    B b = new B();
+    b.show();
+    b.show(42);
+  }
+}
+
+class A {
+  void show() {
+    System.out.println("Nothing to show");
+  }
+}
+
+class B extends A {
+  void show(int val) {
+    System.out.println(val);
+  }
+}
+```
+
+## 合成复用原则 Composite/Aggregate Reuse Priciple
 
 又叫组合/聚合复用原则。它要求在软件复用时，要尽量**先使用组合或者聚合等关联关系**来实现，**其次才考虑使用继承关系**来实现。如果要使用继承关系，则必须严格**遵循里氏替换原则**。合成复用原则同里氏替换原则相辅相成的，两者都是开闭原则的具体实现规范。
 
