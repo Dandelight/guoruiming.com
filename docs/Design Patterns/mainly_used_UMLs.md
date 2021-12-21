@@ -106,7 +106,7 @@ sequenceDiagram
 	participant 取款机
 	participant 银行
 	客户 ->> 取款机: 取款请求
-	alt [money > 2500]
+	alt money > 2500
 		 取款机 -->> 客户: 显示一次不能取太多
 	else
 		取款机 ->> 银行: 取款请求
