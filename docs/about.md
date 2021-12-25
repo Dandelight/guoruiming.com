@@ -10,6 +10,8 @@
 >
 > 不久便消失在风雨里
 >
+> ******
+>
 > 钟表掉落地上摔得粉碎
 >
 > 我用玻璃瓶小心地收集起来
@@ -17,6 +19,16 @@
 > 取了个名字叫时间的灰
 >
 > Ember of time
+
+
+
+ORCID：https://orcid.org/0000-0002-1135-7676
+
+ResearchGate：https://www.researchgate.net/profile/Ruiming-Guo
+
+Gitee：https://gitee.com/dandelight
+
+GitHub：https://github.com/Dandelight
 
 <details>
     <summary>没看见</summary>
