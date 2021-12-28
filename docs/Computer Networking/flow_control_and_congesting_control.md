@@ -88,7 +88,7 @@ TCP 缓冲区不能溢出，所以我们规定：`LastByteRcvd - LastByteRead <=
 
 ![image-20211228135436151](media/flow_control_and_congesting_control/image-20211228135436151.png)
 
-当发送速率在$0 \textasciitilde R/2$之间，接收方的吞吐量等于发送方的吞吐量。当发送速率超过$R/2$时，吞吐量停止在$R/2$，不再增长。
+当发送速率在$0 \sim R/2$之间，接收方的吞吐量等于发送方的吞吐量。当发送速率超过$R/2$时，吞吐量停止在$R/2$，不再增长。
 
 当$λ_{in}$逐渐增大时，时延也在增大。当$λ_{in}$靠近$R/2$时，时延快速增长到无穷大。
 
@@ -187,10 +187,46 @@ RFC 2581 中详细定义了 TCP 拥塞控制算法，分为三大部分：**慢�
 
 #### 快恢复
 
-快恢复是指，将`cwnd`减半后，每收到一个冗余 ACK（没有超时，收到恢复了，只是不是成功接受的回复），`cwnd`都增加 1。
+快恢复是指，将`cwnd`减半后，每收到一个冗余 ACK（没有超时，收到回复了，只是不是成功接受的回复），`cwnd`都增加 1。
 
 而 timeout 后，`ssthreas = cwnd/2, cwnd = 1`，直接回到慢启动的最初阶段。
 
 在 TCP 早期一个版本，TCP Tahoe 中没有快恢复，timeout 或三个冗余 ACK 都回到慢启动；而 TCP Reno 中采用了接收到冗余 ACK 后进入快速恢复阶段的策略。
 
-当然，文章主要讲解了 TCP/IP 协议。除此之外，还有在 Asynchronous Transfer Mode 网络中的 Available Bit-Rate 服务。
+#### 小结
+
+如果忽略慢启动阶段，假设没有 timeout，TCP 拥塞控制采用的是 AIMD（Additive Increase, Multiplicative Decrease）方案（锯齿状）。除了 Tahoe 和 Reno 之外，还有 Vegas 和 CUBIC 等算法。
+
+总之，TCP 拥塞控制算法是大量工程经验和实验的产物，经受住了十余年的考验，获得了理论上和时间上的成功。
+
+#### 拥塞控制下 TCP 的吞吐量
+
+前文说过，在没有丢包的、忽略慢启动和快恢复的理想情况下 TCP 的吞吐量约为$w/RTT$（$w$位窗口大小）。假设网络情况在传输全过程中不变，最大窗口大小为$W$（超过就会丢包，丢包后窗口大小减半），那么显然可知
+
+$$
+\text{the average throughput of a connection} = \frac{0.75\cdot W}{RTT}
+$$
+
+但是，在今天的网络中，在两台主机之间正在传输的数据包的数量可能数以万计——丢掉一万个包才发现丢包了吗？
+
+因此，我们将 TCP 连接的平均吞吐量写成丢包率$L$的函数
+
+$$
+\text{the average throughput of a connection} = \frac{1.22 \times MSS}{RTT \sqrt{L}}
+$$
+
+根据以上公式，可以发现，为了达到 10Gbps 的速率，如今的 TCP 连接最多丢掉$2\cdot 10^{-10}$的包$\frac{1}{5,000,000,000}$。
+
+### ATM ABR 协议中的拥塞控制
+
+文章主要讲解了 TCP/IP 协议。除此之外，还有在 Asynchronous Transfer Mode 网络中的 Available Bit-Rate 服务。
+
+ATM 采用了面向虚电路（Virtual Circuit）的报文交换方式。在虚电路中，每路径上的每个交换机都维护着一个虚电路的状态，非常适合网络辅助的拥塞控制（network-assisted congestion control）。
+
+在 ATM 中，负责转发的节点被称为 switch，数据包被称为 cell。在 switch 之间传输的不仅有 data cell，还有 resource-management cell。一般情况下是 32 个 data cell 就会有一个（be interspersed with a) RM cell。RM cell 可以在 switch 和 host 之中传播与拥塞有关的信息。RM cell 到达主机后，又被该主机发送给对方。
+
+ATM ABR 采用基于速率（rate-based）的方法进行拥塞控制。发送方明确计算出最大速率，并按照此速率进行自我调节。此外，ABR 还提供以下三种机制来传输 switch 到 receiver 的信息：
+
+- EFCI 位：Explicit Forward Congesting Indication，每个 data cell 中都有一位，路径上的 switch 可将此位置 1 以向目的主机和沿途的 switch 表示出现拥塞；目的主机接受并发现 EFCI 位后，向源主机发送一个 CI 位置位的 RM cell
+- CI 和 NI 位：Congestion Indication bit and No Increase bit，两个位在 RM cell 中，沿途的 switch 会在轻度拥塞时将 NI 置位，重度拥塞时将 CI 置位，目的主机接收到 RM cell 会将 CI 和 NI 原样发回（除非是收到了带 EFCI 位的 data cell 而将 RM cell 的 CI 置位）
+- ER 域：Explicit Rate field，每个 RM cell 有 2 字节的 ER 域，明确指出可用的最大速率，类似于 TCP 中的 Window，但 ABR 工作在网络层（和 IP 同一层）。沿途的 switch 可以降低这个速率，因此，主机收到的 RM cell 中的 ER 域将被置为网络中 switch 支持的速率中最小的那个。
