@@ -4,7 +4,7 @@
 
 https://github.com/overleaf/overleaf
 
-![image-20211227104856916](C:\Users\Min\AppData\Roaming\Typora\typora-user-images\image-20211227104856916.png)
+![image-20211227104856916](media/setup/image-20211227104856916.png)
 
 ```bash
 # 清华大学为例
