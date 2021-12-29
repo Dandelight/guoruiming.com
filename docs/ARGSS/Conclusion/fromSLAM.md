@@ -207,20 +207,17 @@ RGB-D 相机提供了多种数据流
 
 项目仍在开发之中，难度比想象中大，因此现阶段只有深度学习的代码。
 
-上位机部分可以使用RoboDK
+上位机部分可以使用 RoboDK
 
-------
+---
 
 多模态三维目标检测综述
 
 Multi-Modal 3D Object Detection in Autonomous Driving: a Survey
 
-
-
 论文作者：
 
 Yingjie Wang, Qiuyu Mao, Hanqi Zhu, Yu Zhang, Jianmin Ji, Yanyong Zhang
-
 
 论文链接：
 
