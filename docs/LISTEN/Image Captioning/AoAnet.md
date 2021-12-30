@@ -4,7 +4,16 @@ Tech Report
 
 # 在 COCO 2014 数据集上训练 AoAnet
 
-基于[AoAnet](https://github.com/husthuaan/AoANet)进行训练
+基于[AoAnet](https://github.com/husthuaan/AoANet)进行训练，参考文献：https://arxiv.org/abs/1908.06954
+
+```tex
+@inproceedings{huang2019attention,
+  title={Attention on Attention for Image Captioning},
+  author={Huang, Lun and Wang, Wenmin and Chen, Jie and Wei, Xiao-Yong},
+  booktitle={International Conference on Computer Vision},
+  year={2019}
+}
+```
 
 ## 数据
 
@@ -57,6 +66,7 @@ wget http://cs.stanford.edu/people/karpathy/deepimagesent/caption_datasets.zip
 conda create -n py2 python<3
 conda activate py2
 conda install pytorch cpuonly -c pytorch
+conda install six
 ```
 
 ```bash
