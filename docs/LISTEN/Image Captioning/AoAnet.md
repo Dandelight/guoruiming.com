@@ -56,6 +56,14 @@ curl https://msvocds.blob.core.windows.net/images/262993_z.jpg >> COCO_train2014
 wget http://cs.stanford.edu/people/karpathy/deepimagesent/caption_datasets.zip
 ```
 
+### 代码仓库
+
+```bash
+git clone https://github.com/husthuaan/AoANet.git --recursive
+```
+
+注意两个`submodule`是不是都下载下来了。
+
 ### 数据预处理
 
 #### 预处理标注
@@ -122,3 +130,18 @@ python scripts/prepro_feats.py --input_json data/dataset_coco.json --output_dir 
 ```
 
 预处理速度很慢，耐心等待
+
+```bash
+sudo apt install openjdk-8-jdk # 依赖
+pip install gensim # NLP库
+
+# 下载Word2Vec的一个模型
+cd coco-caption/pycocoevalcap/wmd/data
+wget -c "https://s3.amazonaws.com/dl4j-distribution/GoogleNews-vectors-negative300.bin.gz"
+gzip -d GoogleNews-vectors-negative300.bin.gz
+```
+
+```python
+from gensim import models
+w = models.KeyedVectors.load_word2vec_format('./GoogleNews-vectors-negative300.bin', binary=True)
+```
