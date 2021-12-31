@@ -195,7 +195,7 @@ RFC 2581 中详细定义了 TCP 拥塞控制算法，分为三大部分：**慢�
 
 #### 小结
 
-如果忽略慢启动阶段，假设没有 timeout，TCP 拥塞控制采用的是 AIMD（Additive Increase, Multiplicative Decrease）方案（锯齿状）。除了 Tahoe 和 Reno 之外，还有 Vegas 和 CUBIC 等算法。
+如果忽略慢启动阶段，假设没有 timeout，TCP 拥塞控制采用的是 AIMD（Additive Increase, Multiplicative Decrease）方案（锯齿状）。除了 Tahoe 和 Reno 之外，还有 Vegas 和 CUBIC 等算法；最新进展：RFC 6582 定义了 TCP NewReno 算法。
 
 总之，TCP 拥塞控制算法是大量工程经验和实验的产物，经受住了十余年的考验，获得了理论上和时间上的成功。
 
@@ -230,3 +230,5 @@ ATM ABR 采用基于速率（rate-based）的方法进行拥塞控制。发送�
 - EFCI 位：Explicit Forward Congesting Indication，每个 data cell 中都有一位，路径上的 switch 可将此位置 1 以向目的主机和沿途的 switch 表示出现拥塞；目的主机接受并发现 EFCI 位后，向源主机发送一个 CI 位置位的 RM cell
 - CI 和 NI 位：Congestion Indication bit and No Increase bit，两个位在 RM cell 中，沿途的 switch 会在轻度拥塞时将 NI 置位，重度拥塞时将 CI 置位，目的主机接收到 RM cell 会将 CI 和 NI 原样发回（除非是收到了带 EFCI 位的 data cell 而将 RM cell 的 CI 置位）
 - ER 域：Explicit Rate field，每个 RM cell 有 2 字节的 ER 域，明确指出可用的最大速率，类似于 TCP 中的 Window，但 ABR 工作在网络层（和 IP 同一层）。沿途的 switch 可以降低这个速率，因此，主机收到的 RM cell 中的 ER 域将被置为网络中 switch 支持的速率中最小的那个。
+
+另外，ATM 还提供 Constant Bit-Rate 服务
