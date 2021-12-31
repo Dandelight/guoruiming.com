@@ -115,7 +115,7 @@ services:
 docker-compose up -d
 docker exec -it AoAnet_pytorch bash # 进入容器
 cd # 代码所在目录
-pip install h5py
+pip install h5py yacs lmdbdict pyemd
 export PYTHONPATH=`pwd`
 ```
 
@@ -131,6 +131,8 @@ python scripts/prepro_feats.py --input_json data/dataset_coco.json --output_dir 
 
 预处理速度很慢，耐心等待
 
+在训练时遇到了问题，没库，没依赖，作者也不提供一下参考
+
 ```bash
 sudo apt install openjdk-8-jdk # 依赖
 pip install gensim # NLP库
@@ -145,3 +147,5 @@ gzip -d GoogleNews-vectors-negative300.bin.gz
 from gensim import models
 w = models.KeyedVectors.load_word2vec_format('./GoogleNews-vectors-negative300.bin', binary=True)
 ```
+
+作者怎么不把依赖写全，非要等到跑到一半扔个异常出来。气。抓异常只抓`(RuntimeError, KeyboardInterrupt)`，您就没考虑过有人可能没装全依赖吗。
