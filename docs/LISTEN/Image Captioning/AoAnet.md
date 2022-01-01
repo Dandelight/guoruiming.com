@@ -277,5 +277,10 @@ $$
 
 其中，$c$表示候选标题，$S$表示参考标题集合，$G(\cdot)$表示利用某种方法将一段文本转化为一个 Scene Graph，$T(\cdot)$表示将一个 Scene Graph 转换为一个 Tuple 的集合。$\otimes$运算类似于交集，但其匹配类似于 METEOR 中的基于 WordNet 的匹配。
 
+### WMD
+
+Word Mover’s Distance[^wmd]
+
 [^zhihu108630305]: https://zhuanlan.zhihu.com/p/108630305
 [^jianshu60deff0f64e1]: https://www.jianshu.com/p/60deff0f64e1
+[^wmd]: https://mkusner.github.io/publications/WMD.pdf
