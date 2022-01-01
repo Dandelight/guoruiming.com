@@ -148,4 +148,119 @@ from gensim import models
 w = models.KeyedVectors.load_word2vec_format('./GoogleNews-vectors-negative300.bin', binary=True)
 ```
 
-作者怎么不把依赖写全，非要等到跑到一半扔个异常出来。气。抓异常只抓`(RuntimeError, KeyboardInterrupt)`，您就没考虑过有人可能没装全依赖吗。
+作者怎么不把依赖写全，非要等到跑到一个 epoch 结束扔个异常出来。气。抓异常只抓`(RuntimeError, KeyboardInterrupt)`，您就没考虑过有人可能没装全依赖吗。
+
+### 测试指标
+
+本次使用五个指标：Bleu、METEOR、ROUGE-L、CIDEr、SPICE。
+
+#### Perplexity
+
+$$
+\log_2\operatorname{PPL}(w_{1:L}|I) = -\frac{1}{L}\sum_{n=1}^L(\log_2\operatorname{P}(w_n | w_{1:n-1}, I))
+$$
+
+其中，$L$是句子的长度，$\operatorname{PPL}(w_{1:L},I)$是根据图像$I$给出的描述句子$w_{1:L}$的$\operatorname{preplexity}$，而$\operatorname{P}(w_n | w_{1:n-1}, I)$是根据图像$I$和前$n-1$个单词组成的序列生成下一个单词$w_n$的概率。
+
+$\operatorname{preplexity}$用于判断模型的稳定性，得分越低就认为模型的预测越稳定，翻译质量越好。
+
+#### Bleu
+
+Bilingual Evaluation Underatudy，用于分析候选译文和参考译文中$N$元组共同出现的程度，重合程度越高就认为译文质量越高。
+
+$$
+\operatorname{BLEU} = BP \times \exp\left(\sum_{n=1}^N w_n \log P_n \right)
+$$
+
+$BP$表示短句子的惩罚因子（Brevity Penalty），用$l_r$表示最短的参考翻译的长度，$l_c$表示候选翻译的长度，具体计算方法：
+
+$$
+BP =
+\begin{cases}
+1 & l_c > l_s \\
+\mathrm{e}^{1-\frac{l_s}{l_c}} & l_c \le l_s
+\end{cases}
+$$
+
+$P(n)$表示 n-gram 的覆盖率，计算方式为：
+
+$$
+p_{n}=\frac{\sum_{C \in\{\text { Candidates }\}} \sum_{\text { n-gram } \in C} \text { Count }_{\text {clip }}(\text { n-gram })}{\sum_{C^{\prime} \in\{\text { Candidates }\}} \sum_{\text { n-gram } \in C^{\prime}} \text { Count }(\text { n-gram })}
+$$
+
+其中$\text{Count}_{\text{clip}}$是截断技术，其计数方式为：将一个 n-gram 在候选翻译中出现的次数，与在各个参考翻译中出现次数的最大值进行比较，取较小的那一个。
+
+#### METEOR
+
+Metric for Evaluation of Translation with Explicit ORdering 基于 BLEU 进行了一些改进，使用 WordNet 计算特有的序列匹配、同义词、词根和词缀，以及释义之间的匹配关系。
+
+$$
+\operatorname{METEOR} = (1-Pen) \times F_{\text{means}}
+$$
+
+其中$Pen = \frac{\#chucks}{m}$为惩罚因子，惩罚候选翻译中词序与参考翻译中次词序的不同。
+
+$$
+F_\text{meams} = \frac{PR}{\alpha P + (1-\alpha)R}
+$$
+
+其中$\alpha$为超参数，$P=\frac{m}{c}$，$R = \frac{m}{r}$，$m$为候选翻译中能够被匹配的一元组的数量，$c$为候选翻译的长度，$r$为参考翻译的长度。
+
+METEOR 基于准确率和召回率，得分越高说明
+
+#### ROUGE
+
+Recall-Oriented Understudy for Gisting Evaluation，大致分为四种：ROUGE-N，ROUGE-L，ROUGE-W，ROUGE-S。
+
+$$
+\operatorname{ROUGE-N}=\frac{\sum_{S \in\{\text { ReferenceSummaries }\}} \sum_{\text {gram }_{n} \in S} \text { Count }_{\text {match }}\left(\text { gram }_{n}\right)}{\sum_{S \in\{\text { ReferenceSummaries }\}} \sum_{\text {gram }_{n} \in S} \text { Count }\left(\text { gram }_{n}\right)}
+$$
+
+其中$n$表示 n-gram，$\text{Count}{(\text{gram}_n)}$表示一个 n-gram 出现的次数，$\text{Count}_{\text{match}}{(\text{gram}_n)}$表示一个 n-gram 共现的次数。
+
+$$
+\begin{aligned}
+\operatorname{ROUGE-L} &=\frac{\left(1+\beta^{2}\right) R_{l c s} P_{l c s}}{R_{l c s}+\beta^{2} P_{l c s}} \\
+R_{l c s} &=\frac{\operatorname{LCS}(X, Y)}{m} \\
+P_{l c s} &=\frac{\operatorname{LCS}(X, Y)}{n}
+\end{aligned}
+$$
+
+其中，$X$表示候选摘要，$Y$表示参考摘要，$\operatorname{LCS}$表示候选摘要与参考摘要的最长公共子序列的长度，$m$表示参考摘要的长度，$n$表示候选摘要的长度。
+
+#### CIDEr
+
+Consensus-based Image Description Evaluation 将每个句子看成文档，计算其 Term Frequency Inverse Document Frequency（TF-IDF）向量的余弦夹角，据此得到候选句子和参考句子的相似程度。
+
+$$
+\operatorname{CIDEr}_n(c, S) = \frac{1}{M} \sum_{i=1}^M \frac{g^n(c)\cdot g^n\left(S_i\right)}{||g^n(c)|| \times ||g^n\left(S_i\right)||}
+$$
+
+其中$c$表示候选标题，$S$表示参考标题集合，$n$表示评估的是 n-gram，M 表示标题的数量，$g^n(\cdot)$表示基于 n-gram 的 TF-IDF 向量。
+
+$$
+\operatorname{CIDEr}\left(c_{i}, S_{i}\right)=\sum_{n=1}^{N} w_{n} \operatorname{CIDEr}_{n}\left(c_{i}, S_{i}\right)
+$$
+
+TF-IDF 的计算方式为：
+
+$$
+g_{k}\left(s_{i j}\right)=\frac{h_{k}\left(s_{i j}\right)}{\sum_{\omega_{l} \in \Omega} h_{l}\left(s_{i j}\right)} \log \left(\frac{|I|}{\sum_{I_{p} \in I} \min \left\{1, \sum_{q} h_{k}\left(s_{p q}\right)\right\}}\right)
+$$
+
+#### SPICE
+
+Semantic Propositional Image Caption Evaluation 使用基于图的语义表示来编码 caption 中的 objects，attributes 和 relationships。它先将待评价 caption 和参考 captions 用 Probabilistic Context-Free Grammar (PCFG) dependency parser parse 成 syntactic dependencies trees，然后用基于规则的方法把 dependency tree 映射成 scene graphs。最后计算待评价的 caption 中 objects, attributes 和 relationships 的 F-score 值。
+
+$$
+\begin{aligned}
+\operatorname{SPICE}(c, S) &=F_{1}(c, S)=\frac{2 \cdot P(c, S) \cdot R(c, S)}{P(c, S)+R(c, S)} \\
+P(c, S) &=\frac{|T(G(c)) \otimes T(G(S))|}{|T(G(c))|} \\
+R(c, S) &=\frac{|T(G(c)) \otimes T(G(S))|}{|T(G(S))|}
+\end{aligned}
+$$
+
+其中，$c$表示候选标题，$S$表示参考标题集合，$G(\cdot)$表示利用某种方法将一段文本转化为一个 Scene Graph，$T(\cdot)$表示将一个 Scene Graph 转换为一个 Tuple 的集合。$\otimes$运算类似于交集，但其匹配类似于 METEOR 中的基于 WordNet 的匹配。
+
+[^zhihu108630305]: https://zhuanlan.zhihu.com/p/108630305
+[^jianshu60deff0f64e1]: https://www.jianshu.com/p/60deff0f64e1
