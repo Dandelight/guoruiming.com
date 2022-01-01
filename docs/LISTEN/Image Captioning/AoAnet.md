@@ -154,6 +154,21 @@ w = models.KeyedVectors.load_word2vec_format('./GoogleNews-vectors-negative300.b
 
 本次使用五个指标：Bleu、METEOR、ROUGE-L、CIDEr、SPICE。
 
+目标指标如下：
+
+```json
+{
+    ‘Bleu_1’: 0.8054903453672397,
+    ‘Bleu_2’: 0.6523038976984842,
+    ‘Bleu_3’: 0.5096621263772566,
+    ‘Bleu_4’: 0.39140307771618477,
+    ‘METEOR’: 0.29011216375635934,
+    ‘ROUGE_L’: 0.5890369750273199,
+    ‘CIDEr’: 1.2892294296245852,
+    ‘SPICE’: 0.22680092759866174
+}
+```
+
 ### Perplexity
 
 $$
