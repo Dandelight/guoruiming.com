@@ -179,9 +179,15 @@ WMD: 0.533
 下载方式如下：
 
 ```bash
+mkdir data/bu_data; cd data/bu_data
 wget https://storage.googleapis.com/up-down-attention/trainval.zip
+unzip trainval.zip
+# 切回项目根目录
+cd ..
+python script/make_bu_data.py --output_dir data/cocobu
 ```
 
+然后我把`train.sh`改了回去(`git checkout train.sh`)，备份了`checkpoint`s，清理项目目录，重新开始训练。
 
 ## 测试指标
 
