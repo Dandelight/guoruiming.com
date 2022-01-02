@@ -184,7 +184,8 @@ wget https://storage.googleapis.com/up-down-attention/trainval.zip
 unzip trainval.zip
 # 切回项目根目录
 cd ..
-python script/make_bu_data.py --output_dir data/cocobu
+conda acitivate py2 # python2文件，因为reader迭代器返回了byte
+python scripts/make_bu_data.py --output_dir data/cocobu
 ```
 
 然后我把`train.sh`改了回去(`git checkout train.sh`)，备份了`checkpoint`s，清理项目目录，重新开始训练。
