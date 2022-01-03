@@ -323,6 +323,106 @@ Word Mover’s Distance[^wmd]
 
 ## 算法分析
 
+### Attention 机制
+
+#### Encoder
+
+设$(h_1, h_2, \ldots, h_n)$是输入句子的隐藏向量表示。这些向量可以是一个 bi-LSTM 的输出，可以捕捉每个词在剧中的语义信息。
+
+#### Decoder
+
+设第$i$个 decoder 的 hidden state 是$s_i$，使用一个递归公式计算：
+
+$$
+s_i = f(s_{i-1}, y_{i-1}, c_i)
+$$
+
+其中，$s_{i-1}$是上一个隐藏向量，$y_{i-1}$是上一步生成的词向量，$c_i$是上下文信息。
+
+$$
+e_{i, j} = a(s_{i-1}, h_j)
+$$
+
+其中$a$可以是任何函数，通常采用一个前馈神经网络。
+
+最终，对分数正则化：
+
+$$
+a_{i, j} = \frac{\exp(e_{i, j})}{\sum_{k=1}^n \exp(e_{i, k})}
+$$
+
+最终计算$c_i$，一个$h_j$的加权平均
+
+$$
+c_i = \sum_{j=1}^n a_{i, j} h_j
+$$
+
+或者，一个向量化的表示：
+
+$$
+\text { Attention }(Q, K, V)=\operatorname{softmax}\left(\frac{Q K^{T}}{\sqrt{d_{k}}}\right) V
+$$
+
+### Self-critical Sequence Training[^self-critical]
+
+#### REINFORCE 方法
+
+在之前，NLP 问题经常使用交叉熵损失函数来优化指标，这有两个不足：一是不能直接优化 NLP 指标，如 CIDEr 等；二是会引起“偏置爆炸”情况。不能直接优化 CIDEr 是因为 CIDEr 的指标是离散的，无法求取梯度。在[^self-critical]中将 LSTM 模型视为 agent，将单词和 feature 视作 environment。LSTM 网络的参数，$\theta$，定义了一个 policy $p_\theta$；其 state 就是它的 cells 和 hidden state。其 action 就是预测下一个单词。每个 action 之后，agent 更新其内部的 state。当模型输出 End-Of-Sequence 后，agent 观测到一个 reward，这个 reward 就可以是生成的句子的 CIDEr 得分。目标是最小化负的 reward 期望
+
+$$
+L(\theta) = - \mathbb{E}_{w^s \sim p_\theta}[r(w^s)],
+$$
+
+$w^w = (w_1^s, \ldots, w_T^s)$，$w_t^s$是在时间$t$从模型中采样出的单词。实际中，通常用$p_\theta$中的一个采样估计$L(\theta)$。
+
+$$
+L(\theta) \approx -r(w^s),\, w^s \sim p_\theta
+$$
+
+使用 REINFORCE 方法计算不可微的 reward function 的梯度：
+
+$$
+\grad_\theta L(\theta) = - \mathbb{E}_{w^s \sim p_\theta}[r(w^s)\grad_\theta \log p_\theta(w^s)].
+$$
+
+在实际中，我们从$p_\theta$中随机采样$w^s = (w_1^s, \ldots, w_T^s)$
+
+$$
+\grad_\theta L(\theta) = - r(w^s)\grad_\theta \log p_\theta(w^s).
+$$
+
+```python
+class LanguageModelCriterion(nn.Module):
+    def __init__(self):
+        super(LanguageModelCriterion, self).__init__()
+
+    def forward(self, input, target, mask):
+        # truncate to the same size
+        target = target[:, :input.size(1)]
+        mask =  mask[:, :input.size(1)]
+
+        output = -input.gather(2, target.unsqueeze(2)).squeeze(2) * mask
+        output = torch.sum(output) / torch.sum(mask)
+
+        return output
+```
+
+### Bottom-Up feature[^up-down]
+
+文献[^up-down]将图像描述生成分成两个任务：一个基于非视觉的或任务上下文驱动的 Attention 机制，命名为 top-down；一个基于纯前馈视觉感知，命名为 bottom-up。文中使用 ResNet101-FasterRCNN 提取 ROI 的 feature vector，将其加权求和得到 bottom-up feature。
+
+AoAnet 论文中训练使用的就是该文献作者提供的 COCO 2014 feature。
+
+### AoAnet
+
+#### AoA 机制
+
+#### Encoder
+
+#### Decoder
+
+#### Training & Objective
+
 ## 模型分析
 
 ### 类图
@@ -417,3 +517,5 @@ classDiagram
 [^zhihu108630305]: https://zhuanlan.zhihu.com/p/108630305
 [^jianshu60deff0f64e1]: https://www.jianshu.com/p/60deff0f64e1
 [^wmd]: https://mkusner.github.io/publications/WMD.pdf
+[^self-critical]: Rennie S J , Marcheret E , Mroueh Y , et al. Self-critical Sequence Training for Image Captioning[J]. IEEE, 2016. https://ieeexplore.ieee.org/document/8099614
+[^up-down]: Anderson P , He X , Buehler C , et al. Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering[C]// 2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). IEEE, 2018. https://ieeexplore.ieee.org/document/8578734
