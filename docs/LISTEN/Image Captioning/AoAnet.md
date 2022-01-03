@@ -150,6 +150,12 @@ w = models.KeyedVectors.load_word2vec_format('./GoogleNews-vectors-negative300.b
 
 作者怎么不把依赖写全，非要等到跑到一个 epoch 结束扔个异常出来。气。抓异常只抓`(RuntimeError, KeyboardInterrupt)`，您就没考虑过有人可能没装全依赖吗。
 
+注意还有一处调用`torch.optim.lr_scheduler.ReduceLROnPlateau()`参数顺序因`PyTorch`版本调整有所改变，需要将`verbose`参数移到最后。
+
+```python
+torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10, threshold=0.0001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08, verbose=False)
+```
+
 ### 使用 ResNet feature
 
 ```bash
@@ -430,6 +436,281 @@ $$
 
 Word Mover’s Distance[^wmd]
 
+## 算法分析
+
+### Attention 机制
+
+#### Encoder
+
+设$(h_1, h_2, \ldots, h_n)$是输入句子的隐藏向量表示。这些向量可以是一个 bi-LSTM 的输出，可以捕捉每个词在剧中的语义信息。
+
+#### Decoder
+
+设第$i$个 decoder 的 hidden state 是$s_i$，使用一个递归公式计算：
+
+$$
+s_i = f(s_{i-1}, y_{i-1}, c_i)
+$$
+
+其中，$s_{i-1}$是上一个隐藏向量，$y_{i-1}$是上一步生成的词向量，$c_i$是上下文信息。
+
+$$
+e_{i, j} = a(s_{i-1}, h_j)
+$$
+
+其中$a$可以是任何函数，通常采用一个前馈神经网络。
+
+最终，对分数正则化：
+
+$$
+a_{i, j} = \frac{\exp(e_{i, j})}{\sum_{k=1}^n \exp(e_{i, k})}
+$$
+
+最终计算$c_i$，一个$h_j$的加权平均
+
+$$
+c_i = \sum_{j=1}^n a_{i, j} h_j
+$$
+
+或者，一个向量化的表示：
+
+$$
+\text { Attention }(Q, K, V)=\operatorname{softmax}\left(\frac{Q K^{T}}{\sqrt{d_{k}}}\right) V
+$$
+
+### Self-Critical Sequence Training[^self-critical]
+
+#### REINFORCE 方法
+
+在之前，NLP 问题经常使用交叉熵损失函数来优化指标，这有两个不足：一是不能直接优化 NLP 指标，如 CIDEr 等；二是会引起“偏置爆炸”情况。不能直接优化 CIDEr 是因为 CIDEr 的指标是离散的，无法求取梯度。在[^self-critical]中将 LSTM 模型视为 agent，将单词和 feature 视作 environment。LSTM 网络的参数，$\theta$，定义了一个 policy $p_\theta$；其 state 就是它的 cells 和 hidden state。其 action 就是预测下一个单词。每个 action 之后，agent 更新其内部的 state。当模型输出 End-Of-Sequence 后，agent 观测到一个 reward，这个 reward 就可以是生成的句子的 CIDEr 得分。目标是最小化负的 reward 期望
+
+$$
+L(\theta) = - \mathbb{E}_{w^s \sim p_\theta}[r(w^s)],
+$$
+
+$w^w = (w_1^s, \ldots, w_T^s)$，$w_t^s$是在时间$t$从模型中采样出的单词。实际中，通常用$p_\theta$中的一个采样估计$L(\theta)$。
+
+$$
+L(\theta) \approx -r(w^s),\, w^s \sim p_\theta
+$$
+
+使用 REINFORCE 方法计算不可微的 reward function 的梯度：
+
+$$
+\grad_\theta L(\theta) = - \mathbb{E}_{w^s \sim p_\theta}[r(w^s)\grad_\theta \log p_\theta(w^s)].
+$$
+
+在实际中，我们从$p_\theta$中随机采样$w^s = (w_1^s, \ldots, w_T^s)$
+
+$$
+\grad_\theta L(\theta) = - r(w^s)\grad_\theta \log p_\theta(w^s).
+$$
+
+```python
+class LanguageModelCriterion(nn.Module):
+    def __init__(self):
+        super(LanguageModelCriterion, self).__init__()
+
+    def forward(self, input, target, mask):
+        # truncate to the same size
+        target = target[:, :input.size(1)]
+        mask =  mask[:, :input.size(1)]
+
+        output = -input.gather(2, target.unsqueeze(2)).squeeze(2) * mask
+        output = torch.sum(output) / torch.sum(mask)
+
+        return output
+```
+
+### Bottom-Up feature[^up-down]
+
+文献[^up-down]将图像描述生成分成两个任务：一个基于非视觉的或任务上下文驱动的 Attention 机制，命名为 top-down；一个基于纯前馈视觉感知，命名为 bottom-up。文中使用 ResNet101-FasterRCNN 提取 ROI 的 feature vector，将其加权求和得到 bottom-up feature。
+
+AoAnet 论文中训练使用的就是该文献作者提供的 COCO 2014 feature。
+
+### AoAnet
+
+#### AoA 机制
+
+遵从文献[^aoanet]中的表述，记$f_{att}(\boldsymbol{Q}, \boldsymbol K, \boldsymbol V)$为一个 Attention 操作。
+
+作者提出使用 AoA 模块计算 attention 结果和 query 的相关性。AoA 模块生成通过两个独立的线性变化生成 information vector $i$ 和 attention gate $g$
+
+$$
+\begin{gathered}
+\boldsymbol{i}=W_{q}^{i} \boldsymbol{q}+W_{v}^{i} \hat{\boldsymbol{v}}+b^{i} \\
+\boldsymbol{g}=\sigma\left(W_{q}^{g} \boldsymbol{q}+W_{v}^{g} \hat{\boldsymbol{v}}+b^{g}\right)
+\end{gathered}
+$$
+
+where $W_{q}^{i}, W_{v}^{i}, W_{q}^{g}, W_{v}^{g} \in \mathbb{R}^{D \times D}, b^{i}, b^{g} \in \mathbb{R}^{D}$，$D$是$\boldsymbol q$和$\boldsymbol v$的维度，$\hat{\boldsymbol{v}}=f_{a t t}(\boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V})$是 Attention 的结果，$\sigma$表示 sigmoid 激活函数。
+
+紧接着，AoA 又增加了一层 Attention
+
+$$
+\hat{i}=g \odot i
+$$
+
+整个操作的公式为：
+
+$$
+\begin{array}{r}
+\operatorname{AoA}\left(f_{a t t}, \boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V}\right)=\sigma\left(W_{q}^{g} \boldsymbol{Q}+W_{v}^{g} f_{a t t}(\boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V})+b^{g}\right) \\
+\odot\left(W_{q}^{i} \boldsymbol{Q}+W_{v}^{i} f_{a t t}(\boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V})+b^{i}\right)
+\end{array}
+$$
+
+实现就是一层的事：
+
+```python
+ if self.decoder_type == 'AoA':
+     # AoA layer
+     self.att2ctx = nn.Sequential(nn.Linear(self.d_model * opt.multi_head_scale + opt.rnn_size, 2 * opt.rnn_size), nn.GLU())
+```
+
+#### Encoder
+
+首先，利用 bottom-up features，每张图片有若干 feature$ \boldsymbol A = \{ \boldsymbol a_1, \boldsymbol a_2, \ldots, \boldsymbol a_k\}$，$\boldsymbol a_i \in \mathbb{R}^D$。$\boldsymbol A$将被送入 AoA refiner 中，通过一个 MultiHeadAttention，外加跳跃连接，最终经过 LayerNorm。
+
+$$
+\boldsymbol{A}^{\prime}=\operatorname{LayerNorm}(\boldsymbol{A}+ \left.\operatorname{AoA}^{E}\left(f_{m h-a t t}, W^{Q_{e}} \boldsymbol{A}, W^{K_{e}} \boldsymbol{A}, W^{V_{e}} \boldsymbol{A}\right)\right)
+$$
+
+$$
+\boldsymbol A \leftarrow \boldsymbol A'
+$$
+
+#### Decoder
+
+与 LSTM 中的 decoder 类似，同样采用一个表征上下文信息的 vector $\boldsymbol c$计算下一个词的条件概率：
+
+$$
+p\left(\boldsymbol{y}_{t} \mid \boldsymbol{y}_{1: t-1}, I\right)=\operatorname{softmax}\left(W_{p} \boldsymbol{c}_{t}\right)
+$$
+
+$W_P$是权重矩阵，$|\Sigma{}|$是词汇量。
+
+$$
+\begin{aligned}
+\boldsymbol{x}_{t} &=\left[W_{e} \Pi_{t}, \overline{\boldsymbol{a}}+\boldsymbol{c}_{t-1}\right] \\
+\boldsymbol{h}_{t}, \boldsymbol{m}_{t} &=\operatorname{LSTM}\left(\boldsymbol{x}_{t}, \boldsymbol{h}_{t-1}, \boldsymbol{m}_{t-1}\right)
+\end{aligned}
+$$
+
+where $\bar{\boldsymbol{a}}=\frac{1}{k} \sum_{i} \boldsymbol{a}_{i}$， $\boldsymbol c_{-1} = 0$，$\boldsymbol c_t$由以下公式计算得到
+
+$$
+\boldsymbol{c}_{t}=\operatorname{AoA}^{D}\left(f_{m h-a t t}, W^{Q_{d}}\left[\boldsymbol{h}_{t}\right], W^{K_{d}} A, W^{V_{d}} A\right)
+$$
+
+#### Training & Objective
+
+在文献中，前 25 epoch 使用交叉熵损失
+
+$$
+L_{X E}(\theta)=-\sum_{t=1}^{T} \log \left(p_{\theta}\left(\boldsymbol{y}_{t}^{*} \mid \boldsymbol{y}_{1: t-1}^{*}\right)\right)
+$$
+
+紧接着的 40 epoch 使用 Self-Critical Sequence Training，对 CIDEr 进行调优
+
+$$
+\nabla_{\theta} L_{R L}(\theta) \approx-\left(r\left(\boldsymbol{y}_{1: T}^{s}\right)-r\left(\hat{\boldsymbol{y}}_{1: T}\right)\right) \nabla_{\theta} \log p_{\theta}\left(\boldsymbol{y}_{1: T}^{s}\right)
+$$
+
+## 模型分析
+
+### 类图
+
+```mermaid
+classDiagram
+	class AoAModel {
+		use_mean_feats=1
+		use_multi_head=2
+		ctx2att: AoA
+		refiner: AoA_Refiner_Core
+		core: AoA_Decoder_Core
+		__init__(opt)
+		_prepare_feature(fc_feats, att_feats, att_masks) (mean_feats, att_feats, p_att_feats, att_masks)
+	}
+	class AttModel {
+		embed: [Embedding, ReLU, Dropout]
+		fc_embed: [Embedding, ReLU, Dropout]
+		att_embed: [Embedding, ReLU, Dropout]
+		logit: Linear
+		vocab: [bad endings, such as 'a', 'the', and so on.]
+
+		__init__(opt)
+		init_hidden(batch_size) state
+		clip_att(att_feats, att_masks) (att_feats, att_masks)
+		_prepare_feature(fc_feats, att_feats, att_masks) (mean_feats, att_feats, p_att_feats, att_masks)
+		_forward(fc_feats, att_feats, seq, att_masks=None) outputs
+		get_logprobs_state(it, fc_feats, att_feats, p_att_feats, att_masks, state) (logprobs, state)
+		_sample_beam(fc_feats, att_feats, att_masks=None, opt=dict()) (deq, seqLogprobs)
+		_sample(fc_feats, att_feats, att_masks, opt=dict()) (seq, seqLogprobs)
+	}
+	class CaptionModel {
+		forward(*args, **kwargs) outputs
+		beam_search(init_state, init_logprobs, *args, **kwargs) done_beams
+		beam_step(logprobsf, unaug_logprobsf, beam_size, t, beam_seq, beam_seq_logprobs, beam_seq_logprobs_sum, state) (beam_seq, beam_seq_logprobs, beam_logprobs_sum, state, candidates)
+		sample_next_word(logprobs, sample_method, temprature) (it, sampleLogprobs)
+	}
+	class AoA_Refiner_Core {
+		layer: ModuleList(AoA_Refiner_Layer * 6)
+	}
+	class AoA_Refiner_Layer {
+		self_attn: MultiHeadedDotAttention
+		feed_forward: PositionwiseFeedForward
+		sublayer: [SublayerConnection]
+	}
+	class MultiHeadedDotAttention {
+		d_k
+		h
+		project_k_v
+		norm: LayerNorm
+		linears: [Linear] * [1+2*project_k_v]
+		aoa_layer: [Linear, GLU]
+		outout_layer: lambda x:x
+		dropout
+		forward(query, value, key)
+	}
+	class PositionwiseFeedForward {
+		w_1: Linear
+		w_2: Linear
+		dropout: Dropout
+		forward(x)
+	}
+	class SublayerConnection {
+		norm: LayerNorm
+		dropout: Dropout
+		forward(x, sublayer)
+	}
+	class AoA_Decoder_Core {
+		att2ctx: AoA
+		attention: MultiHeadedDotAttention
+		ctx_drop: Dropout
+		forward(xt, xt, mean_feats, att_feats, p_att_feats, state, att_mask=None) (output, state)
+	}
+	class TransformerModel {
+		...ommitted
+	}
+	AoA_Refiner_Core "1"*--"6" AoA_Refiner_Layer
+	%% MultiHeadedDotAttention --* AoA_Refiner_Layer
+	AoA_Decoder_Core "1"*--"1" MultiHeadedDotAttention
+	AoA_Refiner_Layer "1"*--"1" MultiHeadedDotAttention
+	AoA_Refiner_Layer "1"*--"1" PositionwiseFeedForward
+	AoA_Refiner_Layer "1"*--"2" SublayerConnection
+
+	%% AoA_Refiner_Layer *-- AoA_Refiner_Core
+	CaptionModel <|-- AttModel
+	AttModel <|-- AoAModel
+	AttModel <|-- TransformerModel
+	AoAModel *-- AoA_Refiner_Core
+	AoAModel *-- AoA_Decoder_Core
+```
+
 [^zhihu108630305]: https://zhuanlan.zhihu.com/p/108630305
 [^jianshu60deff0f64e1]: https://www.jianshu.com/p/60deff0f64e1
 [^wmd]: https://mkusner.github.io/publications/WMD.pdf
+[^self-critical]: Rennie S J , Marcheret E , Mroueh Y , et al. Self-critical Sequence Training for Image Captioning[J]. IEEE, 2016. https://ieeexplore.ieee.org/document/8099614
+[^up-down]: Anderson P , He X , Buehler C , et al. Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering[C]// 2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). IEEE, 2018. https://ieeexplore.ieee.org/document/8578734
+[^aoanet]: Huang, L. , Wang, W. , Chen, J. , & Wei, X. Y. . Attention on Attention for Image Captioning. _International Conference on Computer Vision_. Peking University; Peng Cheng Laboratory. https://ieeexplore.ieee.org/document/9008770
