@@ -188,7 +188,116 @@ conda acitivate py2 # python2文件，因为reader迭代器返回了byte
 python scripts/make_bu_data.py --output_dir data/cocobu
 ```
 
-然后我把`train.sh`改了回去(`git checkout train.sh`)，备份了`checkpoint`s，清理项目目录，重新开始训练。
+然后我把`train.sh`改了回去(`git checkout train.sh`)，备份了`checkpoint`s，清理项目目录，重新开始训练。
+
+```bash
+CUDA_VISIBLE_DEVICES=0 bash train.sh
+```
+
+所有训练选项：
+
+```python
+Namespace(
+    acc_steps=1,
+    att_feat_size=2048,
+    att_hid_size=512,
+    batch_size=16,
+    beam_size=1,
+    bleu_reward_weight=0,
+    block_trigrams=0,
+    cached_tokens='coco-train-idxs',
+    caption_model='aoa',
+    checkpoint_path='log/log_aoanet',
+    cider_reward_weight=1,
+    ctx_drop=1,
+    decoder_type='AoA',
+    drop_prob_lm=0.5,
+    dropout_aoa=0.3,
+    fc_feat_size=2048,
+    grad_clip=0.1,
+    id='aoanet',
+    input_att_dir='data/cocobu_att',
+    input_box_dir='data/cocobu_box',
+    input_encoding_size=1024,
+    input_fc_dir='data/cocobu_fc',
+    input_json='data/cocotalk.json',
+    input_label_h5='data/cocotalk_label.h5',
+    label_smoothing=0.2,
+    language_eval=1,
+    learning_rate=0.0002,
+    learning_rate_decay_every=3,
+    learning_rate_decay_rate=0.8,
+    learning_rate_decay_start=0,
+    length_penalty='',
+    load_best_score=1,
+    logit_layers=1,
+    losses_log_every=25,
+    max_epochs=50,
+    max_length=20,
+    mean_feats=1,
+    multi_head_scale=1,
+    noamopt=False,
+    noamopt_factor=1,
+    noamopt_warmup=2000,
+    norm_att_feat=0,
+    norm_box_feat=0,
+    num_heads=8,
+    num_layers=2,
+    optim='adam',
+    optim_alpha=0.9,
+    optim_beta=0.999,
+    optim_epsilon=1e-08,
+    reduce_on_plateau=False,
+    refine=1,
+    refine_aoa=1,
+    remove_bad_endings=0,
+    rnn_size=1024,
+    rnn_type='lstm',
+    save_checkpoint_every=6000,
+    save_history_ckpt=0,
+    scheduled_sampling_increase_every=5,
+    scheduled_sampling_increase_prob=0.05,
+    scheduled_sampling_max_prob=0.5,
+    scheduled_sampling_start=0,
+    self_critical_after=-1,
+    seq_length=16,
+    seq_per_img=5,
+    start_from='log/log_aoanet',
+    train_only=0,
+    use_att=True,
+    use_bn=0,
+    use_box=0,
+    use_fc=True,
+    use_ff=0,
+    use_multi_head=2,
+    use_warmup=0,
+    val_images_use=-1,
+    vocab_size=9487,
+    weight_decay=0
+)
+```
+
+注意使用`nohup`时需要使用`2) SIGINT`打断（`kill`默认发送的是`15) SIGTERM`），
+
+```bash
+kill -2 $pid # 注意要打断python父程序（pid最小的那个）而不是启动脚本用的bash！
+```
+
+注意由于`PyTorch 1.5`中`BiLSTM`模块更新导致`pack_padded_sequence`的`length`只能是`CPU int64 tensor`，[参考 ISSUE 43227](https://github.com/pytorch/pytorch/issues/43227)，之前的版本会将`length`隐式复制到内存，所以后来`PyTorch`废弃了这种写法。
+
+我们需要修改`models/AttModel.py`中`sort_pack_padded_sequence`函数如下：
+
+```python
+def sort_pack_padded_sequence(input, lengths):
+    sorted_lengths, indices = torch.sort(lengths, descending=True)
+    # 修改下一行，加入.cpu()
+    tmp = pack_padded_sequence(input[indices], sorted_lengths.cpu(), batch_first=True)
+    inv_ix = indices.clone()
+    inv_ix[indices] = torch.arange(0,len(indices)).type_as(inv_ix)
+    return tmp, inv_ix
+```
+
+另外，半年之后，`PaddlePaddle`还是没有`pack_padded_sequence`这个 API，可能需要自己写。参照：https://www.paddlepaddle.org.cn/documentation/docs/faq/train_cn.html#paddletorch-nn-utils-rnn-pack-padded-sequencetorch-nn-utils-rnn-pad-packed-sequenceapi
 
 ## 测试指标
 
@@ -324,4 +433,3 @@ Word Mover’s Distance[^wmd]
 [^zhihu108630305]: https://zhuanlan.zhihu.com/p/108630305
 [^jianshu60deff0f64e1]: https://www.jianshu.com/p/60deff0f64e1
 [^wmd]: https://mkusner.github.io/publications/WMD.pdf
-
