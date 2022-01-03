@@ -150,6 +150,12 @@ w = models.KeyedVectors.load_word2vec_format('./GoogleNews-vectors-negative300.b
 
 作者怎么不把依赖写全，非要等到跑到一个 epoch 结束扔个异常出来。气。抓异常只抓`(RuntimeError, KeyboardInterrupt)`，您就没考虑过有人可能没装全依赖吗。
 
+注意还有一处调用`torch.optim.lr_scheduler.ReduceLROnPlateau()`参数顺序因`PyTorch`版本调整有所改变，需要将`verbose`参数移到最后。
+
+```python
+torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10, threshold=0.0001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08, verbose=False)
+```
+
 ### 使用 ResNet feature
 
 ```bash
@@ -363,7 +369,7 @@ $$
 \text { Attention }(Q, K, V)=\operatorname{softmax}\left(\frac{Q K^{T}}{\sqrt{d_{k}}}\right) V
 $$
 
-### Self-critical Sequence Training[^self-critical]
+### Self-Critical Sequence Training[^self-critical]
 
 #### REINFORCE 方法
 
@@ -417,11 +423,90 @@ AoAnet 论文中训练使用的就是该文献作者提供的 COCO 2014 feature�
 
 #### AoA 机制
 
+遵从文献[^aoanet]中的表述，记$f_{att}(\boldsymbol{Q}, \boldsymbol K, \boldsymbol V)$为一个 Attention 操作。
+
+作者提出使用 AoA 模块计算 attention 结果和 query 的相关性。AoA 模块生成通过两个独立的线性变化生成 information vector $i$ 和 attention gate $g$
+
+$$
+\begin{gathered}
+\boldsymbol{i}=W_{q}^{i} \boldsymbol{q}+W_{v}^{i} \hat{\boldsymbol{v}}+b^{i} \\
+\boldsymbol{g}=\sigma\left(W_{q}^{g} \boldsymbol{q}+W_{v}^{g} \hat{\boldsymbol{v}}+b^{g}\right)
+\end{gathered}
+$$
+
+where $W_{q}^{i}, W_{v}^{i}, W_{q}^{g}, W_{v}^{g} \in \mathbb{R}^{D \times D}, b^{i}, b^{g} \in \mathbb{R}^{D}$，$D$是$\boldsymbol q$和$\boldsymbol v$的维度，$\hat{\boldsymbol{v}}=f_{a t t}(\boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V})$是 Attention 的结果，$\sigma$表示 sigmoid 激活函数。
+
+紧接着，AoA 又增加了一层 Attention
+
+$$
+\hat{i}=g \odot i
+$$
+
+整个操作的公式为：
+
+$$
+\begin{array}{r}
+\operatorname{AoA}\left(f_{a t t}, \boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V}\right)=\sigma\left(W_{q}^{g} \boldsymbol{Q}+W_{v}^{g} f_{a t t}(\boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V})+b^{g}\right) \\
+\odot\left(W_{q}^{i} \boldsymbol{Q}+W_{v}^{i} f_{a t t}(\boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V})+b^{i}\right)
+\end{array}
+$$
+
+实现就是一层的事：
+
+```python
+ if self.decoder_type == 'AoA':
+     # AoA layer
+     self.att2ctx = nn.Sequential(nn.Linear(self.d_model * opt.multi_head_scale + opt.rnn_size, 2 * opt.rnn_size), nn.GLU())
+```
+
 #### Encoder
+
+首先，利用 bottom-up features，每张图片有若干 feature$ \boldsymbol A = \{ \boldsymbol a_1, \boldsymbol a_2, \ldots, \boldsymbol a_k\}$，$\boldsymbol a_i \in \mathbb{R}^D$。$\boldsymbol A$将被送入 AoA refiner 中，通过一个 MultiHeadAttention，外加跳跃连接，最终经过 LayerNorm。
+
+$$
+\boldsymbol{A}^{\prime}=\operatorname{LayerNorm}(\boldsymbol{A}+ \left.\operatorname{AoA}^{E}\left(f_{m h-a t t}, W^{Q_{e}} \boldsymbol{A}, W^{K_{e}} \boldsymbol{A}, W^{V_{e}} \boldsymbol{A}\right)\right)
+$$
+
+$$
+\boldsymbol A \leftarrow \boldsymbol A'
+$$
 
 #### Decoder
 
+与 LSTM 中的 decoder 类似，同样采用一个表征上下文信息的 vector $\boldsymbol c$计算下一个词的条件概率：
+
+$$
+p\left(\boldsymbol{y}_{t} \mid \boldsymbol{y}_{1: t-1}, I\right)=\operatorname{softmax}\left(W_{p} \boldsymbol{c}_{t}\right)
+$$
+
+$W_P$是权重矩阵，$|\Sigma{}|$是词汇量。
+
+$$
+\begin{aligned}
+\boldsymbol{x}_{t} &=\left[W_{e} \Pi_{t}, \overline{\boldsymbol{a}}+\boldsymbol{c}_{t-1}\right] \\
+\boldsymbol{h}_{t}, \boldsymbol{m}_{t} &=\operatorname{LSTM}\left(\boldsymbol{x}_{t}, \boldsymbol{h}_{t-1}, \boldsymbol{m}_{t-1}\right)
+\end{aligned}
+$$
+
+where $\bar{\boldsymbol{a}}=\frac{1}{k} \sum_{i} \boldsymbol{a}_{i}$， $\boldsymbol c_{-1} = 0$，$\boldsymbol c_t$由以下公式计算得到
+
+$$
+\boldsymbol{c}_{t}=\operatorname{AoA}^{D}\left(f_{m h-a t t}, W^{Q_{d}}\left[\boldsymbol{h}_{t}\right], W^{K_{d}} A, W^{V_{d}} A\right)
+$$
+
 #### Training & Objective
+
+在文献中，前 25 epoch 使用交叉熵损失
+
+$$
+L_{X E}(\theta)=-\sum_{t=1}^{T} \log \left(p_{\theta}\left(\boldsymbol{y}_{t}^{*} \mid \boldsymbol{y}_{1: t-1}^{*}\right)\right)
+$$
+
+紧接着的 40 epoch 使用 Self-Critical Sequence Training，对 CIDEr 进行调优
+
+$$
+\nabla_{\theta} L_{R L}(\theta) \approx-\left(r\left(\boldsymbol{y}_{1: T}^{s}\right)-r\left(\hat{\boldsymbol{y}}_{1: T}\right)\right) \nabla_{\theta} \log p_{\theta}\left(\boldsymbol{y}_{1: T}^{s}\right)
+$$
 
 ## 模型分析
 
@@ -519,3 +604,4 @@ classDiagram
 [^wmd]: https://mkusner.github.io/publications/WMD.pdf
 [^self-critical]: Rennie S J , Marcheret E , Mroueh Y , et al. Self-critical Sequence Training for Image Captioning[J]. IEEE, 2016. https://ieeexplore.ieee.org/document/8099614
 [^up-down]: Anderson P , He X , Buehler C , et al. Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering[C]// 2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). IEEE, 2018. https://ieeexplore.ieee.org/document/8578734
+[^aoanet]: Huang, L. , Wang, W. , Chen, J. , & Wei, X. Y. . Attention on Attention for Image Captioning. _International Conference on Computer Vision_. Peking University; Peng Cheng Laboratory. https://ieeexplore.ieee.org/document/9008770
