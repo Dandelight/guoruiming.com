@@ -150,6 +150,46 @@ w = models.KeyedVectors.load_word2vec_format('./GoogleNews-vectors-negative300.b
 
 作者怎么不把依赖写全，非要等到跑到一个 epoch 结束扔个异常出来。气。抓异常只抓`(RuntimeError, KeyboardInterrupt)`，您就没考虑过有人可能没装全依赖吗。
 
+### 使用 ResNet feature
+
+```bash
+python scripts/prepro_feats.py --input_json data/dataset_coco.json --output_dir data/cocotalk --images_root $IMAGE_ROOT
+```
+
+使用 ResNet feature 训练，需要修改`train.sh`中的配置使目录指向 cocotalk 目录。实测 25 epoch 指标：
+
+```yaml
+Bleu_1: 0.724
+Bleu_2: 0.551
+Bleu_3: 0.405
+Bleu_4: 0.295
+METEOR: 0.250
+ROUGE_L: 0.530
+CIDEr: 0.954
+SPICE: 0.182
+WMD: 0.533
+```
+
+指标并不能达到论文中的高度，怀疑是数据使用出了问题。论文中使用的 feature 是 bottom-up feature，
+
+### 使用 Bottom-Up feature
+
+> Download pre-extracted feature from [link](https://github.com/peteanderson80/bottom-up-attention). You can either download adaptive one or fixed one.
+
+下载方式如下：
+
+```bash
+mkdir data/bu_data; cd data/bu_data
+wget https://storage.googleapis.com/up-down-attention/trainval.zip
+unzip trainval.zip
+# 切回项目根目录
+cd ..
+conda acitivate py2 # python2文件，因为reader迭代器返回了byte
+python scripts/make_bu_data.py --output_dir data/cocobu
+```
+
+然后我把`train.sh`改了回去(`git checkout train.sh`)，备份了`checkpoint`s，清理项目目录，重新开始训练。
+
 ## 测试指标
 
 本次使用五个指标：Bleu、METEOR、ROUGE-L、CIDEr、SPICE。
