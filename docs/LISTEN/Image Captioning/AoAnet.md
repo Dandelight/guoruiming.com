@@ -321,6 +321,99 @@ $$
 
 Word Mover’s Distance[^wmd]
 
+## 算法分析
+
+## 模型分析
+
+### 类图
+
+```mermaid
+classDiagram
+	class AoAModel {
+		use_mean_feats=1
+		use_multi_head=2
+		ctx2att: AoA
+		refiner: AoA_Refiner_Core
+		core: AoA_Decoder_Core
+		__init__(opt)
+		_prepare_feature(fc_feats, att_feats, att_masks) (mean_feats, att_feats, p_att_feats, att_masks)
+	}
+	class AttModel {
+		embed: [Embedding, ReLU, Dropout]
+		fc_embed: [Embedding, ReLU, Dropout]
+		att_embed: [Embedding, ReLU, Dropout]
+		logit: Linear
+		vocab: [bad endings, such as 'a', 'the', and so on.]
+
+		__init__(opt)
+		init_hidden(batch_size) state
+		clip_att(att_feats, att_masks) (att_feats, att_masks)
+		_prepare_feature(fc_feats, att_feats, att_masks) (mean_feats, att_feats, p_att_feats, att_masks)
+		_forward(fc_feats, att_feats, seq, att_masks=None) outputs
+		get_logprobs_state(it, fc_feats, att_feats, p_att_feats, att_masks, state) (logprobs, state)
+		_sample_beam(fc_feats, att_feats, att_masks=None, opt=dict()) (deq, seqLogprobs)
+		_sample(fc_feats, att_feats, att_masks, opt=dict()) (seq, seqLogprobs)
+	}
+	class CaptionModel {
+		forward(*args, **kwargs) outputs
+		beam_search(init_state, init_logprobs, *args, **kwargs) done_beams
+		beam_step(logprobsf, unaug_logprobsf, beam_size, t, beam_seq, beam_seq_logprobs, beam_seq_logprobs_sum, state) (beam_seq, beam_seq_logprobs, beam_logprobs_sum, state, candidates)
+		sample_next_word(logprobs, sample_method, temprature) (it, sampleLogprobs)
+	}
+	class AoA_Refiner_Core {
+		layer: ModuleList(AoA_Refiner_Layer * 6)
+	}
+	class AoA_Refiner_Layer {
+		self_attn: MultiHeadedDotAttention
+		feed_forward: PositionwiseFeedForward
+		sublayer: [SublayerConnection]
+	}
+	class MultiHeadedDotAttention {
+		d_k
+		h
+		project_k_v
+		norm: LayerNorm
+		linears: [Linear] * [1+2*project_k_v]
+		aoa_layer: [Linear, GLU]
+		outout_layer: lambda x:x
+		dropout
+		forward(query, value, key)
+	}
+	class PositionwiseFeedForward {
+		w_1: Linear
+		w_2: Linear
+		dropout: Dropout
+		forward(x)
+	}
+	class SublayerConnection {
+		norm: LayerNorm
+		dropout: Dropout
+		forward(x, sublayer)
+	}
+	class AoA_Decoder_Core {
+		att2ctx: AoA
+		attention: MultiHeadedDotAttention
+		ctx_drop: Dropout
+		forward(xt, xt, mean_feats, att_feats, p_att_feats, state, att_mask=None) (output, state)
+	}
+	class TransformerModel {
+		...ommitted
+	}
+	AoA_Refiner_Core "1"*--"6" AoA_Refiner_Layer
+	%% MultiHeadedDotAttention --* AoA_Refiner_Layer
+	AoA_Decoder_Core "1"*--"1" MultiHeadedDotAttention
+	AoA_Refiner_Layer "1"*--"1" MultiHeadedDotAttention
+	AoA_Refiner_Layer "1"*--"1" PositionwiseFeedForward
+	AoA_Refiner_Layer "1"*--"2" SublayerConnection
+
+	%% AoA_Refiner_Layer *-- AoA_Refiner_Core
+	CaptionModel <|-- AttModel
+	AttModel <|-- AoAModel
+	AttModel <|-- TransformerModel
+	AoAModel *-- AoA_Refiner_Core
+	AoAModel *-- AoA_Decoder_Core
+```
+
 [^zhihu108630305]: https://zhuanlan.zhihu.com/p/108630305
 [^jianshu60deff0f64e1]: https://www.jianshu.com/p/60deff0f64e1
 [^wmd]: https://mkusner.github.io/publications/WMD.pdf
