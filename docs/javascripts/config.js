@@ -10,9 +10,11 @@ window.MathJax = {
       ["\\[", "\\]"],
       ["$$", "$$"],
     ],
+    packages: { "[+]": ["boldsymbol"] },
     processEscapes: true,
     processEnvironments: true,
   },
+  loader: { load: ["[tex]/boldsymbol"] },
   options: { ignoreHtmlClass: ".*|", processHtmlClass: "arithmatex" },
 };
 

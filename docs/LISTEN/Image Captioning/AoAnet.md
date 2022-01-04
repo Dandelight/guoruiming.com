@@ -570,7 +570,7 @@ $$
 
 #### Encoder
 
-首先，利用 bottom-up features，每张图片有若干 feature $ \boldsymbol A = \{ \boldsymbol a_1, \boldsymbol a_2, \ldots, \boldsymbol a_k\}$，$\boldsymbol a_i \in \mathbb{R}^D$。$\boldsymbol A$将被送入 AoA refiner 中，通过一个 MultiHeadAttention，外加跳跃连接，最终经过 LayerNorm。
+首先，利用 bottom-up features，每张图片有若干 feature $\boldsymbol A = \{ \boldsymbol a_1, \boldsymbol a_2, \ldots, \boldsymbol a_k\}$ ， $\boldsymbol a_i \in \mathbb{R}^D$ 。 $\boldsymbol A$ 将被送入 AoA refiner 中，通过一个 MultiHeadAttention，外加跳跃连接，最终经过 LayerNorm。
 
 $$
 \boldsymbol{A}^{\prime}=\operatorname{LayerNorm}(\boldsymbol{A}+ \left.\operatorname{AoA}^{E}\left(f_{m h-a t t}, W^{Q_{e}} \boldsymbol{A}, W^{K_{e}} \boldsymbol{A}, W^{V_{e}} \boldsymbol{A}\right)\right)
