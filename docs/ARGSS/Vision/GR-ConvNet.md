@@ -108,5 +108,3 @@ $$
 训练过程：
 
 ![grcnn](media/GR-ConvNet/grcnn.png)
-
-（蓝色为作者提供，红色为本人训练）
