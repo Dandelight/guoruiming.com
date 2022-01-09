@@ -60,7 +60,7 @@ services:
   mysql:
     restart: always
     image: mysql:5.7.18
-    container_name: mysql-lable
+    container_name: mysql-labe
     volumes:
       - /apps/mysql/mydir:/mydir
       - /apps/mysql/datadir:/var/lib/mysql
