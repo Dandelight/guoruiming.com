@@ -129,9 +129,7 @@ DATA ascii
 
 ### `MATLAB`中处理`pcd`文件
 
-首先，保证文件以`pcd`为后缀名。
-
-然后，就是以`pc`开头的一系列命令
+`MATLAB`中存在一系列以`pc`开头的一系列命令
 
 [`pointCloud`](https://ww2.mathworks.cn/help/vision/ref/pointcloud.html) | [`pcplayer`](https://ww2.mathworks.cn/help/vision/ref/pcplayer.html) | [`pcshow`](https://ww2.mathworks.cn/help/vision/ref/pcshow.html) | [`pcwrite`](https://ww2.mathworks.cn/help/vision/ref/pcwrite.html) | [`pcmerge`](https://ww2.mathworks.cn/help/vision/ref/pcmerge.html) | [`pcfitplane`](https://ww2.mathworks.cn/help/vision/ref/pcfitplane.html) | [`planeModel`](https://ww2.mathworks.cn/help/vision/ref/planemodel.html) | [`pctransform`](https://ww2.mathworks.cn/help/vision/ref/pctransform.html) | [`pcdownsample`](https://ww2.mathworks.cn/help/vision/ref/pcdownsample.html) | [`pcdenoise`](https://ww2.mathworks.cn/help/vision/ref/pcdenoise.html) | [`pcregistericp`](https://ww2.mathworks.cn/help/vision/ref/pcregistericp.html)
 
@@ -142,8 +140,8 @@ ptCloud = pcread('teapot.ply');
 pcshow(ptCloud);
 ```
 
-在`MATLAB`中，点云处理处于`Computer Vision Toolbox`的一部分，详见https://ww2.mathworks.cn/help/vision/point-cloud-processing.html。
+在`MATLAB`中，点云处理属于于`Computer Vision Toolbox`的一部分，详见https://ww2.mathworks.cn/help/vision/point-cloud-processing.html
 
-要不，咱们先跑一个点云上的分类？
+`pcread`可读取`ply`或`pcd`格式的点云文件，但要求点云文件以`ply`或`pcd`为后缀名；`pcwrite`亦可输出`ply`或`pcd`文件。
 
-TODO：跟原作者要一张背景图片
+在`Cornell Grasping Dataset`中，数据集作者提供了背景，我们可以通过减除背景的方式得到物体的图像。注意减除背景之后可能得到$0$值，可能需要进行特殊处理。
