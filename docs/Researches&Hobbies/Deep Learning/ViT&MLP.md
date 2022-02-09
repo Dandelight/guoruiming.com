@@ -178,6 +178,8 @@ $$
 
 [facebookresearch/dino](https://github.com/facebookresearch/dino) DINO 算法以及 Vision Transformer 等。
 
+[lucidrains/vit-pytorch](https://github.com/lucidrains/vit-pytorch)  又一个 Vision Transformer 库
+
 ```bibtex
 @article{DosovitskiyAlexey2020AIiW,
 abstract = {While the Transformer architecture has become the de-facto standard for
