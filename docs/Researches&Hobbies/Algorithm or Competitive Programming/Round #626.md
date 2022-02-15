@@ -95,3 +95,58 @@ int main() {
 ```
 
 ## [1324D - Sleeping Schedule](https://codeforces.com/contest/1324/problem/E)
+
+题目大意如下：每天有$h$个小时，Vova 每天睡$n$次，第$i$次睡觉的时间距离上一次苏醒$a_i$小时，每次睡$h$小时。Vova 在$0$时刻苏醒。
+
+定义第$i$次睡觉是**好的**当且仅当该次睡眠开始于$l$小时和$r$小时之间。
+
+Vova 有一定的自制力，在第$i$次睡眠之前他可以**选择**在$a_i$小时后入睡或$a_i-1$小时后入睡。
+
+求**最大的好的睡眠次数**。
+
+这显然是一个动态规划问题~~（虽然我在比赛里没看出来~~，状态为好的睡眠次数，状态转移为按时睡觉或早睡早起，属性为最大值。令$dp_{i, j}$为第$i$次睡眠，其中$j$次早睡时最大“好的”睡眠次数，显而易见答案为$\max\limits_{j=0}^{n} dp_{n, j}$。初始时，$dp_{i, j} = -\infty$，$dp_{0,0}=0$。
+
+每次状态转移有两种选择：按时睡觉与早睡一小时。
+
+- 按时睡觉：$dp_{i+1, j} = \max(dp_{i+1, j}, dp_{i, j}+|(s-j)\mod h \in [l, r]|)$
+- 早睡早起：$dp_{i+1, j+1} = \max(dp_{i+1, j+1}, dp_{i, j} + |s - j - 1 \mod h \in [l, r]|)$
+
+Don't forget to don't make transitions from unreachable states.
+
+时间复杂度：$O(n^2)$
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+bool in(int x, int l, int r) {
+	return l <= x && x <= r;
+}
+
+int main() {
+#ifdef _DEBUG
+	freopen("input.txt", "r", stdin);
+//	freopen("output.txt", "w", stdout);
+#endif
+
+	int n, h, l, r;
+	cin >> n >> h >> l >> r;
+	vector<int> a(n);
+	for (auto &it : a) cin >> it;
+	vector<vector<int>> dp(n + 1, vector<int>(n + 1, INT_MIN));
+	dp[0][0] = 0;
+	int sum = 0;
+	for (int i = 0; i < n; ++i) {
+		sum += a[i];
+		for (int j = 0; j <= n; ++j) {
+			dp[i + 1][j] = max(dp[i + 1][j], dp[i][j] + in((sum - j) % h, l, r));
+			if (j < n) dp[i + 1][j + 1] = max(dp[i + 1][j + 1], dp[i][j] + in((sum - j - 1) % h, l, r));
+		}
+	}
+
+	cout << *max_element(dp[n].begin(), dp[n].end()) << endl;
+
+	return 0;
+}
+```
