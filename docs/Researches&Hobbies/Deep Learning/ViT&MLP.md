@@ -2,7 +2,9 @@
 
 # An Image Is Worth A Thousand Words
 
-书接上回，Transformer 横空出世，一举成为 NLP 领域的最佳模型，不仅在各项任务上有了突破性进展， 还催生了 BERT、GPT 等大模型。就像有人想把 CNN 搬到文本上一样，有很多工作尝试将自注意力机制与卷积融合起来。~~但为什么这么具有开创性意义又直截了当的工作早没有人做呢？因为他们没有 Google 这样庞大的算力。~~作者实验性地将 Transformer 结构作尽可能小的改动，将图像分成$16\times 16$的小块，经过可学习的`Linear Projection`（其实就是`nn.Linear`），就成为了 Multihead Self-Attention 的输入 Token。使用 JFT-300M 数据集在 TPU 上训练 2.5k 核日之后在 ImageNet 上达到了$88.55\pm0.04 \%$的结果，~~成功地证明了训练 ViT 需要消耗极大的算力。~~
+书接上回，Transformer 横空出世，一举成为 NLP 领域的最佳模型，不仅在各项任务上有了突破性进展， 还催生了 BERT、GPT 等大模型。就像有人想把 CNN 搬到文本上一样，有很多工作尝试将自注意力机制与卷积融合起来。~~但为什么这么具有开创性意义又直截了当的工作早没有人做呢？因为他们没有 Google 这样庞大的算力。~~
+
+作者实验性地将 Transformer 结构作尽可能小的改动，将图像分成$16\times 16$的小块，经过可学习的`Linear Projection`（其实就是`nn.Linear`），就成为了 Multihead Self-Attention 的输入 Token。使用 JFT-300M 数据集在 TPU 上训练 2.5k 核日之后在 ImageNet 上达到了$88.55\pm0.04 \%$的结果，~~成功地证明了训练 ViT 需要消耗极大的算力。~~
 
 `ViT`核心代码如下：（参考：https://github.com/facebookresearch/dino/blob/main/vision_transformer.py
 
@@ -224,3 +226,5 @@ author = {Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Wei
     pages = "38--45"
 }
 ```
+
+或许随着算力的提升，会有那么一天，在计算机上算一个 ViT 和今天算一个 k 近邻一样容易。
