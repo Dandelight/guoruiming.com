@@ -4,12 +4,17 @@
 
 ## 学习与项目
 
-列了一系列项目，有在研的，有结束的，有自己做的，有帮朋友做的，有自己没有充足的时间做的，**不是挖坑不填，实在填不过来**，希望有志同道合之人可与我同行。`Gitee`地址：https://gitee.com/dandelight/。
+列了一系列项目，有在研的，有结束的，有自己做的，有帮朋友做的，有自己没有充足的时间做的，**不是挖坑不填，实在填不过来**，希望有志同道合之人可与我同行。
 
-- **LISTEN 耳阅读屏**
+`Gitee`地址：https://gitee.com/dandelight/
+
+- **LISTEN 耳阅读屏**（自然语言处理调研中）
 - 生活垃圾资源化系统（Automated Recyclable Garbage Sorting System，ARGSS）
-- 点云目标检测
-- 聊天软件
+- 点云目标检测（调研中）
+- 聊天软件（完成度：50%）
+- [PaperPeer](https://gitee.com/dandelight/paperpeer)（完成度：10%）
+- [读英语背单词](https://gitee.com/dandelight/readEnglish)（完成度：20%)
+- Silly games like [starller](https://gitee.com/dandelight/starller)（完成度：咕咕咕）
 
 ## Featured Research
 
