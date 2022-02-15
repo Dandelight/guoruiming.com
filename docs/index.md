@@ -4,16 +4,16 @@
 
 ## 学习与项目
 
-列了一系列项目，有自己做的，有自己没有充足的时间做的，**不是挖坑不填，实在填不过来**，希望有志同道合之人可与我同行。`Gitee`地址：https://gitee.com/dandelight/。
+列了一系列项目，有在研的，有结束的，有自己做的，有帮被人做的，有自己没有充足的时间做的，**不是挖坑不填，实在填不过来**，希望有志同道合之人可与我同行。`Gitee`地址：https://gitee.com/dandelight/。
 
 - **LISTEN 耳阅读屏**
 - 生活垃圾资源化系统（Automated Recyclable Garbage Sorting System，ARGSS）
 - 点云目标检测
+- 聊天软件
 
 ## Featured Research
 
-- Image Captioning
-- 确定机械臂抓取位点的计算机视觉方法
+- Image Captioning with Transformer and MLP
 
 ## 课程
 
