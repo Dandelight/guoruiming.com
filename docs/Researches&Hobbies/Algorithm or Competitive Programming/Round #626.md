@@ -150,3 +150,153 @@ int main() {
 	return 0;
 }
 ```
+
+## [1409B - Minimum Product](https://codeforces.com/problemset/problem/1409/B)
+
+给定四个整数$a, b, x, y$，其中$a\ge x$且$b \ge y$，一共可以进行$n$次操作，每次可以将$a$或$b$减一，但必须保证$a\ge x$且$b \ge y$，求最终$a\times b$的最小值。
+
+题目的思路是：当我们开始减一个数，最好的方法是一直减到不能再减为止。
+
+先减哪个好呢？小孩子才做选择。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+	int t;
+	cin >> t;
+	while (t--) {
+		int a, b, x, y, n;
+		cin >> a >> b >> x >> y >> n;
+		long long ans = 1e18;
+		for (int i = 0; i < 2; ++i) {
+			int da = min(n, a - x);
+			int db = min(n - da, b - y);
+			ans = min(ans, (a - da) * 1ll * (b - db));
+			swap(a, b);
+			swap(x, y);
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}
+```
+
+## [1404A - Balanced Bitstring](https://codeforces.com/problemset/problem/1404/A)
+
+bitstring 是仅包含 0 和 1 的字符串。给定一个包含`0`、`1`和`?`的字符串$s$和一个正整数$k$，求是否可以对$s$中的`?`赋值使其中每连续的$k$个字符都是一个 bitstring。
+
+可以发现，$s_i = s_{i+k}$，由此推导可知$t_j=t_j\quad \text{if} \quad i \equiv j\pmod k$。因此，当我们可以扫描整个字符串，检查是否有$t_i = t_{i \mod k}$。如果$t_i$不是`?`而$t_{i\mod k}$是`?`，那么将$t_{i \mod k}$赋值为$t_i$。扫描完成后再检查一边$t_0, \ldots, t_{k-1}$中`1`和`0`的数量是否超过$k/2$，如果超过说明为假。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+int n, k, t;
+string s;
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cin >> t;
+    while (t--) {
+        cin >> n >> k >> s;
+        int zer = 0, one = 0;
+        bool chk = true;
+        for (int i = 0; i < k; i++) {
+            int tmp = -1;
+            for (int j = i; j < n; j += k) {
+                if (s[j] != '?') {
+                    if (tmp != -1 && s[j] - '0' != tmp) {
+                        chk = false;
+                        break;
+                    }
+                    tmp = s[j] - '0';
+                }
+            }
+            if (tmp != -1) {
+                (tmp == 0 ? zer : one)++;
+            }
+        }
+        if (max(zer, one) > k / 2) {
+            chk = false;
+        }
+        cout << (chk ? "YES\n" : "NO\n");
+    }
+}
+```
+
+## [1405D - Tree Tag](https://codeforces.com/contest/1405/problem/D)
+
+Alice 和 Bob 分别站在一棵树的两个结点$a, b$上，Alice 每次可以走过$da$条边，Bob 可以走过$db$条边。Alice 先手，二人交替操作，经过足够多的步数后，当 Alice 和 Bob 落到同一个节点上 Alice 胜，否则 Bob 胜。另外已知 Bob 和 Alice 都是绝顶聪明的人，都会执行最佳操作，问谁最终获胜。
+
+这道题明显是一道博弈论问题，并且需要**分类讨论**。
+
+### 1. $\mathrm{dist}(a, b) \le da$
+
+Alice 交出一个闪现大步一跃一把抓住 Bob，Bob，卒。
+
+### 2. $2da > 树的直径$
+
+Alice 首先到达树的重心，之后 Bob 插翅难逃。
+
+### 3. $db \le 2da$
+
+设 Alice 所在的点$a$为树根，$b$点所在的子树有$k$个结点。Alice 向$b$一定一步，$k$必然减小，而 Bob 不能逃到其他子树，因为一定会被捉。所以 Bob 只能眼睁睁看着 Alice 步步紧逼。Bob，卒。
+
+### 4. $db > 2da$
+
+此时 Bob 终于有了回旋的余地，机智的 Bob 将采取以下的方案。首先因为不在情况 1 中，Bob 躲过第一招；又因为不在情况 2 中，树上至少有一个点与 Alice 的距离大于$da$，也就是 Alice 一步走不到的。如果 Bob 在一个 Alice 下一步走不到的点，那么他可以待在那里；否则，设这个点为$v$，$\mathrm{dist}(a, v) = da + 1$，那么$\mathrm{dist}(b, v) \le \mathrm{dist}(b, a) + \mathrm{dist}(a, v) \le da +(da+1)\le 2da+1 \le db$，写了这么长就是为了证明 Bob 可以一步踏入安全区。
+
+容易证明以上的分类讨论是没有遗漏的。至于怎么想到，也许需要一点常识？
+
+找直径的算法就是指定任意一个节点$u$为根，选出以$u$为端点的最短路径和次短路径长度，求和。可以证明以任意一个点开始`dfs`搜到的直径的数值是相同的。
+
+时间复杂度$O(n)$。
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int N = 1e5 + 5;
+int n, a, b, da, db, depth[N];
+vector<int> adj[N];
+int diam = 0;
+
+int dfs(int x, int p) {
+    int len = 0;
+    for(int y : adj[x]) {
+        if(y != p) {
+            depth[y] = depth[x] + 1;
+            int cur = 1 + dfs(y, x);
+            diam = max(diam, cur + len);
+            len = max(len, cur);
+        }
+    }
+    return len;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int te;
+    cin >> te;
+    while(te--) {
+        cin >> n >> a >> b >> da >> db;
+        for(int i = 1; i <= n; i++) adj[i].clear();
+        for(int i = 0; i < n - 1; i++) {
+            int u, v;
+            cin >> u >> v;
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        diam = 0;
+        depth[a] = 0;
+        dfs(a, -1);
+        cout << (2 * da >= min(diam, db) || depth[b] <= da ? "Alice" : "Bob") << '\n';
+    }
+}
+```
+
+## [1404C - Fixed Point Removal](https://codeforces.com/problemset/problem/1404/C)
+
+这是一道 Div. 1 的 C 题，先放在这里吧。
