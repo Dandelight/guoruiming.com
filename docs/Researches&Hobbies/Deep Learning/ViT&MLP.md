@@ -180,7 +180,7 @@ $$
 
 [facebookresearch/dino](https://github.com/facebookresearch/dino) DINO 算法以及 Vision Transformer 等。
 
-[lucidrains/vit-pytorch](https://github.com/lucidrains/vit-pytorch)  又一个 Vision Transformer 库
+[lucidrains/vit-pytorch](https://github.com/lucidrains/vit-pytorch) 又一个 Vision Transformer 库
 
 ```bibtex
 @article{DosovitskiyAlexey2020AIiW,
@@ -227,4 +227,10 @@ author = {Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Wei
 }
 ```
 
+在视觉任务中使用 Transformer 有若干理由：
+
+![image-20220226114837985](media/ViT&MLP/image-20220226114837985.png)[^jittor-seminar]
+
 或许随着算力的提升，会有那么一天，在计算机上算一个 ViT 和今天算一个 k 近邻一样容易。
+
+[^jittor-seminar]: 计图研讨会：Swin Transformer 和在计算机视觉中拥抱 Transformer 的五个理由 https://www.bilibili.com/video/BV1fr4y1e7th
