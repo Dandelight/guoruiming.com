@@ -2,13 +2,13 @@
 
 你，见过怎样的深度学习代码？
 
-是一堆 ArgParse 看不懂的惆怅？
+是一堆`ArgParse`看不懂的惆怅？
 
 ```python
-importy argparse
+import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset_root', required=True, help='Dataset root')
-# 略去十个add_argument
+# 略去几十个add_argument
 parser.add_argument('--lr_decay_steps', default='8,12,16', help='When to decay the learning rate (in epochs) [default: 8,12,16]')
 cfgs = parser.parse_args()
 ```
