@@ -72,3 +72,15 @@ MAE 和 ViT 的做法一致，将图像划分成规则的，不重叠的 patches
 Transformer 在其中到底在哪方面起到了多少作用？
 
 如果没有 Transformer，这种结构效果如何？CNN、或者 MLP 呢？
+
+## 背景
+
+### Vision Transformer
+
+Transformer 模型想必大家应该会有所了解，此处先不提语言领域的 Transformer，Vision Transformer 的流程可以用下边这个动图表示：https://github.com/lucidrains/vit-pytorch
+
+首先将输入图像切块（patch），经过一层线性变换成为一维向量，然后进入 transformer encoder，输出另一个向量（latent representation），通过一个全连接层获得分类。
+
+![img](media/Masked Autoencoders/vit.gif)
+
+### 自监督学习
