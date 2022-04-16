@@ -1,20 +1,20 @@
 # **20220327-线性代数**
 
-|      |          |                                     |     |    |   | 
-| ---- | -------- | ---------------------------------- | ---------- | ----- | -------------------------------------------- |
-| 0.5h | 矩阵乘法 | [TJOI2017]可乐                     | 图上路径数 | 提高  | https://www.luogu.com.cn/problem/P3758       |
-| 1h   | 矩阵乘法 | Recurrences,UVa10870               | 伴随矩阵   | 提高+ | https://www.luogu.com.cn/problem/UVA10870    |
-| 1h   | 矩阵乘法 | USACO2007 Nov G. Cow Relays        | Floyd加速  | 提高+ | https://www.luogu.com.cn/problem/P2886       |
-| 1h   | 矩阵乘法 | [2020-NOI Online #3 提高组] 魔法值 | DP加速     | 提高+ | https://www.luogu.com.cn/problem/P6569       |
-| 0.5h | 矩阵乘法 | CF691E Xor-sequences               | DP加速     | 提高  | https://codeforces.com/contest/691/problem/E |
-| 0.5h | 高斯消元 | [JSOI2008]球形空间产生器           | 方程转换   | 提高+ | https://www.luogu.com.cn/problem/P4035       |
-| 0.5h  | 矩阵乘法   | [TJOI2019]甲苯先生的字符串     | 路径统计 | 提高+ | https://www.luogu.com.cn/problem/P5337          |
-| 0.75h | 高斯消元   | 乘积是平方数(Square, UVa11542) | 异或方程 | NOI-  | https://www.luogu.com.cn/problem/UVA11542       |
-| 2h    | 矩阵线段树 | CF718C. Sasha and Array        | 斐波那契 | NOI-  | https://codeforces.com/problemset/problem/718/C |
-| 1h    | 矩阵乘法   | Balkan OI 2009 - Reading       | 分层图   | NOI-  | https://www.luogu.com.cn/problem/P6841          |
-| 0.25h | 高斯消元   | [JSOI2008]球形空间产生器       | 方程转换 | 提高+ | https://www.luogu.com.cn/problem/P4035          |
-| 1h    | 高斯消元   | [SDOI2010] 外星千足虫          | 异或方程 | 提高+ | https://www.luogu.com.cn/problem/P2447          |
-| 1h    | 矩阵乘法   | Recurrences,UVa10870           | 伴随矩阵 | 提高+ | https://www.luogu.com.cn/problem/UVA10870       |
+|       |            |                                    |            |       |                                                 |
+| ----- | ---------- | ---------------------------------- | ---------- | ----- | ----------------------------------------------- |
+| 0.5h  | 矩阵乘法   | [TJOI2017]可乐                     | 图上路径数 | 提高  | https://www.luogu.com.cn/problem/P3758          |
+| 1h    | 矩阵乘法   | Recurrences,UVa10870               | 伴随矩阵   | 提高+ | https://www.luogu.com.cn/problem/UVA10870       |
+| 1h    | 矩阵乘法   | USACO2007 Nov G. Cow Relays        | Floyd 加速 | 提高+ | https://www.luogu.com.cn/problem/P2886          |
+| 1h    | 矩阵乘法   | [2020-NOI Online #3 提高组] 魔法值 | DP 加速    | 提高+ | https://www.luogu.com.cn/problem/P6569          |
+| 0.5h  | 矩阵乘法   | CF691E Xor-sequences               | DP 加速    | 提高  | https://codeforces.com/contest/691/problem/E    |
+| 0.5h  | 高斯消元   | [JSOI2008]球形空间产生器           | 方程转换   | 提高+ | https://www.luogu.com.cn/problem/P4035          |
+| 0.5h  | 矩阵乘法   | [TJOI2019]甲苯先生的字符串         | 路径统计   | 提高+ | https://www.luogu.com.cn/problem/P5337          |
+| 0.75h | 高斯消元   | 乘积是平方数(Square, UVa11542)     | 异或方程   | NOI-  | https://www.luogu.com.cn/problem/UVA11542       |
+| 2h    | 矩阵线段树 | CF718C. Sasha and Array            | 斐波那契   | NOI-  | https://codeforces.com/problemset/problem/718/C |
+| 1h    | 矩阵乘法   | Balkan OI 2009 - Reading           | 分层图     | NOI-  | https://www.luogu.com.cn/problem/P6841          |
+| 0.25h | 高斯消元   | [JSOI2008]球形空间产生器           | 方程转换   | 提高+ | https://www.luogu.com.cn/problem/P4035          |
+| 1h    | 高斯消元   | [SDOI2010] 外星千足虫              | 异或方程   | 提高+ | https://www.luogu.com.cn/problem/P2447          |
+| 1h    | 矩阵乘法   | Recurrences,UVa10870               | 伴随矩阵   | 提高+ | https://www.luogu.com.cn/problem/UVA10870       |
 
 ## 可乐
 
@@ -67,11 +67,9 @@ int main() {
 
 ## Recurrences(未完成)
 
-
-
 ## Cow Relays
 
-很容易想到N次矩阵乘法的思路，不同的是这次的是长度而不是方案数（所以是加法而不是乘法）、是最小值而不是总数，所以把`*`换成`+`，把`+`换成`min`。
+很容易想到 N 次矩阵乘法的思路，不同的是这次的是长度而不是方案数（所以是加法而不是乘法）、是最小值而不是总数，所以把`*`换成`+`，把`+`换成`min`。
 
 ```cpp
 #include <bits/stdc++.h>
@@ -317,8 +315,6 @@ int main() {
 
 ## Sasha and Array(未完成)
 
-
-
 ## Reading
 
 ```cpp
@@ -454,4 +450,3 @@ int main() {
   }
 }
 ```
-

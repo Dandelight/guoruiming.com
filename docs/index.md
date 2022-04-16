@@ -40,3 +40,11 @@
 .osc_desc_color {color: #666666 !important;}
 .osc_link_color * {color: #9b9b9b !important;}
 </style>
+
+## Something more
+
+[![Badge](https://cp-logo.vercel.app/codeforces/dandelight)]
+(https://codeforces.com/profile/dandelight)
+
+[![Badge](https://cp-logo.vercel.app/atcoder/dandelight)]
+https://atcoder.jp/users/dandelight)

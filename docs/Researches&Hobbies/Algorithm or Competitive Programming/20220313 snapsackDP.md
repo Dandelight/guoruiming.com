@@ -1,15 +1,15 @@
-**20220313 背包DP**
+**20220313 背包 DP**
 
-| | | | |
+|                |                                          |       |                                             |
 | -------------- | ---------------------------------------- | ----- | ------------------------------------------- |
-| 01背包转化     | USACO 2015 Dec G. Fruit Feast            | 提高- | https://www.luogu.com.cn/problem/P4817      |
-| 01背包转化     | CF837D Round Subset                      | 提高- | http://codeforces.com/contest/837/problem/D |
-| 01背包转化     | CEOI2018 Cloud Computing                 | 提高  | https://www.luogu.com.cn/problem/P6359      |
+| 01 背包转化    | USACO 2015 Dec G. Fruit Feast            | 提高- | https://www.luogu.com.cn/problem/P4817      |
+| 01 背包转化    | CF837D Round Subset                      | 提高- | http://codeforces.com/contest/837/problem/D |
+| 01 背包转化    | CEOI2018 Cloud Computing                 | 提高  | https://www.luogu.com.cn/problem/P6359      |
 | 完全背包方案数 | [NOIP2018 提高组] 货币系统               | 提高  | https://www.luogu.com.cn/problem/P5020      |
 |                |                                          |       |                                             |
-| 01背包转化     | USACO 2020 Open G. Exercise              | 提高+ | https://www.luogu.com.cn/problem/P6280      |
+| 01 背包转化    | USACO 2020 Open G. Exercise              | 提高+ | https://www.luogu.com.cn/problem/P6280      |
 | 完全背包方案数 | USACO 2019 Jan G. Cow Poetry             | 提高+ | https://www.luogu.com.cn/problem/P5196      |
-| 01背包转化     | POI2004 - Maximal Orders of Permutations | NOI-  | https://www.luogu.com.cn/problem/P5919      |
+| 01 背包转化    | POI2004 - Maximal Orders of Permutations | NOI-  | https://www.luogu.com.cn/problem/P5919      |
 | 分数规划       | USACO 2018 Open G. Talent Show           | 提高+ | https://www.luogu.com.cn/problem/P4377      |
 | 分组背包       | [BJOI2019] 排兵布阵                      | 提高+ | https://www.luogu.com.cn/problem/P5322      |
 
@@ -49,9 +49,9 @@ const int N = 222;
 const int F = 30;
 int dp1[N][N * F];
 int dp2[N][N * F];
- 
+
 void upd(int& a, int b) { a = max(a, b); }
- 
+
 int main() {
   int n, k;
   scanf("%d%d", &n, &k);
@@ -81,7 +81,7 @@ int main() {
   }
   int answer = 0;
   for (int i = 0; i < k * F; i++) answer = max(answer, min(i, dp1[k][i]));
- 
+
   cout << answer << endl;
   return 0;
 }
@@ -371,7 +371,8 @@ int main() {
 
 设$dp[i][j]$表示第$i$个城堡时，已派出$j$个士兵。决策时，贪心派出恰好严格大于某一玩家派出的数量的两倍（不然浪费）。我们发现又可以排序预处理$a[i][j]$出表示第$i$个城堡，出兵数量第$j$大的人出兵数量（因为这样可以很容易算出贡献，即为$k \times i$
 
-dp转移方程即为：
+dp 转移方程即为：
+
 $$
 dp[j] = \max(dp[j-a[i][k] \times2-1]+k\times i, dp[j])
 $$
@@ -399,4 +400,3 @@ signed main(){
     return 0;
 }
 ```
-

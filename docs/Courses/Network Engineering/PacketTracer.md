@@ -8,16 +8,14 @@
 
 通过交换机的 Console 端口管理交换机属于带外管理。这种管理方式不占用交换机的网络端口，第一次配置交换机必须利用 Console 端口进行配置。
 
-通过Telnet、拨号等方式登陆终端属于带内管理。
+通过 Telnet、拨号等方式登陆终端属于带内管理。
 
 交换机的命令行操作模式主要包括：
 
-
-* 用户模式 `Switch>`
-* 特权模式 `Switch#`
-* 全局配置模式 `Switch(config)#`
-* 端口模式 `Switch(config-if)#`
-
+- 用户模式 `Switch>`
+- 特权模式 `Switch#`
+- 全局配置模式 `Switch(config)#`
+- 端口模式 `Switch(config-if)#`
 
 交换机常用的配置命令行
 
