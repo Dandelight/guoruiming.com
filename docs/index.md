@@ -31,8 +31,10 @@
 
 ## Gitee Status
 
-<script src='https://gitee.com/dandelight/blog/widget_preview' async defer></script><div id="osc-gitee-widget-tag"></div>
+<script src='https://gitee.com/dandelight/blog/widget_preview' async defer></script>
+<div id="osc-gitee-widget-tag"></div>
 <style>
+.osc-gitee-widget-tag li {margin-left:0em;}
 .osc_pro_color {color: #4183c4 !important;}
 .osc_panel_color {background-color: #ffffff !important;}
 .osc_background_color {background-color: #ffffff !important;}
