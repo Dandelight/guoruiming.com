@@ -35,6 +35,7 @@
 <div id="osc-gitee-widget-tag"></div>
 <style>
 .osc-gitee-widget-tag li {margin-left:0em;}
+.osc_git_box .osc_git_main ul {width: auto;}
 .osc_pro_color {color: #4183c4 !important;}
 .osc_panel_color {background-color: #ffffff !important;}
 .osc_background_color {background-color: #ffffff !important;}
