@@ -43,8 +43,5 @@
 
 ## Something more
 
-[![Badge](https://cp-logo.vercel.app/codeforces/dandelight)]
-(https://codeforces.com/profile/dandelight)
-
-[![Badge](https://cp-logo.vercel.app/atcoder/dandelight)]
-https://atcoder.jp/users/dandelight)
+<a href="https://codeforces.com/profile/dandelight"><img src="https://cp-logo.vercel.app/codeforces/dandelight"/></a>
+<a href="https://atcoder.jp/users/dandelight"><img src="https://cp-logo.vercel.app/atcoder/dandelight"/></a>
