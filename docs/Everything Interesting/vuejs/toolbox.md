@@ -300,23 +300,31 @@ export default {
 1. 新建一个`js`文件，用来注册全局方法（此例中新建`toolbox.js`
 
 ```js
-export default{
-	install(Vue.options){
-		Vue.prototype.$aaaaa=function(){ //全局注册aaaaa方法
-			console.log('aaaaa')
-		},
+export default {
+  install(Vue, options) {
+    (Vue.prototype.$aaaaa = function () {
+      //全局注册aaaaa方法
+      console.log("aaaaa");
+      console.log(this); // this 指向了 Vue 对象
+      this.$bbbbb();
+      this.$ccccc();
+    }),
+      (Vue.prototype.$bbbbb = function () {
+        //全局注册bbbbb方法
+        console.log("bbbbb");
+      });
 
-		Vue.prototype.$bbbbb=function(){ //全局注册bbbbb方法
-			console.log('bbbbb')
-		}
-	}
-}
+    Vue.prototype.$ccccc = () => {
+      console.log(this); // ！不能使用箭頭函數！！！！
+    };
+  },
+};
 ```
 
 （2）在 main.js 中注入 global.js 文件
 
 ```js
-import toolbox from "@/utils/toolboxs.js";
+import toolbox from "@/utils/toolbox.js";
 Vue.use(toolbox);
 ```
 
@@ -324,8 +332,11 @@ Vue.use(toolbox);
 
 ```js
 this.aaaaa();
-this.bbbbb();
 ```
+
+运行结果：
+
+![image-20220507181445732](media/toolbox/image-20220507181445732.png)
 
 2.定义单独的方法，调用时需引入
 代码如下（示例）：
