@@ -328,6 +328,8 @@ $$
 
 ##### 编写模型代码
 
+编写代码部分，我们将接触昇腾工具链的第一个工具：`MindSpore`。
+
 ```python
 class LeNet5(nn.Cell):
     def __init__(self):
@@ -438,13 +440,42 @@ ms.export(model, mindspore.Tensor(input_spec), file_name='lenet', file_format='A
 
 做到上一步之后，我们已经有了`lenet.air`文件，下面的操作我们将在设备端进行。
 
+在上一步我们进行了模型导出。
+
+模型导出与`Checkpoint saving`有什么不同呢？
+
+`Checkpoint`是**研究**中用到的，通过[`save_checkpoint`](https://mindspore.cn/docs/zh-CN/r1.7/api_python/mindspore/mindspore.save_checkpoint.html)与[`load_checkpoint`](https://mindspore.cn/docs/zh-CN/r1.7/api_python/mindspore/mindspore.load_checkpoint.html)进行交互；`Checkpoint`本质上可以看成是一个`Python`的`dict`。比如上述`LeNet`的一个`Checkpoint`：
+
+```json
+{
+    'conv1.weight': Parameter (name=conv1.weight, shape=(6, 1, 5, 5), dtype=Float32, requires_grad=True),
+    'conv2.weight': Parameter (name=conv2.weight, shape=(16, 6, 5, 5), dtype=Float32, requires_grad=True),
+    'fc1.weight': Parameter (name=fc1.weight, shape=(120, 400), dtype=Float32, requires_grad=True),
+    'fc1.bias': Parameter (name=fc1.bias, shape=(120,), dtype=Float32, requires_grad=True),
+    'fc2.weight': Parameter (name=fc2.weight, shape=(84,
+    120), dtype=Float32, requires_grad=True),
+    'fc2.bias': Parameter (name=fc2.bias, shape=(84,), dtype=Float32, requires_grad=True),
+    'fc3.weight': Parameter (name=fc3.weight, shape=(10,
+    84), dtype=Float32, requires_grad=True),
+    'fc3.bias': Parameter (name=fc3.bias, shape=(10,), dtype=Float32, requires_grad=True)
+}
+```
+
+而导出模型则是将模型**编译**，编译后的模型可以脱离`Python`语言环境，在专用的**运行时**中执行，效率也更高。类似于`Java`代码编译为字节码之后在`JVM`中执行。
+
+编译模型使用的工具是 Ascend Tensor Compiler，这是我们学到的昇腾工具链中第二个工具。这个工具属于 CANN 的一部分。
+
+```bash
+atc --mode=0 --framework=5 --model=lenet.onnx --output=onnx_lenet.om --soc_version=Ascend310
+```
+
 #### 设备端部署与测试
 
 ### 进阶应用开发
 
 #### DVPP 与 AIPP
 
-这两个更是企业级
+这两个更是企业级。
 
 ## 总结与展望
 
