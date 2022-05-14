@@ -1,4 +1,4 @@
-建立`docker`镜像的一些通用启动工作：
+# 建立`docker`镜像的一些通用启动工作：
 
 ```dockerfile
 FROM # Base image name

@@ -1,0 +1,180 @@
+# AscendCL 编程简明广播体操
+
+> 提示：本文使用`C++`进行开发，`Python` API 与之十分近似，可触类旁通。
+
+AscendCL（Ascend Computing Language）是华为昇腾开发的异构计算架构，提供 Device 管理、Context 管理、Stream 管理、内存管理、模型加载与执行、算子加载与执行、媒体数据处理等 C 语言 API 库供用户开发深度神经网络应用，用于实现目标识别、图像分类等功能。
+
+## 概念和术语
+
+> - **Host**指与 Device 相连接的 X86 服务器、ARM 服务器，会利用 Device 提供的 NN（Neural-Network）计算能力，完成业务。
+> - **Device**指安装了芯片的硬件设备，利用 PCIe 接口与 Host 侧连接，提供 NN 计算能力。\*\*
+> - **Context**作为一个容器，管理了所有对象（包括 Stream、Event、设备内存等）的生命周期。不同 Context 的 Stream、不同 Context 的 Event 是完全隔离的，无法建立同步等待关系。
+> - 多线程编程场景下，每切换一个线程，都要为该线程指定当前 Context，否则无法获取任何其他运行资源。该部分更多细节我们在“同步等待”实验中深入讨论。
+>
+> **Stream**用于维护一些异步操作的执行顺序，确保按照应用程序中的代码调用顺序在 Device 上执行。
+
+以上摘自官网，用大家熟悉的例子作对比，Host 指主机和主机内存，Device 可以类比为显卡和显存，Context 是显存里一个“进程”（类比 CPU 进程）的生命周期，进程中有许多异步操作，异步操作的执行顺序用 Stream 描述。学习过`Nvidia CUDA`编程的同学对这些概念可能会对号入座。你们是对的。
+
+## 正身：引用`ACL`头文件
+
+```cpp
+#include<acl/acl.h>
+```
+
+战歌，起！
+
+## 起式：`AclInit()`
+
+首先，我们要激发昇腾芯片的澎湃算力，就要对其进行初始化操作。
+
+```cpp
+aclError aclInit(const char *configPath)
+```
+
+其中，`aclError`为`int`类型的别名，返回值为$0$时为正常，返回值不为零时，有着各自的意义，可通过查阅[官方定义](https://support.huaweicloud.com/devg-cpp-Atlas200DK202/atlasapi_07_0217.html)判断错误类型。**同时特别提醒：不要以为“不可能在这里出错，一定要对返回值进行判断**，在真实的场景中真的有`aclInit()`都跑不过的情况，比如我有一次返回值是 545000，直接歇菜，重刷系统了。
+
+参数`configPath`为一个字符数组指针，是配置文件的文件名，置为`NULL`表示空的配置文件。~~主要因为这个配置文件我也不会用~~
+
+## 第一式：无中生有
+
+> 您需要按顺序依次申请如下资源：Device、Context、Stream，确保可以使用这些资源执行运算、管理任务。
+
+依照上文的概念和术语，Device 指的是昇腾 310 芯片，Context 指芯片上一个“进程”，Stream 指异步操作的执行顺序（有过网络编程经验用过`epoll`的同学可能有一些似曾相识？）
+
+那么好，烧火做饭第一步，咱们先把锅（Device）架上！
+
+等等，不急，咱们先摸摸底，看看有几口锅。
+
+```cpp
+aclError aclrtGetDeviceCount(uint32_t *count)
+```
+
+函数的命名采用经典的`C`语言 OOP 写法，解读一下：`acl.rt.GetDeviceCount`，`rt`代表 runtime 运行时。
+
+返回值上面仔细讲过，不说了，`ACL`中的返回值全都是`aclError`，定义都是一样的，以下再也不提。
+
+值得注意的是，这个函数会修改参数`uint32_t*`指向的内存地址为可用 Device 数量。建议在下面加一句`assert(count>0)`。_判断异常，人人有责。未来的你会感谢现在判断异常的自己。_
+
+咱们有锅了~架上！
+
+```cpp
+aclError aclrtSetDevice(int32_t deviceId)
+```
+
+不多说~~因为我也不知道会有多少个 Device 我只用到过一个~~
+
+## 第二式：木牛流马
+
+```cpp
+aclError aclrtCreateContext(aclrtContext *context, int32_t deviceId)
+```
+
+复杂起来了！返回值依然是经典的错误码（不行！程序员怎么能说是“错误码”呢！要说“正确码”！图个吉利）。
+
+注意第二参数`deviceId`为值传参，是输入，输入的是一个在上一步`aclrtSetDevice`中成功设置的 device，~~我一般设为 0~~；第一参数`context`是一个`aclrtContext`指针（老 OOP 了），不需要初始化（良好的编程规范告诉我们初始化指针要置`NULL`），也千万不要拿到了内容之后给`free`掉。指针指向区域的具体内容没有文档资料，相当于私有成员了吧。
+
+## 第三式：行云流水
+
+> 硬件资源最多支持 1024 个 Stream……每个 Context 对应一个默认 Stream，该默认 Stream 是调用[aclrtSetDevice](https://support.huaweicloud.com/devg-cpp-Atlas200DK202/atlasapi_07_0015.html)接口或[aclrtCreateContext](https://support.huaweicloud.com/devg-cpp-Atlas200DK202/atlasapi_07_0022.html)接口隐式创建的。推荐调用 aclrtCreateStream 接口显式创建 Stream。
+
+```cpp
+aclError aclrtCreateStream(aclrtStream *stream)
+```
+
+函数似乎没有输入，但输入已经确定了是当前活动的 Context，输出自然是 stream 指针指向的内存区域了。
+
+之前的一切都只是铺垫，下面终于搭好花轿子，准备请新娘登轿啦！（刚刚好像在用做饭作比喻这不重要）
+
+## 第四式：飞龙探云手
+
+？？？名字很怪大家见怪不怪就好
+
+```cpp
+aclError aclmdlLoadFromFile(const char *modelPath, uint32_t *modelId)
+```
+
+`modelPath`是输入的 om 文件的路径，**请确保执行程序的用户对这个路径中的文件有读权限**，输出一个`modelId`，相当于`Linux`系统中广泛使用的文件描述符（仅仅是相当于）。
+
+https://support.huaweicloud.com/aclcppdevg-cann51RC1alpha1/aclcppdevg_000021.html
+
+当然这个 API 还有其他版本，比如这个：
+
+```cpp
+aclError aclmdlLoadFromMem(const void* model, size_t modelSize, uint32_t* modelId)
+```
+
+从内存里读模型
+
+```cpp
+aclError aclmdlLoadFromFileWithMem(const char *modelPath, uint32_t *modelId, void *workPtr, size_t workSize, void *weightPtr, size_t weightSize)
+```
+
+这 API 就需要用户自行调用`aclmdlQuerySize` `aclrtMalloc`等一系列函数自行管理内存，不到不得已不用这个函数。
+
+## 第五式：吐息运气
+
+![img](media/acl_developing/zh-cn_image_0000001208951970.png)
+
+取不起名字了……
+
+创建输入数据集
+
+```cpp
+aclmdlDataset *aclmdlCreateDataset()
+```
+
+注意返回值！是一个指针。
+
+返回的是一个数据集容器，要往里加图片需要
+
+```cpp
+aclError aclmdlAddDatasetBuffer(aclmdlDataset *dataset, aclDataBuffer *dataBuffer)
+```
+
+对，就是把`acldataBuffer`指向的内存加入`dataset`之中。
+
+但问题来了！`dataBuffer`从哪里搞到？
+
+```cpp
+aclDataBuffer *aclCreateDataBuffer(void *data, size_t size)
+```
+
+`data`是程序员自行用`aclrtMalloc`创建的内存空间。policy 详情见[官方说明](https://support.huaweicloud.com/devg-cpp-Atlas200DK202/atlasapi_07_0057.html)
+
+```cpp
+aclError aclrtMalloc(void **devPtr, size_t size, aclrtMemMallocPolicy policy)
+```
+
+输出同时也需要一个数据集来存放！
+
+## 第六式：粮草先行
+
+![img](media/acl_developing/zh-cn_image_0000001208791990.png)
+
+## 第七式：正菜！
+
+```cpp
+aclError aclmdlExecute(uint32_t modelId, const aclmdlDataset *input, aclmdlDataset *output)
+```
+
+自由了！就是这么轻松自在，我们的模型开始执行了！ 执行之后，结果会放到`output`里。这是个同步接口，还有一个异步接口叫做`aclmdlExecuteAsync`，需要指定 stream 才可以使用，并注意使用`aclrtSynchronizeStream(stream)`等待。
+
+## 收式：卸磨杀驴
+
+我的任务完成啦！！！
+
+有始有终，咱们把自己申请的内存、加载的模型、`Stream`、`Context`、`Device`按申请的反顺序释放掉，最后释放掉`acl`。
+
+```cpp
+// aclrtFree释放自己申请的内存
+ret = aclrtDestroyStream(stream_);
+ret = aclrtDestroyContext(context_);
+ret = aclrtResetDevice(deviceId_);
+ret = aclFinalize();
+```
+
+有一说一，我觉得这一式的题目是这里面最贴切的。
+
+TODO：贴出完整代码
+
+参考：[昇腾 CANN 社区版 5.0.2.alpha003](https://support.huaweicloud.com/aclcppdevg-cann502alpha3infer/atlasdevelopment_01_0001.html)

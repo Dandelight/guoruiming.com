@@ -8,7 +8,7 @@
 
 - `C++`：Linux 环境下的 C++ 语言开发、[CMake](https://cmake.org/) 工程
 
-- `Python`
+- `Python`：全部语法、第三方库管理
 
 - 深度学习原理
 
@@ -60,9 +60,13 @@
 
 > 昇腾（HUAWEI Ascend) 310 是一款高能效、灵活可编程的人工智能处理器，在典型配置下可以输出 16TOPS@INT8, 8TOPS@FP16，功耗仅为 8W。采用自研华为达芬奇架构，集成丰富的计算单元，提高 AI 计算完备度和效率，进而扩展该芯片的适用性。全 AI 业务流程加速,大幅提高 AI 全系统的性能，有效降低部署成本。
 >
+> **昇腾 310**（HUAWEI Ascend)是一款华为专门为图像识别、视频处理、推理计算及机器学习等领域设计的高性能、低功耗 AI 芯片。芯片内置 2 个 AI core，可支持 128 位宽的 LPDDR4X，可实现最大 22TOPS（INT8） 的计算能力。
+>
 > 昇腾（HUAWEI Ascend) 910 是业界算力最强的 AI 处理器，基于自研华为达芬奇架构 3D Cube 技术，实现业界最佳 AI 性能与能效，架构灵活伸缩，支持云边端全栈全场景应用。算力方面，昇腾 910 完全达到设计规格，半精度（FP16）算力达到 320 TFLOPS，整数精度（INT8）算力达到 640 TOPS，功耗 310W。
 
 #### 神经网络计算架构：CANN
+
+##### 简介
 
 https://www.hiascend.com/software/cann
 
@@ -70,13 +74,34 @@ AI 场景的异构计算架构，通过提供多层次的编程接口，支持�
 
 ![image-20220513183904076](media/installation/image-20220513183904076.png)
 
+CANN 的下载分为**社区版**和**商用版**，二者都是免费下载的。
+
+- 社区版更新速度快，可以即时体验最新功能；
+- 商用版更新速度慢，更加稳定
+
+CANN 又分为`nnrt`和`nnae`两种发行版，其中`nnrt`只包含离线推理运行时，`nnae`包含离线推理、在线推理、训练的运行时。
+
+![img](media/installation/zh-cn_image_0000001174278156.png)
+
+![img](media/installation/zh-cn_image_0000001174118176.png)
+
+##### 开发文档
+
+https://support.huaweicloud.com/instg-cann51RC1alpha1/instg_000002.html
+
 #### AI 计算框架：MindSpore
+
+##### 简介
 
 https://mindspore.cn/
 
 > MindSpore 作为新一代深度学习框架，是源于全产业的最佳实践，最佳匹配昇腾处理器算力，支持终端、边缘、云全场景灵活部署，开创全新的 AI 编程范式，降低 AI 开发门槛。MindSpore 是一种全新的深度学习计算框架，旨在实现易开发、高效执行、全场景覆盖三大目标。为了实现易开发的目标，MindSpore 采用基于源码转换（Source Code Transformation，SCT）的自动微分（Automatic Differentiation，AD）机制，该机制可以用控制流表示复杂的组合。函数被转换成函数中间表达（Intermediate Representation，IR），中间表达构造出一个能够在不同设备上解析和执行的计算图。在执行前，计算图上应用了多种软硬件协同优化技术，以提升端、边、云等不同场景下的性能和效率。MindSpore 支持动态图，更易于检查运行模式。由于采用了基于源码转换的自动微分机制，所以动态图和静态图之间的模式切换非常简单。为了在大型数据集上有效训练大模型，通过高级手动配置策略，MindSpore 可以支持数据并行、模型并行和混合并行训练，具有很强的灵活性。此外，MindSpore 还有“自动并行”能力，它通过在庞大的策略空间中进行高效搜索来找到一种快速的并行策略。
 >
 > https://mindspore-website.obs.cn-north-4.myhuaweicloud.com/white_paper/MindSpore_white_paperV1.1.pdf
+
+##### 开发文档
+
+https://mindspore.cn/docs/zh-CN/r1.7/index.html
 
 #### 开发工具链：MindStudio
 
@@ -88,7 +113,7 @@ https://bbs.huaweicloud.com/forum/forum-726-1.html
 
 #### 应用开发基本流程
 
-#### 确定需求与问题
+##### 确定需求与问题
 
 - 为什么有需求？
 - 要解决什么问题？
@@ -103,27 +128,27 @@ https://bbs.huaweicloud.com/forum/forum-726-1.html
 
 如果你的需求是计算 a + b，请不要用 AI 解决
 
-#### 开发算法
+##### 开发算法
 
 - 理解问题
 - 论文调研
 - 实验验证
 
-#### 模型部署
+##### 模型训练
 
-- DVPP
-- AIPP
+##### 模型部署
+
 - 内存分配与回收
 - 模型装载与卸载
 - 设备能力的调用
 
+##### 测试验收
+
 ### `Atlas`外观与接口
 
-Atlas 200 DK 开发者套件（型号 3000）是以 Atlas 200 AI 加速模块（型号 3000）为 核心的开发者板形态的终端类产品。主要功能是将 Atlas 200 AI 加速模块（型号 3000）的接口对外开放，方便用户快速简捷的使用 Atlas 200 AI 加速模块（型号 3000），可以运用于平安城市、无人机、机器人、视频服务器等众多领域的预研开发。
+**Atlas 200 DK 开发者套件**（型号 3000）是以 Atlas 200 AI 加速模块（型号 3000）为 核心的开发者板形态的终端类产品。主要功能是将 Atlas 200 AI 加速模块（型号 3000）的接口对外开放，方便用户快速简捷的使用 Atlas 200 AI 加速模块（型号 3000），可以运用于平安城市、无人机、机器人、视频服务器等众多领域的预研开发。
 
-Atlas 200 AI 加速模块（型号 3000）是一款高性能的 AI 智能计算模块，集成了昇腾 310 AI 处理器（Ascend 310 AI 处理器），可以实现图像、视频等多种数据分析与推理计 算，可广泛用于智能监控、机器人、无人机、视频服务器等场景。
-
-> 昇腾 310 是一款华为专门为图像识别、视频处理、推理计算及机器学习等领域设计的高性能、低 功耗 AI 芯片。芯片内置 2 个 AI core，可支持 128 位宽的 LPDDR4X，可实现最大 22TOPS（INT8） 的计算能力。
+**Atlas 200 AI 加速模块**（型号 3000）是一款高性能的 AI 智能计算模块，集成了昇腾 310 AI 处理器（Ascend 310 AI 处理器），可以实现图像、视频等多种数据分析与推理计 算，可广泛用于智能监控、机器人、无人机、视频服务器等场景。
 
 目前市面上的`Atlas`有`IT21DMDA`（旧主板）和`IT21VDMB`（新主板）两个版本，`Maker`新到的一批都是新主板。新旧主板可以按照[Atlas 200 DK 技术白皮书](https://e.huawei.com/cn/material/server/2c6bd7fa84c3475690b587dc653f28f1)第 15 页的配图区分。以下以新主板为例讲解，请参阅[Atlas 200 DK 技术白皮书](https://e.huawei.com/cn/material/server/2c6bd7fa84c3475690b587dc653f28f1)。
 
@@ -299,183 +324,23 @@ cat ~/id_rsa.pub # 如果你生成的不是RSA密钥你应该比我明白所以�
 
 ![image-20220513202129408](media/installation/image-20220513202129408.png)
 
-<!-- ~~如果有代金券需求我们可以统一找张老申请~~ -->
+不过我们的第一个任务是手写数字识别，在一般`CPU`上一分钟之内就可以完成训练，所以我们直接在本机运行，方便直观。
 
 ```bash
 conda create -n ms python=3.9 mindspore-cpu=1.7.0 -c mindspore -c conda-forge -y
 ```
-
-### 初级应用开发
-
-#### 认识任务：手写数字识别
-
-#### 深度学习模型
-
-##### 认识模型
-
-这次我们用到的模型依然是经典永流传的`LeNet-5`。
-
-![img](media/installation/lenet5.jpg)
-
-图片来源于[http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf](https://gitee.com/link?target=http%3A%2F%2Fyann.lecun.com%2Fexdb%2Fpublis%2Fpdf%2Flecun-01a.pdf)
-
-损失函数采用交叉熵损失函数，算法为带动量的`SGD`。
-
-$$
-\ell(x_i, c) = - \log\left(\frac{\exp(x_i[c])}{\sum_j \exp(x_i[j])}\right)
-=  -x_i[c] + \log\left(\sum_j \exp(x_i[j])\right)
-$$
-
-##### 编写模型代码
-
-编写代码部分，我们将接触昇腾工具链的第一个工具：`MindSpore`。
-
-```python
-class LeNet5(nn.Cell):
-    def __init__(self):
-        super(LeNet5, self).__init__()
-        self.conv1 = nn.Conv2d(1, 6, 5, stride=1, pad_mode='valid')
-        self.conv2 = nn.Conv2d(6, 16, 5, stride=1, pad_mode='valid')
-        self.relu = nn.ReLU()
-        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.flatten = nn.Flatten()
-        self.fc1 = nn.Dense(400, 120)
-        self.fc2 = nn.Dense(120, 84)
-        self.fc3 = nn.Dense(84, 10)
-
-    def construct(self, x):
-        x = self.relu(self.conv1(x))
-        x = self.pool(x)
-        x = self.relu(self.conv2(x))
-        x = self.pool(x)
-        x = self.flatten(x)
-        x = self.fc1(x)
-        x = self.fc2(x)
-        x = self.fc3(x)
-
-        return x
-```
-
-##### 配置运行环境
-
-```python
-import os
-# os.environ['DEVICE_ID'] = '0'
-
-import mindspore as ms
-import mindspore.context as context
-import mindspore.dataset.transforms.c_transforms as C
-import mindspore.dataset.vision.c_transforms as CV
-
-from mindspore import nn
-from mindspore.train import Model
-from mindspore.train.callback import LossMonitor
-
-context.set_context(mode=context.GRAPH_MODE, device_target='CPU') # Ascend, CPU, GPU
-```
-
-##### 获取数据
-
-```python
-def create_dataset(data_dir, training=True, batch_size=32, resize=(32, 32),
-                   rescale=1/(255*0.3081), shift=-0.1307/0.3081, buffer_size=64):
-    data_train = os.path.join(data_dir, 'train') # train set
-    data_test = os.path.join(data_dir, 'test') # test set
-    ds = ms.dataset.MnistDataset(data_train if training else data_test)
-
-    ds = ds.map(input_columns=["image"], operations=[CV.Resize(resize), CV.Rescale(rescale, shift), CV.HWC2CHW()])
-    ds = ds.map(input_columns=["label"], operations=C.TypeCast(ms.int32))
-    # When `dataset_sink_mode=True` on Ascend, append `ds = ds.repeat(num_epochs) to the end
-    ds = ds.shuffle(buffer_size=buffer_size).batch(batch_size, drop_remainder=True)
-
-    return ds
-```
-
-从中获取几张数据进行可视化。
-
-```python
-import matplotlib.pyplot as plt
-ds = create_dataset('MNIST', training=False)
-data = ds.create_dict_iterator(output_numpy=True).get_next()
-images = data['image']
-labels = data['label']
-
-for i in range(1, 5):
-    plt.subplot(2, 2, i)
-    plt.imshow(images[i][0])
-    plt.title('Number: %s' % labels[i])
-    plt.xticks([])
-plt.show()
-```
-
-##### 训练
-
-```python
-def train(data_dir, lr=0.01, momentum=0.9, num_epochs=3):
-    ds_train = create_dataset(data_dir)
-    ds_eval = create_dataset(data_dir, training=False)
-
-    net = LeNet5()
-    loss = nn.loss.SoftmaxCrossEntropyWithLogits(sparse=True, reduction='mean')
-    opt = nn.Momentum(net.trainable_params(), lr, momentum)
-    loss_cb = LossMonitor(per_print_times=ds_train.get_dataset_size())
-
-    model = Model(net, loss, opt, metrics={'acc', 'loss'})
-    # dataset_sink_mode can be True when using Ascend
-    model.train(num_epochs, ds_train, callbacks=[loss_cb], dataset_sink_mode=False)
-    metrics = model.eval(ds_eval, dataset_sink_mode=False)
-    print('Metrics:', metrics)
-
-train('MNIST/')
-```
-
-##### 导出模型
-
-```python
-input_spec = Tensor(np.ones([1, 1, 32, 32]).astype(np.float32))
-ms.export(model, mindspore.Tensor(input_spec), file_name='lenet', file_format='AIR')
-```
-
-#### 模型转换
-
-做到上一步之后，我们已经有了`lenet.air`文件，下面的操作我们将在设备端进行。
-
-在上一步我们进行了模型导出。
-
-模型导出与`Checkpoint saving`有什么不同呢？
-
-`Checkpoint`是**研究**中用到的，通过[`save_checkpoint`](https://mindspore.cn/docs/zh-CN/r1.7/api_python/mindspore/mindspore.save_checkpoint.html)与[`load_checkpoint`](https://mindspore.cn/docs/zh-CN/r1.7/api_python/mindspore/mindspore.load_checkpoint.html)进行交互；`Checkpoint`本质上可以看成是一个`Python`的`dict`。比如上述`LeNet`的一个`Checkpoint`：
-
-```json
-{
-    'conv1.weight': Parameter (name=conv1.weight, shape=(6, 1, 5, 5), dtype=Float32, requires_grad=True),
-    'conv2.weight': Parameter (name=conv2.weight, shape=(16, 6, 5, 5), dtype=Float32, requires_grad=True),
-    'fc1.weight': Parameter (name=fc1.weight, shape=(120, 400), dtype=Float32, requires_grad=True),
-    'fc1.bias': Parameter (name=fc1.bias, shape=(120,), dtype=Float32, requires_grad=True),
-    'fc2.weight': Parameter (name=fc2.weight, shape=(84,
-    120), dtype=Float32, requires_grad=True),
-    'fc2.bias': Parameter (name=fc2.bias, shape=(84,), dtype=Float32, requires_grad=True),
-    'fc3.weight': Parameter (name=fc3.weight, shape=(10,
-    84), dtype=Float32, requires_grad=True),
-    'fc3.bias': Parameter (name=fc3.bias, shape=(10,), dtype=Float32, requires_grad=True)
-}
-```
-
-而导出模型则是将模型**编译**，编译后的模型可以脱离`Python`语言环境，在专用的**运行时**中执行，效率也更高。类似于`Java`代码编译为字节码之后在`JVM`中执行。
-
-编译模型使用的工具是 Ascend Tensor Compiler，这是我们学到的昇腾工具链中第二个工具。这个工具属于 CANN 的一部分。
-
-```bash
-atc --mode=0 --framework=5 --model=lenet.onnx --output=onnx_lenet.om --soc_version=Ascend310
-```
-
-#### 设备端部署与测试
 
 ### 进阶应用开发
 
 #### DVPP 与 AIPP
 
 这两个更是企业级。
+
+## `MindSpore` Internals
+
+本节中我们将从源代码的角度对`MindSpore`进行解读。
+
+> 对于工科学生，不到代码层面的理解都是粗浅的。
 
 ## 总结与展望
 
