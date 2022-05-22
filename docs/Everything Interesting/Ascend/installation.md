@@ -111,6 +111,8 @@ https://bbs.huaweicloud.com/forum/forum-726-1.html
 
 #### Gitee Ascend/samples
 
+https://gitee.com/Ascend/samples
+
 #### 应用开发基本流程
 
 ##### 确定需求与问题
@@ -324,7 +326,7 @@ cat ~/id_rsa.pub # 如果你生成的不是RSA密钥你应该比我明白所以�
 
 ![image-20220513202129408](media/installation/image-20220513202129408.png)
 
-不过我们的第一个任务是手写数字识别，在一般`CPU`上一分钟之内就可以完成训练，所以我们直接在本机运行，方便直观。
+不过我们的第一个任务是手写数字识别，在一般`CPU`上就可以完成训练，所以我们直接在本机运行，方便直观。
 
 ```bash
 conda create -n ms python=3.9 mindspore-cpu=1.7.0 -c mindspore -c conda-forge -y
@@ -349,6 +351,10 @@ conda create -n ms python=3.9 mindspore-cpu=1.7.0 -c mindspore -c conda-forge -y
 - 序列
 - 音频
 - 点云
+
+推荐学习资源
+
+https://www.hiascend.com/zh/developer/courses/detail/387264598548287488
 
 ## 从失败中救赎
 

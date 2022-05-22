@@ -8,17 +8,16 @@
 
 `Gitee`地址：https://gitee.com/dandelight/
 
-- **LISTEN 耳阅读屏**（自然语言处理调研中）
-- 生活垃圾资源化系统（Automated Recyclable Garbage Sorting System，ARGSS）
-- 点云目标检测（调研中）
-- 聊天软件（完成度：50%）
+- 点云目标检测（理解点云数据）
+- LISTEN 耳阅读屏（十月开展社会调研）
+- 聊天软件（完成度：80%）
 - [PaperPeer](https://gitee.com/dandelight/paperpeer)（完成度：10%）
 - [读英语背单词](https://gitee.com/dandelight/readEnglish)（完成度：20%)
 - Silly games like [starller](https://gitee.com/dandelight/starller)（完成度：咕咕咕）
 
 ## Featured Research
 
-- Image Captioning with Transformer and MLP
+To Be Updated.
 
 ## 课程
 
@@ -43,8 +42,7 @@
 .osc_desc_color {color: #666666 !important;}
 .osc_link_color * {color: #9b9b9b !important;}
 </style>
-
-## Something more
+## Something Else
 
 <a href="https://codeforces.com/profile/dandelight"><img src="https://cp-logo.vercel.app/codeforces/dandelight"/></a>
 <a href="https://atcoder.jp/users/dandelight"><img src="https://cp-logo.vercel.app/atcoder/dandelight"/></a>

@@ -126,12 +126,12 @@ train('MNIST/')
 
 ```python
 input_spec = Tensor(np.ones([1, 1, 32, 32]).astype(np.float32))
-ms.export(model, mindspore.Tensor(input_spec), file_name='lenet', file_format='AIR')
+ms.export(model, mindspore.Tensor(input_spec), file_name='lenet', file_format='ONNX')
 ```
 
 #### 模型转换
 
-做到上一步之后，我们已经有了`lenet.air`文件，下面的操作我们将在设备端进行。
+做到上一步之后，我们已经有了`lenet.onnx`文件，下面的操作我们将在设备端进行。
 
 在上一步我们进行了模型导出。
 
@@ -163,7 +163,11 @@ ms.export(model, mindspore.Tensor(input_spec), file_name='lenet', file_format='A
 ![img](media/basic_developing/zh-cn_image_0000001253427095.png)
 
 ```bash
-atc --mode=0 --framework=5 --model=lenet.onnx --output=onnx_lenet.om --soc_version=Ascend310
+atc --mode=0 --framework=5 --model=lenet.onnx --output=onnx_lenet --soc_version=Ascend310
 ```
+
+https://support.huaweicloud.com/atctool-cann51RC1alpha1/atlasatc_16_0001.html
+
+![img](https://support.huaweicloud.com/atctool-cann51RC1alpha1/figure/zh-cn_image_0000001253634677.png)
 
 #### 设备端部署与测试

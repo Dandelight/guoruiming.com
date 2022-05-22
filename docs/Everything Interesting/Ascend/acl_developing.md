@@ -13,7 +13,49 @@ AscendCL（Ascend Computing Language）是华为昇腾开发的异构计算架�
 >
 > **Stream**用于维护一些异步操作的执行顺序，确保按照应用程序中的代码调用顺序在 Device 上执行。
 
-以上摘自官网，用大家熟悉的例子作对比，Host 指主机和主机内存，Device 可以类比为显卡和显存，Context 是显存里一个“进程”（类比 CPU 进程）的生命周期，进程中有许多异步操作，异步操作的执行顺序用 Stream 描述。学习过`Nvidia CUDA`编程的同学对这些概念可能会对号入座。你们是对的。
+以上摘自官网，用大家熟悉的例子作对比，Host 指主机和主机内存，Device 可以类比为显卡和显存，Context 是显存里一个“进程”（类比 CPU 进程）的生命周期，进程中有许多异步操作，异步操作的执行顺序用 Stream 描述。学习过`Nvidia CUDA`编程的同学对这些概念可能会对号入座。你们是对的，放心大胆地对号入座吧，你们一定比别人学得快。
+
+## 注意：谨言慎行
+
+因为这是相当 Low Level 的开发，报错信息不会十分”友好“的给你一个弹窗（因为内核越精简越好）。为了让开发者能获悉错误，`ACL`内部设置了`aclError`的一个变量，每次执行`ACL API`都会对这个变量进行赋值。一些函数会返回这个值的一个`copy`，如果没有，可以通过[`aclGetRecentErrMsg()`](https://support.huaweicloud.com/aclcppdevg-cann51RC1alpha1/aclcppdevg_03_0012.html)获得一个`char*`，如果上一个操作成功，则返回`nullptr`，否则返回一个指向有报错信息的位置。
+
+> 要我说，华为真是内敛，这么好用的一个`API`竟然藏得这么深，看到时让我惊喜了一下，用了之后更加兴奋了。
+
+我将错误检查的流程封装为两个宏函数：`CHECK`对返回`aclError`的函数进行检查，`CHECK_NULLPTR`对返回的指针进行检查。
+
+```cpp
+#include <cstdio>
+#include <cstdlib>
+#define CHECK(call)                                                        \
+  do {                                                                     \
+    const aclError error_code = call;                                      \
+    if (error_code != ACL_SUCCESS) {                                       \
+      fprintf(stderr, "\033[1;31mError in %s, file %s, line %d\033[0m\n",  \
+              #call, __FILE__, __LINE__);                                  \
+      fprintf(stderr, "\033[1;31mError code: %d\033[0m\n", error_code);    \
+      fprintf(stderr, "\033[1;31mError message: %s\033[0m\n",              \
+              aclGetRecentErrMsg());                                       \
+      exit(0);                                                             \
+    } else {                                                               \
+      fprintf(stderr, "\033[1;32mASCEND API " #call " succeed!\033[0m\n"); \
+    }                                                                      \
+  } while (0)
+
+#define CHECK_NULLPTR(pointer)                                               \
+  do {                                                                       \
+    if (pointer == nullptr && aclGetRecentErrMsg() == nullptr) {             \
+      fprintf(stderr, "\033[1;31mPointer " #pointer " is nullptr\033[0m\n"); \
+      fprintf(stderr, "\033[1;31mError message: %s\033[0m\n",                \
+              aclGetRecentErrMsg());                                         \
+      exit(0);                                                               \
+    } else {                                                                 \
+      fprintf(stderr,                                                        \
+              "\033[1;32mPointer " #pointer                                  \
+              " now is pointing at %#llX!\033[0m\n",                         \
+              (unsigned long long)pointer);                                  \
+    }                                                                        \
+  } while (0)
+```
 
 ## 正身：引用`ACL`头文件
 
@@ -22,6 +64,8 @@ AscendCL（Ascend Computing Language）是华为昇腾开发的异构计算架�
 ```
 
 战歌，起！
+
+这一句表示将`AscendCL`的所有头文件都包含进来，也就是可以使用`ACL`的全部功能。
 
 ## 起式：`AclInit()`
 
@@ -71,7 +115,7 @@ aclError aclrtCreateContext(aclrtContext *context, int32_t deviceId)
 
 复杂起来了！返回值依然是经典的错误码（不行！程序员怎么能说是“错误码”呢！要说“正确码”！图个吉利）。
 
-注意第二参数`deviceId`为值传参，是输入，输入的是一个在上一步`aclrtSetDevice`中成功设置的 device，~~我一般设为 0~~；第一参数`context`是一个`aclrtContext`指针（老 OOP 了），不需要初始化（良好的编程规范告诉我们初始化指针要置`NULL`），也千万不要拿到了内容之后给`free`掉。指针指向区域的具体内容没有文档资料，相当于私有成员了吧。
+注意第二参数`deviceId`为值传参，是输入，输入的是一个在上一步`aclrtSetDevice`中成功设置的 device，~~我一般设为 0~~；第一参数`context`是一个`aclrtContext`指针（老 OOP 了），不需要初始化（良好的编程规范告诉我们初始化指针要置`NULL`），也千万不要拿到了内容之后给`free`掉。指针指向区域的具体内容没有文档资料，相当于私有成员了吧。只能通过文档中提供的`API`进行操作。
 
 ## 第三式：行云流水
 
@@ -97,13 +141,13 @@ aclError aclmdlLoadFromFile(const char *modelPath, uint32_t *modelId)
 
 https://support.huaweicloud.com/aclcppdevg-cann51RC1alpha1/aclcppdevg_000021.html
 
-当然这个 API 还有其他版本，比如这个：
+当然这个 API 还有高级版本，比如这个从内存里读模型：
 
 ```cpp
 aclError aclmdlLoadFromMem(const void* model, size_t modelSize, uint32_t* modelId)
 ```
 
-从内存里读模型
+还有这个，连权值都让你自己分配
 
 ```cpp
 aclError aclmdlLoadFromFileWithMem(const char *modelPath, uint32_t *modelId, void *workPtr, size_t workSize, void *weightPtr, size_t weightSize)
@@ -147,9 +191,35 @@ aclError aclrtMalloc(void **devPtr, size_t size, aclrtMemMallocPolicy policy)
 
 输出同时也需要一个数据集来存放！
 
+在`Atlas 200 DK`中，`DEVICE`和`HOST`共享同一片内存（其他就不是了），所以可以通过对`dataBuffer`中指向区域的赋值进行修改。
+
+```cpp
+ CHECK(
+      aclrtMalloc((void**)&inputBuffer, inputSize, ACL_MEM_MALLOC_NORMAL_ONLY));
+  CHECK(aclrtMalloc((void**)&outputBuffer, outputSize,
+                    ACL_MEM_MALLOC_NORMAL_ONLY));
+  for (int i = 0; i < 28; ++i)
+    for (int j = 0; j < 28; ++j) {
+      inputBuffer[i * 28 + j] = (float)imageData[i * 28 + j] / 255.0;
+    }
+```
+
 ## 第六式：粮草先行
 
 ![img](media/acl_developing/zh-cn_image_0000001208791990.png)
+
+```cpp
+aclDataBuffer* inDataBuffer = aclCreateDataBuffer(inputBuffer, inputSize);
+aclDataBuffer* outDataBuffer = aclCreateDataBuffer(outputBuffer, outputSize);
+
+CHECK_NULLPTR(inDataBuffer);
+CHECK_NULLPTR(outDataBuffer);
+
+CHECK(aclmdlAddDatasetBuffer(inputDataset, inDataBuffer));
+CHECK(aclmdlAddDatasetBuffer(outputDataset, outDataBuffer));
+
+CHECK(aclmdlExecute(modelId, inputDataset, outputDataset));
+```
 
 ## 第七式：正菜！
 
@@ -167,14 +237,34 @@ aclError aclmdlExecute(uint32_t modelId, const aclmdlDataset *input, aclmdlDatas
 
 ```cpp
 // aclrtFree释放自己申请的内存
-ret = aclrtDestroyStream(stream_);
-ret = aclrtDestroyContext(context_);
-ret = aclrtResetDevice(deviceId_);
-ret = aclFinalize();
+CHECK(aclDestroyDataBuffer(inDataBuffer));
+CHECK(aclDestroyDataBuffer(outDataBuffer));
+
+CHECK(aclrtFree(inputBuffer));
+CHECK(aclrtFree(outputBuffer));
+
+CHECK(aclmdlDestroyDataset(inputDataset));
+CHECK(aclmdlDestroyDataset(outputDataset));
+CHECK(aclmdlDestroyDesc(modelDesc));
+
+CHECK(aclrtDestroyStream(stream));
+CHECK(aclrtDestroyContext(context));
+CHECK(aclrtResetDevice(deviceId));
+CHECK(aclFinalize());
 ```
 
 有一说一，我觉得这一式的题目是这里面最贴切的。
 
-TODO：贴出完整代码
+## 进阶
 
-参考：[昇腾 CANN 社区版 5.0.2.alpha003](https://support.huaweicloud.com/aclcppdevg-cann502alpha3infer/atlasdevelopment_01_0001.html)
+昇腾芯片还具有更强大的能力：DVPP 数字图像硬件级解编码、AIPP 预处理等，这些功能都需要进一步学习。
+
+另外，目前该项目的主要目的是为了普及基础知识，更多内容（内存优化、表现评估等）还需要进一步发掘。
+
+## 完整代码
+
+https://gitee.com/dandelight/acl_mnist
+
+参考：[昇腾 CANN 社区版（5.1.RC1.alpha001）](https://support.huaweicloud.com/instg-cann51RC1alpha1/instg_000002.html)
+
+[昇腾 CANN 社区版 5.0.2.alpha003](https://support.huaweicloud.com/aclcppdevg-cann502alpha3infer/atlasdevelopment_01_0001.html)

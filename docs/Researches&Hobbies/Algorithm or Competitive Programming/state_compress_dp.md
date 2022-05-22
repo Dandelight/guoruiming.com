@@ -197,3 +197,132 @@ signed main() {
     printf("%lld\n", ans);
 }
 ```
+
+## Headmaster’s Headache
+
+看不懂了……
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int N = 110;
+const int MAXN = (1 << 8);
+
+int s0, n, m;
+
+int f[N][MAXN][MAXN];//状压数组，含义见题解
+
+int cost[N];//雇第i个职员花多少钱
+int teach[N];//第i个职员能交那些科目
+
+int main()
+{
+	while(scanf("%d %d %d", &s0, &m, &n) != EOF)
+	{
+		if(s0 == 0) break;
+
+		//数据不清空，爆零两行泪
+		memset(f, 0x3f, sizeof(f));
+		memset(teach , 0, sizeof(teach));
+
+		//因为在职教师是必选的，那么可以提前把他们处理出来
+		//把他们可以教的科目作为初始状态，花费的费用作为初始消耗
+		int ori1 = 0 , ori2 = 0, mon = 0;
+		//ori1与DP中的i等价，ori2与j等价，mon是代价
+		for(int k = 1; k <= m; k++)
+		{
+			int c;
+			scanf("%d", &c);
+			mon += c;
+
+			string s;
+			getline(cin, s);
+			//getline读整行
+
+			int num = 0;
+			for(int i = 0; i < (int )s.length() ; i++)
+				if(s[i] >= '0' && s[i] <= '9')
+					num *= 10, num += s[i] - '0';
+				else if(num)
+				{
+					if(!(ori2 & (1 << (num - 1))))//这门课不到两个人教（两个人教与N个人教对于我们的状态来说，没有区别）
+					{
+						if(ori1 & ((1 << (num - 1))))//这门课有人一个教了， 那么把这一个人教的标志取消掉，换成两个人教的标志
+							ori1 ^= ((1 << (num - 1))), ori2 |= ((1 << (num - 1)));
+						else//否则，标记上这门课有一个人教
+							ori1 |= ((1 << (num - 1)));
+					}
+
+					num = 0;
+				}
+			if(num)//最后一位的处理
+			{
+				if(!(ori2 & (1 << (num - 1))))
+				{
+					if(ori1 & ((1 << (num - 1))))
+						ori1 ^= ((1 << (num - 1))), ori2 |= ((1 << (num - 1)));
+					else
+						ori1 |= ((1 << (num - 1)));
+				}
+			}
+		}
+
+		//初态设定
+		f[0][ori1][ori2] = mon;
+
+		for(int k = 1; k <= n; k++)
+		{
+			scanf("%d", &cost[k]);
+
+			string s;
+			getline(cin, s);
+
+			int num = 0;
+			for(int i = 0; i < (int )s.length() ; i++)
+				if(s[i] >= '0' && s[i] <= '9')
+					num *= 10, num += s[i] - '0';
+				else if(num)
+					teach[k] |= (1 << (num - 1)), num = 0;
+			if(num)
+				teach[k] |= (1 << (num - 1));
+		}
+
+		//我习惯的是刷表法...可能快一点
+		for(int k = 0; k < n; k++)
+			for(int i = 0; i < MAXN; i++)
+				for(int j = 0; j < MAXN; j++)
+					if(f[k][i][j] != 0x3f3f3f3f)
+					{
+						//不雇佣
+						f[k + 1][i][j] = min(f[k + 1][i][j], f[k][i][j]);
+
+						int to1 = i, to2 = j;
+						//处理出雇佣之后的状态
+						for(int c = 0; c < s0; c++)
+						{
+							//他不教这一科
+							if(!(teach[k + 1] & (1 << c)))
+								continue;
+
+							//这科有两个人教了...
+							if((j & (1 << c) ))
+								continue;
+
+							//这个处理有点类似之前读入的处理，不细讲
+							if(i & (1 << c))
+								to1 ^= (1 << c), to2 |= (1 << c);
+							else
+								to1 |= (1 << c);
+						}
+						//处理完毕，选择此人
+						f[k + 1][to1][to2] = min(f[k + 1][to1][to2], f[k][i][j] + cost[k + 1]);
+					}
+		//末态：所有科目都有至少两个人教
+		printf("%d\n", f[n][0][(1 << s0) - 1]);
+	}
+
+	return 0;
+}
+```
