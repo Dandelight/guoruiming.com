@@ -2,6 +2,12 @@
 
 本次讲座讲解华为 MindSpore 与 Atlas 200 DK 的使用
 
+## 视频讲解
+
+<iframe src="//player.bilibili.com/player.html?aid=257408820&bvid=BV1MY411u7Jx&cid=745534525&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+感谢 SCU Maker 协会的大力支持！
+
 ## 前置知识
 
 ### 必修
