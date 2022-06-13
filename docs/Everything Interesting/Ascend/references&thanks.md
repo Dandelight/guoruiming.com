@@ -6,4 +6,4 @@ https://blog.csdn.net/weixin_42800966/article/details/122587832
 
 SCU Maker
 
-李航帆学长、鲁邦彦学长
+智能基座社团

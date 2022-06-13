@@ -1,18 +1,10 @@
 # Docker+PyCharm 快速搭建机器学习开发环境
 
-[![姜建林](media/Untitled/v2-b619e7aabda618f7a999286ec02a5139_xs.jpg)](https://www.zhihu.com/people/jiang-jian-lin-74)
-
-转发自：[姜建林](https://www.zhihu.com/people/jiang-jian-lin-74)
-
-CS 研究生
-
-162 人赞同了该文章
-
 本文介绍使用 Docker 容器结合 PyCharm 快速搭建机器学习类任务开发环境。机器学习的开发往往会涉及到很多 python 的包，环境的搭建和维护是一件头疼的事，使用 Docker 现成的机器学习工具 Deepo 能跳过环境搭建的过程，再结合 PyCharm 可以实现本地开发调试。本文在 Mac 上做的尝试，linux 操作系统同理，windows 也有相应的 docker 软件使用，Pycharm 的设置都是相似的。最终的效果是省略环境搭建的步骤，使用 PyCharm 进行代码的开发和调试。
 
 ## Docker
 
-Docker 是一种容器技术，类似于虚拟机，但比虚拟机更轻便。Docker 容器内的应用程序直接运行于宿主的内核，而没有自己的内核，而且也没有硬件虚拟。更多 Docker 的相关知识可以看《Docker-从入门到实践》。
+Docker 是一种容器技术，类似于虚拟机，但比虚拟机更轻便。Docker 容器内的应用程序直接运行于宿主的内核，而没有自己的内核，而且也没有硬件虚拟。
 
 ## Deepo
 
@@ -60,28 +52,24 @@ AuthorizedKeysFile  .ssh/authorized_keys # 公钥信息保存到该文件中
 ### PyCharm+Docker
 
 经过以上的操作，可以理解成本地 12622 端口开启了 ssh 服务，运行一个独立的 ubuntu 服务器。接下来介绍如何使用 PyCharm 调用 Docker 容器中的解释器。（注意需要 PyCharm 专业版）
-在 Pycharm 中 PyCharm-->Project-->Project Interpreter，如下图所示：
-
-![img](media/Untitled/v2-5329bc217ed51cf26cfd7ab566fa87f5_720w.jpg)
+在 Pycharm 中 PyCharm-->Project-->Project Interpreter，
 
 点击右上按钮选择添加解释器。
 
-![img](media/Untitled/v2-492c1b50b3db6d25977788e534d6631c_720w.jpg)
-
-选择`SSH Interpreter`，按图中内容。
-
-![img](media/Untitled/v2-94daf7fd16cb01924864902266a37c61_720w.jpg)
+选择`SSH Interpreter`
 
 选用 openssh 连接，并添加私钥文件。
-
-![img](media/Untitled/v2-c8405a678bc19c5795e8100dbd434cc2_720w.jpg)
 
 选择 docker 容器内的 python 解释器。 这样在 PyCharm 写代码时就会调用已经包含机器学习框架的 python 解释器，能够代码提醒和智能补全。
 接下来配置 Run/Debug Configurations，
 
-![img](media/Untitled/v2-6df74412e6af60afec4ef2d9f33150aa_720w.jpg)
-
 如上配置，这里解释器是 docker 中的解释器，注意`Working Directory`是 docker 容器中的目录，这为`/data`，由于 docker 的设置，本机`~/data`和 docker 容器中的`/data`目录相映射，因此需要执行的文件可以放入本机`~/data`目录。以上就可以在 Pycharm 调用容器内的解释器以使用容器中已安装的机器学习框架，而且执行和调试可以在本地进行，提高开发效率。
    以上结合 Docker 和 PyCharm 快速搭建机器学习开发环境，这例子的情景是在 mac 后台运行容器，并将本机的端口映射到容器的 22 端口，实现 ssh 连接容器，并在 PyCharm 中调用容器的解释器，以实现本地的机器学习任务的开发调式。以上的模式对于一个远程的服务器同样适用，在服务器上创建 docker 容器并运行在后台，映射到服务器的一个端口。在 Pycharm 中调用远程服务器的解释器，并创建本地目录和服务器目录的映射（在 Deployment 配置），就可以实现在本地写代码和调试。
 
-![img](media/Untitled/v2-166435351977c5730888f8d2f6b68907_720w.jpg)最终效果
+### 其他做法
+
+可以使用 `JetBrains Remote Gateway`  进行远程开发，优点是开发体验近乎原生，不需要多考虑本地和远程主机的**路径同步**问题；缺点是 `JetBrains IDE`  都非常的消耗资源。
+
+## 参考
+
+转发自：[姜建林](https://www.zhihu.com/people/jiang-jian-lin-74)

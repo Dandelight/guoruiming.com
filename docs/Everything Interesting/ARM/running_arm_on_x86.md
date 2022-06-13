@@ -1,4 +1,6 @@
 > 因为《嵌入式系统》需要写一段简单的 ARM 程序作为课程设计，提供的 ARM Developer Suite 又十分古老难用，所以找到了这样一招。
+>
+> 摘抄的这篇文章讲述了如何使用 `QEMU`  运行在 `x86`  机器上运行 `ARM`  的二进制程序。
 
 # RUNNING ARM BINARIES ON X86 WITH QEMU-USER
 
@@ -64,7 +66,7 @@ azeria@ubuntu:~$ ./hello64
 Hello, I'm executing ARM64 instructions!
 ```
 
-Voilà, our statically linked aarch64 binary is running on our x86_64 host thanks to _qemu-user-static_. But can we execute a dynamically linked Arm executable? Yes, we can. This time, the package that makes this possible is _qemu-user_.
+Voilà, our statically linked aarch64 binary is running on our x86*64 host thanks to \_qemu-user-static*. But can we execute a dynamically linked Arm executable? Yes, we can. This time, the package that makes this possible is _qemu-user_.
 
 First, compile the C code without the _-static_ flag. In order to run it, we need to use _qemu-aarch64_ and supply the aarch64 libraries via the _-L_ flag.
 
@@ -213,7 +215,7 @@ hello32: file format elf32-little
 objdump: can't disassemble for architecture UNKNOWN!
 ```
 
-Since the native _objdump_ expects a binary compiled for the architecture it is running on (x86_64 in this case), it does not recognize the architecture of the Arm binary we supplied and refuses to disassemble it. But the _objdump_ binary itself does not need to be compiled for the Arm architecture, it only needs to be able to interpret Arm machine code. So all we need is a cross-built of it. If you type “arm-linux” in your terminal and double-tap, you will see all the utilities we have already installed with the _binutils-arm-linux-gnueabihf_ package, and _objdump_ is included!
+Since the native _objdump_ expects a binary compiled for the architecture it is running on (x86*64 in this case), it does not recognize the architecture of the Arm binary we supplied and refuses to disassemble it. But the \_objdump* binary itself does not need to be compiled for the Arm architecture, it only needs to be able to interpret Arm machine code. So all we need is a cross-built of it. If you type “arm-linux” in your terminal and double-tap, you will see all the utilities we have already installed with the _binutils-arm-linux-gnueabihf_ package, and _objdump_ is included!
 
 ```
 azeria@ubuntu:~$ arm-linux-gnueabihf-

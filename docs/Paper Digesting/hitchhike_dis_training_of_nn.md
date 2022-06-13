@@ -1,14 +1,6 @@
 # A Hitchhiker’s Guide On Distributed Training Of Deep Neural Networks
 
-> 小郭今天吃什么？
->
-> 哈，为什么吃分布式训练呢？
->
-> 模型非常大，一口吃不下！
-
-论文地址：[arXiv](https://arxiv.org/abs/1810.11787v1) [ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0743731518308712)
-
-模型层面最近卷花了，来分布式冷静一下。
+论文地址：[arXiv](https://arxiv.org/abs/1810.11787v1) [ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0743731518308712)
 
 ## 主要任务
 

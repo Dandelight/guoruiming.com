@@ -4,7 +4,9 @@
 
 ## 视频讲解
 
-<iframe src="//player.bilibili.com/player.html?aid=257408820&bvid=BV1MY411u7Jx&cid=745534525&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+<iframe src="//player.bilibili.com/player.html?aid=257408820&bvid=BV1MY411u7Jx&cid=745534525&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" height="600" width="800" allowfullscreen="true"> </iframe>
+
+https://www.bilibili.com/video/BV1MY411u7Jx
 
 感谢 SCU Maker 协会的大力支持！
 

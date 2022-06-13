@@ -1,3 +1,5 @@
+# 基于`Qt` 的 `RealSense` 相机数据采集软件
+
 This is a very simple example, that uses only Qt and Intel Realsense SDK.
 
 We start by writing a class that handles our camera:
@@ -194,9 +196,7 @@ void MainWindow::receiveFrame(QImage rgb, QImage depth)
 }
 ```
 
-And we're done!
-
-Lastly, we write our main, that will starts our thread and show our window.
+主线程和主函数
 
 ```cpp
 #include <QApplication>
@@ -220,3 +220,5 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 ```
+
+然而在运行代码的时候遇到了比较大的问题：`qmake`  如何链接 `RealSense`？结果就是两个库链不上。

@@ -1,4 +1,4 @@
-![graspnet-replicate](media/first_breakthrough/graspnet-replicate.png)
+![graspnet-replicate](media/replicate/graspnet-replicate.png)
 
 取得的第一个突破性成果：真实场景中的应用。
 

@@ -38,4 +38,54 @@ def get_model(name, num_classes=10, stem=False, verbose=True, **block_kwargs):
 CUDA_VISIBLE_DEVICES=0 python train.py  --log_dir logs/log_rs --batch_size 2 --dataset_root /path/to/imagenet # 略去十几个参数
 ```
 
-在此文中，我们将一一解决这些问题！
+主要问题来自于，`Python` 的 `dict` 的内容是通过 `__getitem__` 和 `__setitem__` 获取的，而 `ArgumentParser` 的内容作为属性获取。
+
+解决问题和很简单，转换一下：
+
+```python
+from os import get_inheritable
+import yaml
+import argparse
+
+default_config_parser = parser = argparse.ArgumentParser(
+    description='Training Config', add_help=False)
+parser.add_argument(
+    '-c',
+    '--config_yaml',
+    default=
+    'train.yml',
+    type=str,
+    metavar='FILE',
+    help='YAML config file specifying default arguments')
+
+
+# YAML should override the argparser's content
+def _parse_args_and_yaml(given_parser=None):
+    if given_parser == None:
+        given_parser = default_config_parser
+    given_configs, remaining = given_parser.parse_known_args()
+    if given_configs.config_yaml:
+        with open(given_configs.config_yaml, 'r', encoding='utf-8') as f:
+            cfg = yaml.safe_load(f)
+            given_parser.set_defaults(**cfg)
+
+    # The main arg parser parses the rest of the args, the usual
+    # defaults will have been overridden if config file specified.
+    args = given_parser.parse_args(remaining)
+
+    # Cache the args as a text string to save them in the output dir later
+    args_text = yaml.safe_dump(args.__dict__, default_flow_style=False)
+    return args, args_text
+
+
+def parse_args_and_yaml(arg_parser=None):
+    return _parse_args_and_yaml(arg_parser)[0]
+
+
+if __name__ == "__main__":
+    args, args_text = _parse_args_and_yaml()
+```
+
+[^unknown]:
+    ArgumentParser 和 YAML 在 Python 中的共同使用 / 用 YAML 更新 Parser
+    https://blog.51cto.com/u_15127596/4233240

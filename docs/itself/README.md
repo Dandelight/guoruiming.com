@@ -1,5 +1,9 @@
 # 服务器本身
 
+## 关于那个我自己写的服务器
+
+[dandelight/enging](https://gitee.com/dandelight/enging)  是一个类 [`NginX`](https://nginx.org/)  的 `web`  静态页面服务器，但是出于未知的原因突然就只能 serve HTML 文件了，所以就用真正的 `NginX`  替代了。
+
 ## 关于 80 端口被`Welcome to nginx!`页面占用
 
 找到`/etc/nginx/site-enabled/default`文件，把 80 端口的占用指向另一个端口。

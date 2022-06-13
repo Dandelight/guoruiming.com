@@ -1,6 +1,6 @@
-#
+# 获取 RealSense 相机内参
 
-## 方法 1：`rs-sensor-control`获取
+## 软件方法：`rs-sensor-control`获取
 
 打开`C:\Program Files (x86)\Intel RealSense SDK 2.0\tools`
 
@@ -146,3 +146,5 @@ print(intr.ppx)  # 获取指定某个内参
 ```
 
 注意：通过 python script 获取内参一定要看好自己到底用了哪个 video stream，每个 video stream 的内参都是不一样的
+
+## 硬件方法

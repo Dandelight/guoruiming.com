@@ -6,13 +6,11 @@ document.querySelector("video").playbackRate = 3;
 
 首先让我们来看一看一个完整的`Windows`窗口程序是如何构成的。
 
-第一部分：Windows 基础
+- 第一部分：Windows 基础
+- 第二部分：MDI、多线程、数据库
+- 第三部分：图片等
 
-第二部分：MDI、多线程、数据库
-
-第三部分：图片等
-
-https://docs.microsoft.com
+官方文档：https://docs.microsoft.com
 
 ### First program
 
@@ -34,13 +32,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 }
 ```
 
-unicode
+`unicode`
 
 ![image-20211114092232613](media/first things first/image-20211114092232613.png)
 
-L"String", LCHAR wchar_t
+`L"String", LCHAR wchar_t`
 
-TCHAR
+`TCHAR`
 
 ![image-20211114093755267](media/first things first/image-20211114093755267.png)
 

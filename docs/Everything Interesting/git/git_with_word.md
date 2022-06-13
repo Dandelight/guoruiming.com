@@ -5,7 +5,6 @@ SCIENCE HACK
 MARTIN FENNER
 
 August 25, 2014 • 3 min read • readability score 41.4 •
-https://doi.org/10.53731/r294649-6f79289-8cw07
 
 One of the major challenges of writing a journal article is to keep track of versions - both the different versions you create as the document progresses, and to merge in the changes made by your collaborators. For most academics Microsoft Word is the default writing tool, and it is both very good and very bad in this. Very good because the _track changes_ feature makes it easy to see what has changed since the last version and who made the changes. Very bad because this feature is built around keeping everything in a single Word document, so that only one person can work on on a manuscript at a time. This usually means sending manuscripts around by email, and being very careful about not confusing different versions of the document, which requires [creativity](http://www.phdcomics.com/comics/archive.php?comicid=1531).
 
@@ -34,4 +33,6 @@ One of the reasons that git became so popular with software developers is that i
 
 There are still a few rough edges in the workflow described above (e.g. only partial support of Word track changes), but it is an interesting approach to collaborate using Microsoft Word and git. And this workflow can of course be enhanced to also include authors that write in LaTeX or one of the other formats that Pandoc supports. One nice side effect of using markdown is that Github will automatically render a webpage for the document (which it will not do for HTML without extra effort).
 
-Copyright © 2014 Martin Fenner. Distributed under the terms of the [Creative Commons Attribution 4.0 License.](https://creativecommons.org/licenses/by/4.0/legalcode)
+参考：
+
+[^martin]: https://doi.org/10.53731/r294649-6f79289-8cw07 Copyright © 2014 Martin Fenner. Distributed under the terms of the [Creative Commons Attribution 4.0 License.](https://creativecommons.org/licenses/by/4.0/legalcode)

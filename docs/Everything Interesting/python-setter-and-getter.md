@@ -1,3 +1,7 @@
+# `Python` 面向对象
+
+## Setter Getter
+
 ```python
 >>> class Screen(object):
 ...     def __init__(self):
@@ -15,3 +19,7 @@
 >>> print(s.width)
 42
 ```
+
+## Static Method
+
+## Class Method

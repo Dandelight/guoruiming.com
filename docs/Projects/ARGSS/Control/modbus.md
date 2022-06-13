@@ -1,8 +1,6 @@
 [https://modbus.org](https://modbus.org)
 
-来源：王• 2019 年 03 月 17 日 12:01 • 151264 次阅读
-
-[![img](media/modbus/u298.png) 1](http://www.elecfans.com/rengongzhineng/596297.html#comment)
+http://www.elecfans.com/rengongzhineng/596297.html#comment)
 
 先来简单分析一条 MODBUS-RTU 报文，例如：01 06 00 01 00 17 98 04
 01 06 00 01 00 17 98 04
