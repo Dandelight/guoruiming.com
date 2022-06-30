@@ -25,17 +25,21 @@ ENTRYPOINT ["/usr/sbin/sshd", "-D"]
 ```yaml
 version: "3"
 services:
-  pytorch: # 记住改service的名字，或者在下面加一个name字段
+  jupyter: # 记住改service的名字，或者在下面加一个name字段
+    restart: always
+    # image: ufoym/deepo:all-jupyter-py36-cu111
     build: "."
+    container_name: jupyter-all
     ports:
-      - "0:22" # 将容器内22映射到任意端口
-    volumes:
-      - $HOME:$HOME
-      - /nvme:/nvme
+      - "8822:22"
     shm_size: "32gb" # PyTorch多线程加载数据
+    volumes:
+      - "$HOME:$HOME"
+      - /nvme:/nvme
     deploy:
       resources:
         reservations:
           devices:
             - capabilities: ["gpu"] # NVIDIA GPU支持
+  restart: "always" # 自动重启
 ```
