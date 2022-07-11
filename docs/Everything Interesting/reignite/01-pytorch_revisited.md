@@ -76,26 +76,6 @@ docker compose up -d
 
 ### Tensor 是什么
 
-### Tensor 的基本属性（从实现的角度）
-
-Tensor 是线性计算中最常见的**数据结构**。
-
-- 维数：`ndim`
-- 形状：`shape`
-- 访问步长：`stride`
-- storage：`storage`
-- 数据类型：`dtype`
-- 数据内容
-- 设备：`device`
-- 梯度：`grad`
-
-### 特殊的 Tensor
-
-- `meta tensor` 只有形状而没有内容，用于？？？
-- sparce tensor 基于稀疏矩阵，类似 `scipy` 的 `sparce_matrix`，可用于图神经网络
-- quantized tensor 将 float32 量化为 uint8 而提高推理性能
-- complex tensor 复数 Tensor，提供了 `real` 和 `image` 两个属性
-
 ### 创建一个 Tensor
 
 - 使用 [`torch.tensor()`](https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor) 从已有数据创建 Tensor
@@ -111,21 +91,21 @@ Tensor 是线性计算中最常见的**数据结构**。
 
 但从 `tensor` 创建 `tensor` 应该使用 `Tensor.clone()`、`Tensor.detach()`（返回一个从当前计算图中脱离的 `tensor`，但返回的 `tensor` 与之共享 `storage`，所以不应该使用 inplace 操作进行改变）、`Tensor.requires_grad_()`。
 
-### `torch.asarray`
+#### `torch.asarray`
 
 与 `torch.tensor` 不同的是 `asarray` ，如果原对象是 `ndarray`、`DLPack capsule`、实现了 `Python buffer protocol` 的对象，则新 `Tensor` 会与原对象共享内存。
 
-### `torch.as_tensor`
+#### `torch.as_tensor`
 
 与上述不同的是，如果原对象是 `tensor`，则会最大程度保留 autograd 历史。
 
-### `torch.from_numpy`
+#### `torch.from_numpy`
 
 一定会与原对象共享内存，不支持 `resize` 操作
 
 其他不太常用的还有 `from_dlpack`、`frombuffer` 等。
 
-### 统一初始化
+#### 统一初始化
 
 - `zeros`
 - `ones`
@@ -165,7 +145,7 @@ a = torch.eye(3)
 b = torch.eye(3, 4)
 ```
 
-### 创建类似现有 Tensor 的 Tensor
+#### 创建类似现有 Tensor 的 Tensor
 
 - `zeros_like`
 - `ones_like`
@@ -181,11 +161,79 @@ $$
 \text { heaviside }(\text { input, values })= \begin{cases}0, & \text { if input }<0 \\ values, & \text { if input }=0 \\ 1, & \text { if input }>0\end{cases}
 $$
 
-### 范围创建
+#### 范围创建
 
-- `range`：创建有 $\left\lfloor \frac{\text { end-start }}{\text { step }}\right\rfloor+1$ 个元素的一维 Tensor
-- `arange`：创建有 $\left\lceil\frac{\text { end-start }}{\text { step }}\right\rceil$ 个元素的一维 Tensor
+- ~~`range`：创建有 $\left\lfloor \frac{\text { end-start }}{\text { step }}\right\rfloor+1$ 个元素的一维 Tensor，返回 Tensor 的 dtype 为 `float32`~~ 在 PyTorch 1.11 被 depreciate 了，不要用了
+- `arange`：创建有 $\left\lceil\frac{\text { end-start }}{\text { step }}\right\rceil$ 个元素的一维 Tensor，返回 Tensor 的 dtype 为 `int64`
 - `linspace`：创建有 $\mathrm{step}$ 个元素的 Tensor，和 MATLAB 中同名函数同义
 - `logspace`：$(\mathrm{base} ^{\text {start }}, \mathrm{base} ^{\left(\text {start+ } \frac{\text { end -start }}{\text { steps-1 }}\right)}, \ldots, \mathrm{base} ^{\left(\text {start+(steps-2)* } \frac{\text { end }-\text { start }}{\text { steps }^{-1}}\right)}, \mathrm{base} \left.^{\text {end }}\right)$
 
-## 使用这个 Tensor
+#### 特殊的 Tensor
+
+- `meta tensor` 只有形状而没有内容，用于？？？
+- sparce tensor 基于稀疏矩阵，类似 `scipy` 的 `sparce_matrix`，可用于图神经网络
+- quantized tensor 将 float32 量化为 uint8 而提高推理性能
+- complex tensor 复数 Tensor，提供了 `real` 和 `image` 两个属性
+- named tensor 带有命名的 Tensor，设计的初衷是用“命名”来跟踪**维度**，在建图时发现维度不匹配问题，而不是像现在一样 `RuntimeException`。
+
+#### 用 Tensor 的 `new_*` 方法创建 Tensor
+
+- `new_tensor`
+- `new_full`
+- `new_empty`
+- `new_ones`
+- `new_zeros`
+
+`new` 出的 Tensor 与原 Tensor 有相同的 `dtype` 和 `device`。
+
+```python
+tensor = torch.ones((2,), dtype=torch.float64)
+tensor.new_full((3, 4), 3.141592)
+```
+
+~~一生二二生三三生万物~~
+
+### Tensor 的基本属性（从实现的角度）
+
+Tensor 是线性计算中最常见的**数据结构**。
+
+- 维数：`ndim`：返回一个 `Python` `int` 对象，表示维度
+- 形状：`shape`：返回一个 `torch.Shape` 对象，表示每个维度的大小
+- 访问步长：`stride()`：返回一个 `tuple`，为维度的 `stride`。
+- storage：`storage()`：返回一个 `torch.Storage` 的子类，为 `torch` 的底层一维存储
+- 数据类型：`dtype`：返回一个 `torch.dtype` 对象，表示这个 `tensor` 中数据的类型
+- 数据内容：直接访问或者 `b.data`，可以像数组一样操作，具体访问方式在后文介绍。
+- 设备：`device`：返回一个 `torch.device` 对象
+- 梯度：`grad`：如果这个 Tensor 有 grad 返回之；如果没有返回 None，具体会在 Autograd 一节中详细介绍。
+
+目前能想到的就是这些。
+
+### Tensor 的数据类型
+
+直接摘抄 `PyTorch` 官网的解释如下：~~难得认真地分个类画个表~~
+
+| Data type                                                                                | dtype                                 | CPU tensor             | GPU tensor                  |
+| ---------------------------------------------------------------------------------------- | ------------------------------------- | ---------------------- | --------------------------- |
+| 32-bit floating point                                                                    | `torch.float32` or `torch.float`      | `torch.FloatTensor`    | `torch.cuda.FloatTensor`    |
+| 64-bit floating point                                                                    | `torch.float64` or `torch.double`     | `torch.DoubleTensor`   | `torch.cuda.DoubleTensor`   |
+| 16-bit floating point [1](https://pytorch.org/docs/stable/tensors.html#id4)              | `torch.float16` or `torch.half`       | `torch.HalfTensor`     | `torch.cuda.HalfTensor`     |
+| 16-bit floating point [2](https://pytorch.org/docs/stable/tensors.html#id5)              | `torch.bfloat16`                      | `torch.BFloat16Tensor` | `torch.cuda.BFloat16Tensor` |
+| 32-bit complex                                                                           | `torch.complex32` or `torch.chalf`    |                        |                             |
+| 64-bit complex                                                                           | `torch.complex64` or `torch.cfloat`   |                        |                             |
+| 128-bit complex                                                                          | `torch.complex128` or `torch.cdouble` |                        |                             |
+| 8-bit integer (unsigned)                                                                 | `torch.uint8`                         | `torch.ByteTensor`     | `torch.cuda.ByteTensor`     |
+| 8-bit integer (signed)                                                                   | `torch.int8`                          | `torch.CharTensor`     | `torch.cuda.CharTensor`     |
+| 16-bit integer (signed)                                                                  | `torch.int16` or `torch.short`        | `torch.ShortTensor`    | `torch.cuda.ShortTensor`    |
+| 32-bit integer (signed)                                                                  | `torch.int32` or `torch.int`          | `torch.IntTensor`      | `torch.cuda.IntTensor`      |
+| 64-bit integer (signed)                                                                  | `torch.int64` or `torch.long`         | `torch.LongTensor`     | `torch.cuda.LongTensor`     |
+| Boolean                                                                                  | `torch.bool`                          | `torch.BoolTensor`     | `torch.cuda.BoolTensor`     |
+| quantized 8-bit integer (unsigned)                                                       | `torch.quint8`                        | `torch.ByteTensor`     | /                           |
+| quantized 8-bit integer (signed)                                                         | `torch.qint8`                         | `torch.CharTensor`     | /                           |
+| quantized 32-bit integer (signed)                                                        | `torch.qint32`                        | `torch.IntTensor`      | /                           |
+| quantized 4-bit integer (unsigned) [3](https://pytorch.org/docs/stable/tensors.html#id6) | `torch.quint4x2`                      | `torch.ByteTensor`     | /                           |
+
+相同设备上，不同数据类型的实数 Tensor 进行计算时遵循类似 C 语言的变量类型提升规则，而不同设备上的 Tensor 不能直接计算。
+
+### Tensor 的操作
+
+半天才到这一步，好戏还在后头呢。
