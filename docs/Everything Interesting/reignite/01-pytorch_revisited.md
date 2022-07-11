@@ -16,8 +16,9 @@ FROM pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
 USER root
 RUN sed -i "s@http://.*archive.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list &&\
         sed -i "s@http://.*security.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list
-# 接收 cudatools 的公钥，信任 CUDA 更新包
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys  A4B469963BF863CC
+# 接收 cudatools 的公钥，信任 CUDA 更新包，如果出现因为 cuda 更新的错误就将这句反注释掉
+# RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC
+# 安装 openssh
 RUN apt-get update && apt-get install -y openssh-server --fix-missing
 # pip 换源
 RUN pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple
