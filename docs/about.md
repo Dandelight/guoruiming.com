@@ -14,3 +14,5 @@ ResearchGate：https://www.researchgate.net/profile/Ruiming-Guo
 Gitee：https://gitee.com/dandelight
 
 GitHub：https://github.com/Dandelight
+
+CSDN：[凉风映夏](https://blog.csdn.net/qq_38056431)
