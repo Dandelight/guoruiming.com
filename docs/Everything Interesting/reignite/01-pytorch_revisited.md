@@ -194,6 +194,16 @@ tensor.new_full((3, 4), 3.141592)
 
 ~~一生二二生三三生万物~~
 
+### 随机初始化
+
+- [`torch.rand()`](https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand) 值初始化为 $[0, 1)$ 之间均匀分布
+- [`torch.rand_like()`](https://pytorch.org/docs/stable/generated/torch.rand_like.html#torch.rand_like)
+- [`torch.randn()`](https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn) 值初始化为服从 $\mathcal{N}(0, 1)$ 的正态分布
+- [`torch.randn_like()`](https://pytorch.org/docs/stable/generated/torch.randn_like.html#torch.randn_like)
+- [`torch.randint()`](https://pytorch.org/docs/stable/generated/torch.randint.html#torch.randint) 值为 `[low, high)` 之间的随机 `torch.int64`
+- [`torch.randint_like()`](https://pytorch.org/docs/stable/generated/torch.randint_like.html#torch.randint_like)
+- [`torch.randperm()`](https://pytorch.org/docs/stable/generated/torch.randperm.html#torch.randperm) 返回一个 $1\ldots n$ 的随机排列的一维 Tensor，`dtype` 默认 `torch.int64`
+
 ### Tensor 的基本属性（从实现的角度）
 
 Tensor 是线性计算中最常见的**数据结构**。
@@ -206,6 +216,11 @@ Tensor 是线性计算中最常见的**数据结构**。
 - 数据内容：直接访问或者 `b.data`，可以像数组一样操作，具体访问方式在后文介绍。
 - 设备：`device`：返回一个 `torch.device` 对象
 - 梯度：`grad`：如果这个 Tensor 有 grad 返回之；如果没有返回 None，具体会在 Autograd 一节中详细介绍。
+- `layout`（beta）对于 dense tensor 等价于 `stride`，对于 `sparse COO tensor` 处于测试阶段
+- `memory_format`：规定数据的存储和访问方式，主要有 `contiguous_format` 和 `channel_last` 两种。
+  - `torch.contiguous_format`：默认表现，Tensor is or will be allocated in dense non-overlapping memory. Strides represented by values in decreasing order.
+  - `torch.channels_last`： Tensor is or will be allocated in dense non-overlapping memory. Strides represented by values in `strides[0] > strides[2] > strides[3] > strides[1] == 1` aka NHWC order.
+  - `torch.preserve_format`：Used in functions like `clone` to preserve the memory format of the input tensor. If input tensor is allocated in dense non-overlapping memory, the output tensor strides will be copied from the input. Otherwise output strides will follow `torch.contiguous_format`
 
 目前能想到的就是这些。
 
