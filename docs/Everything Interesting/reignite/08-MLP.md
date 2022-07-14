@@ -40,16 +40,22 @@ $$
 - **eps** – $\epsilon$. Default: `1e-5`
 - **momentum** – the value used for the **running_mean** and **running_var** computation. Can be set to `None` for cumulative moving average (i.e. simple average). Default: `0.1`
 - **affine** – a boolean value that when set to `True`, this module has **learnable affine parameters**. When `affine=False` the output of `BatchNorm` is equivalent to considering `gamma=1` and `beta=0` as constants. Default: `True`
-- **track_running_stats** – a boolean value that when set to `True`, this module tracks the running mean and variance, and when set to `False`, this module does not track such statistics, and initializes statistics buffers `running_mean` and `running_var` as `None`. **When these buffers are `None`, this module always uses batch statistics.** in both training and eval modes. Default: `True` trainning 和 track_running_stats，track_running_stats=True 表示跟踪整个训练过程中的 batch 的统计特性，得到方差和均值，而不只是仅仅依赖与当前输入的 batch 的统计特性。相反的，如果 track_running_stats=False 那么就只是计算当前输入的 batch 的统计特性中的均值和方差了。当在推理阶段的时候，如果 track_running_stats=False，此时如果 batch_size 比较小，那么其统计特性就会和全局统计特性有着较大偏差，可能导致糟糕的效果。
+- **track_running_stats** – a boolean value that when set to `True`, this module tracks the running mean and variance, and when set to `False`, this module does not track such statistics, and initializes statistics buffers `running_mean` and `running_var` as `None`. **When these buffers are `None`, this module always uses batch statistics.** in both training and eval modes. Default: `True`。`track_running_stats=True` 表示跟踪整个训练过程中的 batch 的统计特性，通过线性平滑法获得方差和均值，而不只是仅仅依赖与当前输入的 batch 的统计特性。相反的，如果 `track_running_stats=False` 那么就只是计算当前输入的 batch 的统计特性中的均值和方差了。当在推理阶段的时候，如果 `track_running_stats=False`，此时如果 `batch_size` 比较小，那么其统计特性就会和全局统计特性有着较大偏差，可能导致糟糕的效果。
 
-* training=True, track_running_stats=True。这个是期望中的训练阶段的设置，此时 BN 将会跟踪整个训练过程中 batch 的统计特性。
-* training=True, track_running_stats=False。此时 BN 只会计算当前输入的训练 batch 的统计特性，可能没法很好地描述全局的数据统计特性。
-* trainning=False, track_running_stats=True。这个是期望中的测试阶段的设置，此时 BN 会用之前训练好的模型中的（假设已经保存下了）running_mean 和 running_var 并且不会对其进行更新。一般来说，只需要设置 model.eval()其中 model 中含有 BN 层，即可实现这个功能。
-* trainning=False, track_running_stats=False 效果同(2)，只不过是位于测试状态，这个一般不采用，这个只是用测试输入的 batch 的统计特性，容易造成统计特性的偏移，导致糟糕效果。
+This **`momentum`** argument is different from one used in **optimizer** classes and the conventional notion of momentum. Mathematically, the update rule for running statistics here is
 
-同时，**我们要注意到**，BN 层中的`running_mean`和`running_var`的更新是在 `forward() `操作中进行的，而不是`optimizer.step()`中进行的，因此如果处于 `training` 状态，就算你不进行手动 `step()`，BN 的统计特性也会变化的。[^loseinvain]
+$$
+\hat{x}_{\text {new }}=(1-\text{momentum}) \times \hat{x} +  \text{momentum} \times x_{t}
+$$
 
-This momentum argument is different from one used in optimizer classes and the conventional notion of momentum. Mathematically, the update rule for running statistics here is $\hat{x}_{\text {new }}=(1-$ momentum $) \times \hat{x}+$ momentum $\times x_{t}$, where $\hat{x}$ is the estimated statistic and $x_{t}$ is the new observed value.
+where $\hat{x}$ is the **estimated statistic** and $x_{t}$ is the **new observed value**. 也就是说，BN 层中的`running_mean` 和 `running_var` 的更新是在 `forward() ` 操作中进行的，而不是 `optimizer.step()` 中进行的，因此如果处于 `training` 状态，就算你不进行手动 `step()`，BN 的统计特性也会变化。[^loseinvain]
+
+模型的 `training` 和 `track_running_stats` 属性的组合关系如下：
+
+1. `training=True, track_running_stats=True`。这个是期望中的训练阶段的设置，此时 BN 将会跟踪整个训练过程中 batch 的统计特性，并使用线性平滑法更新。
+2. `training=True, track_running_stats=False`。此时 BN 只会计算**当前**输入的训练 batch 的统计特性，可能没法很好地描述全局的数据统计特性。
+3. `training=False, track_running_stats=True`。这个是期望中的测试阶段的设置，此时 BN 会用**训练好**的模型中的`running_mean` 和 `running_var` 并且**不会对其进行更新**。一般来说，只需要设置 `model.eval()` 其中 `model` 中含有 BN 层，即可实现这个功能。
+4. `trainng=False, track_running_stats=False` 效果同 (2)，只不过是位于 `eval` 状态，训练中不会这样做，这个只是用测试输入的 batch 的统计特性，容易造成统计特性的偏移，导致糟糕效果。
 
 `BatchNorm` 在 [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](http://proceedings.mlr.press/v37/ioffe15.pdf) 中被引入。论文由 [Covariance Shift](https://www.sciencedirect.com/science/article/pii/S0378375800001154) 介绍了 **Internal Covariate Shift**
 
