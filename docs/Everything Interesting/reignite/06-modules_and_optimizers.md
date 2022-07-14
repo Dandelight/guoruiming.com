@@ -279,7 +279,7 @@ class Model(nn.Module):
 | [`nn.Identity`](https://pytorch.org/docs/stable/generated/torch.nn.Identity.html#torch.nn.Identity)       | A placeholder identity operator that is argument-insensitive.                                                                               |
 | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`nn.Linear`](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear)             | Applies a linear transformation to the incoming data: y = xA^T + b*y*=_x**A**T_+_b_                                                         |
-| [`nn.Bilinear`](https://pytorch.org/docs/stable/generated/torch.nn.Bilinear.html#torch.nn.Bilinear)       | Applies a bilinear transformation to the incoming data: y = x_1^T A x_2 + b*y*=*x*1*T**A**x*2+_b_                                           |
+| [`nn.Bilinear`](https://pytorch.org/docs/stable/generated/torch.nn.Bilinear.html#torch.nn.Bilinear)       | Applies a bilinear transformation to the incoming data: y = x*1^T A x_2 + b*y*=*x*1*T**A**x*2+\_b*                                          |
 | [`nn.LazyLinear`](https://pytorch.org/docs/stable/generated/torch.nn.LazyLinear.html#torch.nn.LazyLinear) | A [`torch.nn.Linear`](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear) module where in_features is inferred. |
 
 #### Dropout 层
@@ -548,6 +548,10 @@ x += - learning_rate * mt / (np.sqrt(vt) + eps)
 ![img](media/06-modules_and_optimizers/opt2.gif)
 
 ![img](media/06-modules_and_optimizers/opt1.gif)
+
+![image-20220714134614500](media/06-modules_and_optimizers/image-20220714134614500.png)
+
+https://arxiv.org/pdf/1412.6980.pdf
 
 ### 学习率调整
 
