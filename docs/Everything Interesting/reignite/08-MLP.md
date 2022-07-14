@@ -65,6 +65,8 @@ where $\hat{x}$ is the **estimated statistic** and $x_{t}$ is the **new observed
 >
 > ![image-20220714170402171](media/08-MLP/image-20220714170402171.png)
 
+![img](media/08-MLP/Screen_Shot_2020-05-19_at_4.24.42_PM.png)
+
 ## Dropout
 
 `Dropout`
