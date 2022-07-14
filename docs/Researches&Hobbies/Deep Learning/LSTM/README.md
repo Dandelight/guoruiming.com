@@ -12,7 +12,7 @@ $$
 \boldsymbol{h}^{(t)} = \sigma\left(\boldsymbol{W}_h\boldsymbol{h}^{(t-1)} + \boldsymbol{W}_e \boldsymbol{e}^{(t)} + \boldsymbol{b}_1 \right)
 $$
 
-其中$\boldsymbol{h}^{(0)}$是初识隐藏状态，词嵌入
+其中$\boldsymbol{h}^{(0)}$是初始隐藏状态，词嵌入
 
 $$
 \boldsymbol{e}^{(t)} = \boldsymbol{E}\boldsymbol{x}^{(t)}
