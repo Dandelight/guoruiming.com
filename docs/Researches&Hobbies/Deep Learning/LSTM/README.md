@@ -56,13 +56,13 @@ $$
 
 LSTM 有三个门、三个状态：
 
-- $\boldsymbol f$被称为 forget gate，决定对 cell 的哪些状态“记住”哪些进行“遗忘”；
-- $\boldsymbol i$被称为“输入门”，用于决定输入$\boldsymbol x$的哪些部分会进入 cell；
-- $\boldsymbol o$被称为“输出门”，用于决定 cell 的哪部分会影响输出；
+- $\boldsymbol f$ 被称为 forget gate，决定对 cell 的哪些状态“记住”哪些进行“遗忘”；
+- $\boldsymbol i$ 被称为“输入门”，用于决定输入$\boldsymbol x$的哪些部分会进入 cell；
+- $\boldsymbol o$ 被称为“输出门”，用于决定 cell 的哪部分会影响输出；
 
-- $\tilde{\boldsymbol{c}}^{(t)}$为由$x$计算得到的 cell 的新状态
-- $\boldsymbol c^{(t)}$为 cell 下一时刻的状态
-- $\boldsymbol h^{(t)}$为输出状态
+- $\tilde{\boldsymbol{c}}^{(t)}$ 为由$x$计算得到的 cell 的新状态
+- $\boldsymbol c^{(t)}$ 为 cell 下一时刻的状态
+- $\boldsymbol h^{(t)}$ 为输出状态
 
 ## GRU
 
@@ -285,4 +285,4 @@ class LstmNetwork():
 
 [^1]: Werbos, P.G., 1988, Neural Networks 1, and others
 [^cs224n-lecture06]: http://web.stanford.edu/class/cs224n/slides/cs224n-2022-lecture06-fancy-rnn.pdf
-[^nicodjimenez]: https://github.com/nicodjimenez
+[^nicodjimenez]: https://github.com/nicodjimenez https://nicodjimenez.github.io/2014/08/08/lstm.html
