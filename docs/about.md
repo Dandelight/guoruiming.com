@@ -1,8 +1,10 @@
 # About ME
 
 > 这世界，因你的存在而有何不同？
+>
+> The most obvious (but maybe not easy for you) way to find this out is looking into source code.
 
-- 一个刷了几百道题刚刚入门的算法竞赛选手
+- 一个刷了千来道题刚刚入门的算法竞赛选手
 - 一个知道 How 在求解 Why 的机器学习研究者
 - 一个不会写 `CSS` 的全栈 `JavaScript`-er
 - 一个沉稳且活泼的男孩子
