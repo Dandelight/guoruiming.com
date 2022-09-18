@@ -8,12 +8,27 @@
 
 `Gitee`地址：https://gitee.com/dandelight/
 
-- 点云目标检测
-- LISTEN 耳阅读屏
-- `xxd_project`（完成度：80%）
+### 在研
+
+招人！长期招人，~~没工资，~~包教技术
+
+- 小小逗：语言 Cosplay 聊天社交 APP（完成度：95%，Alpha 测试开启）
+
+### 已鸽
+
+战略性放弃：
+
 - [PaperPeer](https://gitee.com/dandelight/paperpeer)（完成度：10%）
 - [读英语背单词](https://gitee.com/dandelight/readEnglish)（完成度：20%)
 - Silly games like [starller](https://gitee.com/dandelight/starller)（完成度：咕咕咕）
+
+难度过高：
+
+- 点云目标检测
+
+寻找合作者：
+
+- LISTEN 耳阅读屏
 
 ## Featured Research
 
@@ -21,12 +36,14 @@ To Be Updated.
 
 ## 课程
 
+> 按照熟悉程度排序
+
 - 编译原理
-- 计算机体系结构
-- 研究与开发实践
 - 计算机网络
-- 现代软件工程
+- 数据结构
+- 操作系统
 - 数据库系统原理
+- 软件工程
 
 ## Gitee Status
 
