@@ -8,6 +8,10 @@
 
 `Gitee`地址：https://gitee.com/dandelight/
 
+## Featured Research
+
+在读研究生了！好想把这一块快点填满啊……（回去读论文）
+
 ### 在研
 
 招人！长期招人，~~没工资，~~包教技术
@@ -16,11 +20,11 @@
 
 ### 已鸽
 
-战略性放弃：
+战略性放弃~~（随写随扔的课程作业）~~：
 
-- [PaperPeer](https://gitee.com/dandelight/paperpeer)（完成度：10%）
-- [读英语背单词](https://gitee.com/dandelight/readEnglish)（完成度：20%)
-- Silly games like [starller](https://gitee.com/dandelight/starller)（完成度：咕咕咕）
+- [PaperPeer](https://gitee.com/dandelight/paperpeer)
+- [读英语背单词](https://gitee.com/dandelight/readEnglish)
+- [A Silly 2D Game](https://gitee.com/dandelight/starller)
 
 难度过高：
 
@@ -29,10 +33,6 @@
 寻找合作者：
 
 - LISTEN 耳阅读屏
-
-## Featured Research
-
-To Be Updated.
 
 ## 课程
 
