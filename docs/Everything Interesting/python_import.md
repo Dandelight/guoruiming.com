@@ -1,3 +1,31 @@
+最近多了一些应用和思考，总结如下。
+
+首先定义 `Python` 下 **namespace** 的概念。
+
+namespace 是一个对象，代表一个运行环境，所有在该环境中创建的对象都会称为该 namespace 的一个属性。
+
+Python 有三个 namespace：`builtin`、`global`、`local`。
+
+namespace 不仅可以访问，还可以修改，修改 namespace 就相当于创建/修改该环境中的变量。
+
+说回本文，每次 `import foo` 的时候，Python 会寻找 `foo.py` 这个 文件/包 并**在一个单独的 namespace 中**执行之。
+
+所有在这个 namespace 中产生的对象，都将成为 `foo` 的方法，`foo` 成为一个包。
+
+很容易想到，如果一个叫 `foo.py` 的包里有一句 `import foo`，会不会递归爆栈？
+
+不会。
+
+因为 Python 会缓存已经导入过的 `module`，只会执行一次。
+
+所以 `foo.py` 会被当成主脚本运行一次，当做 `module` 运行一次。
+
+那么想到：如果在 `a.py` 中 `import b`，在 `b.py` 中 `import c`，再在 `a.py` 中 `import c`，那么 `c` 会被 `import` 几次？
+
+一次。
+
+---
+
 **只记是什么，不问为什么。**
 
 转载自：https://zhuanlan.zhihu.com/p/156774410
