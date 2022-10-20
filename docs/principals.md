@@ -14,3 +14,11 @@
 1. bug fixing：软硬件使用过程中出现了文档中未提及的 bug，记录解决方法，一般会提供直接简单的解决方案，以最快解决问题为目的
 2. 详细笔记：较为系统地论述问题的背景、解决方案、结果，涉及较多的背景知识及透彻的分析；分步骤解决之后一定要附上最小可行样例（Minimum Working Example）
 3. 随手记录：记录灵感留待日后扩充
+
+## Mermin's Rules for writing equations[^mermin]
+
+1. Fisher's Rule: 给所有的行间公式都应该有标号。虽然作者一定会在正文中引用，但读者有可能引用，总不能让读者说“公式 2 后边第二个公式”吧；
+2. Good Samaritan's Rule: 在引用一个公式的时候，不仅使用标号引用，同时带上一个短语来描述，以免读者摸不着头脑或者翻老远去看；
+3. Math Is Prose Rule: 在行间公式的结尾加上标点。公式不像图表，公式是嵌入行文之中的，如果出现在一句中间，需要有标点符号。
+
+[^mermin]: What's Wrong with these Equations?. N. David Mermin. Cornell University<https://doi.org/10.1063/1.2811173>
