@@ -33,4 +33,4 @@ dependencies:
       - smmap==4.0.0
       - soupsieve==2.2.1
       - watchdog==2.1.5
-prefix: D:\Users\10402\miniconda3\envs\mkdocs
+prefix: D:\Users\Min\miniconda3\envs\mkdocs
