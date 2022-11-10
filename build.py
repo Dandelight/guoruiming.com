@@ -304,7 +304,6 @@ def _build_page(page, config, doc_files, nav, env, dirty=False):
 def build(config, live_server=False, dirty=False, incremental=False):
     """ Perform a full site build. """
     try:
-
         from time import time
         start = time()
 
@@ -466,6 +465,8 @@ def do_upload(config: CosConfig, last_build_finish):
     else:
         logging.info("All files uploaded successfully.")
 
+from scripts.add_meta import add_meta
+
 if __name__ == '__main__':
     if incremental:
         try:
@@ -474,8 +475,13 @@ if __name__ == '__main__':
             logging.warning("NO last_build_finish.txt found")
             incremental=False
             timestamp = 0.0
+    else:
+        timestamp = 0.0
 
     build(mkdocs_config.load_config(), dirty=incremental, incremental=incremental)
+
+    add_meta()
+
     try:
         do_upload(cosConfig, timestamp)
     except CosClientError:

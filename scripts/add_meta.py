@@ -17,10 +17,8 @@ def add_theme(file, value):
         f.writelines(html)
 
 
-
-
-for root, dirs, files in os.walk("./site"):
-    for file in files:
-        if(file.endswith("html")):
-            add_theme(os.path.join(root, file), "#ffab8f")
-            # exit(0)
+def add_meta():
+    for root, dirs, files in os.walk("./site"):
+        for file in files:
+            if(file.endswith("html")):
+                add_theme(os.path.join(root, file), "#ffab8f")

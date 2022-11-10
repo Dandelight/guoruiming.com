@@ -84,16 +84,13 @@ def _filter_paths(basename: str, path: str, is_dir: bool, exclude) -> bool:
             return True
     return False
 
-def do_upload(config: CosConfig, last_build_finish):
+def do_upload(config: CosConfig):
     client = CosS3Client(config)
     g = os.walk(uploadDir)
     # 创建上传的线程池
     pool = SimpleThreadPool()
     for file in get_files(uploadDir):
         srcKey = os.path.join(uploadDir, file)
-        if os.stat(os.path.join("docs", path)).st_mtime <= timestamp:
-            logging.debug(f"Incremental upload: Skip {path}")
-            continue
         cosObjectKey = (cosBase + file.replace('\\', '/')).strip('/')
         pool.add_task(client.upload_file, bucket, cosObjectKey, srcKey)
 
@@ -105,15 +102,8 @@ def do_upload(config: CosConfig, last_build_finish):
         logging.info("All files uploaded successfully.")
 
 if __name__ == '__main__':
-    if incremental:
-        try:
-            with open("last_build_finish.txt", "r") as f: timestamp = float(f.readline())
-            logging.info("Incremental build")
-        except:
-            logging.warning("NO last_build_finish.txt found")
-            timestamp = 0.0
     try:
-        do_upload(config, timestamp)
+        do_upload(config)
     except CosClientError:
         logging.error("Client Error: {}".format(CosClientError))
     except CosServiceError:
