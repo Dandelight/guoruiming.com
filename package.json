@@ -7,10 +7,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "init": "npx tcb login",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "mkdocs build",
-    "deploy": "python upload_qcloud.py"
+    "deploy": "python upload_qcloud.py",
+    "go": "npm run build && npm run deploy"
   },
   "repository": {
     "type": "git",
