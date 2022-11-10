@@ -1,5 +1,9 @@
 # 服务器本身
 
+现在网页在腾讯云对象存储（COS）上托管，自己参考 [`mkdocs`](https://github.com/mkdocs/mkdocs/) 源码写了个简单的持续集成，也是刚开始体会到直接看懂源码的乐趣。
+
+开源软件的能量才刚刚显现。
+
 ## 关于那个我自己写的服务器
 
 [dandelight/enging](https://gitee.com/dandelight/enging)  是一个类 [`NginX`](https://nginx.org/)  的 `web`  静态页面服务器，但是出于未知的原因突然就只能 serve HTML 文件了，所以就用真正的 `NginX`  替代了。
@@ -16,18 +20,17 @@
 
 首先修改`/etc/ssh/sshd_config`
 
-```
-#禁用密码验证
+```ssh
+# 禁用密码验证
 PasswordAuthentication no
-#启用密钥验证
-RSAAuthentication yes
+# 启用密钥验证
 PubkeyAuthentication yes
 ```
 
 然后重启`ssh`服务
 
-```
-service sshd restart #centos系统
-service ssh restart #ubuntu系统
-/etc/init.d/ssh restart #debian系统
+```shell
+service sshd restart # centos
+service ssh restart # ubuntu
+/etc/init.d/ssh restart # debian
 ```
