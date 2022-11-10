@@ -1,3 +1,5 @@
 /site
 /venv
 node_modules/
+.env
+*.log
