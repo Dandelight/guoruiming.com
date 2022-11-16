@@ -12,7 +12,9 @@
 
 在读研究生了！好想把这一块快点填满啊……（回去读论文）
 
-Laplacian Eigenmap 在 MNIST 数据集上的效果可视化
+![le](media/index/le.gif)
+
+图：Laplacian Eigenmap 在 MNIST 数据集上的效果可视化
 
 ### 在研
 
