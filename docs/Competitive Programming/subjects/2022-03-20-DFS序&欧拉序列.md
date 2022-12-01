@@ -1,13 +1,11 @@
-# 20220320-DFS序&欧拉序列
+# 20220320-DFS 序&欧拉序列
 
-| 投入时间 |          |                                             |       |                                                              |
-| -------- | -------- | ------------------------------------------- | ----- | ------------------------------------------------------------ |
-| < 0.5h   | 时间戳   | 祖孙询问(LOJ10135)                          | 提高  | https://loj.ac/p/10135                                       |
-| < 0.75h  | 时间戳   | AtCoder abc202 E Count Descendants          | 提高+ | https://atcoder.jp/contests/abc202/tasks/abc202_e            |
+| 投入时间 |          |                                             |       |                                                                                   |
+| -------- | -------- | ------------------------------------------- | ----- | --------------------------------------------------------------------------------- |
+| < 0.5h   | 时间戳   | 祖孙询问(LOJ10135)                          | 提高  | https://loj.ac/p/10135                                                            |
+| < 0.75h  | 时间戳   | AtCoder abc202 E Count Descendants          | 提高+ | https://atcoder.jp/contests/abc202/tasks/abc202_e                                 |
 | <1h      | 欧拉序列 | USACO 2019 Feb G. Cow Land                  | 提高+ | [https://www.luogu.com.cn/problem/P6098 ](https://www.luogu.com.cn/problem/P6098) |
-| <2h      | 欧拉序列 | USACO 2019 Dec G. Milk Visits(**离线算法**) | 提高+ | https://www.luogu.com.cn/problem/P5838                       |
-
-
+| <2h      | 欧拉序列 | USACO 2019 Dec G. Milk Visits(**离线算法**) | 提高+ | https://www.luogu.com.cn/problem/P5838                                            |
 
 | 投入时间 |          |                                                 |      |                                              |
 | -------- | -------- | ----------------------------------------------- | ---- | -------------------------------------------- |
@@ -16,8 +14,6 @@
 | <1h      | 时间戳   | USACO 2019 Dec P. Bessie's Snow Cow             | NOI- | https://www.luogu.com.cn/problem/P5852       |
 | <2h      | 欧拉序列 | IOI2009 – Regions                               | NOI  | https://www.luogu.com.cn/problem/P5901       |
 | <1.5h    | 时间戳   | CF838B Diverging Directions                     | NOI- | https://codeforces.com/contest/838/problem/B |
-
-
 
 ## Milking Visits
 
@@ -440,4 +436,3 @@ int main() {
   }
 }
 ```
-
