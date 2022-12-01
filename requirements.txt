@@ -1,5 +1,5 @@
 beautifulsoup4==4.10.0
-certifi==2021.5.30
+certifi
 charset-normalizer==2.0.9
 click==8.0.1
 colorama==0.4.4
