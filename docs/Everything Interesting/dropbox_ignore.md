@@ -9,9 +9,9 @@
 这是本博客的配置，注意一定要用绝对路径。
 
 ```powershell
-(base) PS C:\Users\${env:UserName}\Dropbox> Set-Content -Path 'C:\Users\${env:UserName}\Dropbox\blog' -Stream com.dropbox.ignored -Value 1
-(base) PS C:\Users\${env:UserName}\Dropbox> Set-Content -Path 'C:\Users\${env:UserName}\Dropbox\blog\node_modules' -Stream com.dropbox.ignored -Value 1
-(base) PS C:\Users\${env:UserName}\Dropbox> Set-Content -Path 'C:\Users\${env:UserName}\Dropbox\blog\.git' -Stream com.dropbox.ignored -Value 1
-(base) PS C:\Users\${env:UserName}\Dropbox> Set-Content -Path 'C:\Users\${env:UserName}\Dropbox\blog\site' -Stream com.dropbox.ignored -Value 1
-(base) PS C:\Users\${env:UserName}\Dropbox> Clear-Content -Path 'C:\Users\${env:UserName}\Dropbox\blog' -Stream com.dropbox.ignored
+Set-Content -Path "C:\Users\${env:UserName}\Dropbox\blog" -Stream com.dropbox.ignored -Value 1
+Set-Content -Path "C:\Users\${env:UserName}\Dropbox\blog\node_modules" -Stream com.dropbox.ignored -Value 1
+Set-Content -Path "C:\Users\${env:UserName}\Dropbox\blog\.git" -Stream com.dropbox.ignored -Value 1
+Set-Content -Path "C:\Users\${env:UserName}\Dropbox\blog\site" -Stream com.dropbox.ignored -Value 1
+Clear-Content -Path "C:\Users\${env:UserName}\Dropbox\blog" -Stream com.dropbox.ignored
 ```
