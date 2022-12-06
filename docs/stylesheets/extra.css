@@ -3,3 +3,7 @@
   --md-primary-fg-color--light: #ffc9b8;
   --md-primary-fg-color--dark: rgb(165, 70, 39);
 }
+
+* {
+  filter: grayscale(100%);
+}
