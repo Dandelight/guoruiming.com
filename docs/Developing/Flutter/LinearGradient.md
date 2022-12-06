@@ -14,7 +14,7 @@ Positioned.fill(  //使用绝对定位可全局渐变（可不用）
 )
 ```
 
-关于从`web`开发过渡到`Flutter`，官方教程：https://flutter.cn/get-started/flutter-for/web-devs
+关于从`web`开发过渡到`Flutter`，官方教程：<https://flutter.cn/get-started/flutter-for/web-devs>
 
 > 一时嵌套一时爽，一直嵌套，会怎样……
 
