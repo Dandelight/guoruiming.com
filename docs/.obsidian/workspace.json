@@ -1,0 +1,168 @@
+{
+  "main": {
+    "id": "a9b896b23698ea54",
+    "type": "split",
+    "children": [
+      {
+        "id": "fe2939c813140a54",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9bb25948074453dd",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "WeBook/DimensionReduction/Fisher Discriminant Analysis.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "a355d513e8dbc6ae",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "WeBook/DimensionReduction/2DPCA.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "862157b8e42e0f1b",
+    "type": "split",
+    "children": [
+      {
+        "id": "e3cbd9139e336d6e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0af21c4e4d498192",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "f4467af1cfe831e4",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "0ca20cbc1aeb5adc",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "right": {
+    "id": "9d6cbedeb02c71e7",
+    "type": "split",
+    "children": [
+      {
+        "id": "e4108a6292e9332a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b2050de95485b2c1",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "WeBook/DimensionReduction/Fisher Discriminant Analysis.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "0717dede7c54f6eb",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "WeBook/DimensionReduction/Fisher Discriminant Analysis.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "2262357b097e538c",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "d71e483b559e5f09",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "WeBook/DimensionReduction/Fisher Discriminant Analysis.md"
+              }
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "9bb25948074453dd",
+  "lastOpenFiles": [
+    "WeBook/DimensionReduction/2DPCA.md",
+    "WeBook/DimensionReduction/Fisher Discriminant Analysis.md",
+    "Projects/ARGSS/liegroupdynamics.pdf",
+    "WeBook/LinearAlgebra/ed_and_svd.md",
+    "WeBook/index.md",
+    "Researches&Hobbies/Algorithm or Competitive Programming/Treap.md",
+    "Projects/ARGSS/Conclusion/fromSLAM.md",
+    "index.md",
+    "Projects/ARGSS/Datasets/cornell_grasp_dataset.md",
+    "Projects/ARGSS/Datasets/README.md"
+  ]
+}

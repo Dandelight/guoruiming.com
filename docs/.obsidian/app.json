@@ -1,0 +1,17 @@
+{
+  "strictLineBreaks": true,
+  "showFrontmatter": true,
+  "spellcheck": true,
+  "spellcheckLanguages": ["zh-CN", "en-US"],
+  "newFileLocation": "current",
+  "attachmentFolderPath": "./media",
+  "pdfExportSettings": {
+    "includeName": true,
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 100
+  },
+  "useTab": false,
+  "showLineNumber": false
+}
