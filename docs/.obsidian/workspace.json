@@ -4,29 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "fe2939c813140a54",
+        "id": "eef23573d76e494d",
         "type": "tabs",
         "children": [
           {
-            "id": "9bb25948074453dd",
+            "id": "bef2af8c6141b41d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "WeBook/DimensionReduction/Fisher Discriminant Analysis.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "a355d513e8dbc6ae",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "WeBook/DimensionReduction/2DPCA.md",
+                "file": "WeBook/DimensionReduction/Linear Discriminant Analysis.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -79,11 +66,12 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 300.5,
     "collapsed": true
   },
   "right": {
@@ -100,7 +88,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "WeBook/DimensionReduction/Fisher Discriminant Analysis.md",
+                "file": "WeBook/DimensionReduction/Linear Discriminant Analysis.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -117,7 +105,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "WeBook/DimensionReduction/Fisher Discriminant Analysis.md",
+                "file": "WeBook/DimensionReduction/Linear Discriminant Analysis.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -130,7 +118,7 @@
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": true
+                "useHierarchy": false
               }
             }
           },
@@ -140,29 +128,29 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "WeBook/DimensionReduction/Fisher Discriminant Analysis.md"
+                "file": "WeBook/DimensionReduction/Linear Discriminant Analysis.md"
               }
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
     "width": 300,
     "collapsed": true
   },
-  "active": "9bb25948074453dd",
+  "active": "bef2af8c6141b41d",
   "lastOpenFiles": [
+    "Excalidraw/Drawing 2022-12-06 19.13.06.excalidraw.md",
+    "WeBook/DimensionReduction/Linear Discriminant Analysis.md",
     "WeBook/DimensionReduction/2DPCA.md",
-    "WeBook/DimensionReduction/Fisher Discriminant Analysis.md",
+    "Excalidraw/Drawing 2022-12-06 16.35.29.excalidraw.md",
     "Projects/ARGSS/liegroupdynamics.pdf",
     "WeBook/LinearAlgebra/ed_and_svd.md",
     "WeBook/index.md",
     "Researches&Hobbies/Algorithm or Competitive Programming/Treap.md",
     "Projects/ARGSS/Conclusion/fromSLAM.md",
-    "index.md",
-    "Projects/ARGSS/Datasets/cornell_grasp_dataset.md",
-    "Projects/ARGSS/Datasets/README.md"
+    "index.md"
   ]
 }
