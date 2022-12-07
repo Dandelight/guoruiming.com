@@ -7,17 +7,17 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "mkdocs build",
+    "build": "mkdocs build && python scripts/add_meta.py",
     "deploy": "python upload_qcloud.py",
     "go": "npm run build && npm run deploy"
   },
   "repository": {
     "type": "git",
-    "url": "git@gitee.com:dandelight/blog"
+    "url": "https://gitee.com/dandelight/blog"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Ruiming Guo",
+  "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License",
   "devDependencies": {
-    "prettier": "^2.8.0"
+    "prettier": "latest"
   }
 }
