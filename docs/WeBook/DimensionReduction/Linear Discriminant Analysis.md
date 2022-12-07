@@ -18,28 +18,77 @@ $$
 \mathbf{S}_b=\sum_{i=1}^c n_i\left(\overline{\mathbf{x}}_i-\overline{\mathbf{x}}\right)\left(\overline{\mathbf{x}}_i-\overline{\mathbf{x}}\right)^T
 $$
 
-为函数的类间离散度矩阵（between-class scatter matrix），其中 $n_i(i=1, \ldots, c)$ 表示第 $i$ 类样本的数量，$\overline{\mathbf{x}}\in\mathbb{R}^{d\times 1}$ 表示所有训练样本的均值，$\overline{\mathbf{x}}_i\in\mathbb{R}^{d\times 1}$ 表示第 $i$ 类样本的均值，$\mathbf{x}^i_j\in\mathbb{R}^{d\times 1}$ 表示第 $i$ 类样本集合中的第 $j$ 个样本。
+为函数的类间离散度矩阵（between-class scatter matrix），其中 $n_i(i=1, \ldots, c)$ 表示第 $i$ 类样本的数量，$\overline{\mathbf{x}}\in\mathbb{R}^{d\times 1}$ 表示所有训练样本的均值，$\overline{\mathbf{x}}_i\in\mathbb{R}^{d\times 1}$ 表示第 $i$ 类样本的均值，$\mathbf{x}^i_j\in\mathbb{R}^{d\times 1}$ 表示第 $i$ 类样本集合中的第 $j$ 个样本。可以观察到，
 
-目标函数是一个迹的比值形式的优化问题，通常是非凸的，通常转化为一个更为简单但不精确的比值的迹的形式。对应形式如下
+$$
+\mathbf{S}_t = \mathbf{S}_w + \mathbf{S}_b,
+$$
+
+即总方差等于类内方差加类间方差。
+
+目标函数是一个迹的比值形式的优化问题，通常是非凸的，常用的方法是将其转化为一个更为简单但不精确的比值的迹的形式。对应形式如下
 
 $$
 \begin{aligned}
 \mathbf{W} & =\underset{\mathbf{W}^T \mathbf{W}=\mathbf{I}}{\arg \max } \operatorname{tr}\left(\left(\mathbf{W}^T \mathbf{S}_w \mathbf{W}\right)^{-1}\left(\mathbf{W}^T \mathbf{S}_b \mathbf{W}\right)\right) \\
-& =\underset{\mathbf{W}^T \mathbf{W}=\mathbf{I}}{\arg \max } \frac{\left|\mathbf{W}^T \mathbf{W}_b \mathbf{W}\right|}{\left|\mathbf{W}^T \mathbf{S}_w \mathbf{W}\right|},
+& =\underset{\mathbf{W}^T \mathbf{W}=\mathbf{I}}{\arg \max } \frac{\left|\mathbf{W}^T \mathbf{S}_b \mathbf{W}\right|}{\left|\mathbf{W}^T \mathbf{S}_w \mathbf{W}\right|},
+\end{aligned}
+$$
+
+其中，因为 $\mathbf{w}$ 仅指方向，其大小并没有实际意义，所以约束其为单位向量；$\mathbf{w}$ 两两正交，故有 $\mathbf{W}^T\mathbf{W}= \mathbf{I}$。
+
+假设 $\mathbf{S}_w$ 为满秩矩阵，故 $\mathbf{S}_w^{-1}$ 存在。设 $\mathbf{S}_w^{1/2}$ 为对称、正定矩阵，满足 $\mathbf{S}_w = \mathbf{S}_w^{-1/2}\mathbf{S}_w^{-1/2}$，设其逆为 $\mathbf{S}_w^{-1/2}$。设
+
+$$
+\mathbf{z} = \mathbf{S}_w^{1/2}\mathbf{w}
+$$
+
+则准则函数变为
+
+$$
+\frac{\mathbf{v}^{\mathrm{T}} \mathbf{S}_b \mathbf{v}}{\mathbf{v}^{\mathrm{T}} \mathbf{S}_w \mathbf{v}}=\frac{\mathbf{z}^{\mathrm{T}} \mathbf{S}_w^{-\frac{1}{2}} \mathbf{S}_b \mathbf{S}_w^{-\frac{1}{2}} \mathbf{Z}}{\mathbf{z}^{\mathrm{T}} \mathbf{z}}
+$$
+
+因为
+
+$$
+\begin{aligned}
+\mathbf{v}^T \mathbf{v} &= 1 \\
+{\left(\mathbf{S}_w^{-1/2} \mathbf{z}\right)}^T {\mathbf{S}_w^{-1/2} \mathbf{z}} &= 1 \\
+\mathbf{z}^T \mathbf{z} &= 1
+\end{aligned}
+$$
+
+即我们发现，$\mathbf{z}$ 也为单位向量。通过拉格朗日乘子法，我们可以得到
+
+$$
+\mathbf{S}_w^{-\frac{1}{2}} \mathbf{S}_b \mathbf{S}_w^{-\frac{1}{2}} \mathbf{z}_1=\lambda \mathbf{z}
+$$
+
+左乘 $\mathbf{S}_w^{-1/2}$ 可得
+
+$$
+\mathbf{S}_w^{-1} \mathbf{S}_b\left(\mathbf{S}_w^{-\frac{1}{2}} \mathbf{z}\right)=\lambda \left(\mathbf{S}_w^{-\frac{1}{2}} \mathbf{z}\right), \quad \Rightarrow \quad \mathbf{S}_w^{-1} \mathbf{S}_b \mathbf{v} = \lambda \mathbf{v}
+$$
+
+由此，我们将原问题转化为了一个特征值分解问题，最优 $\mathbf{v}$ 即为 $\mathbf{S}_w^{-1}\mathbf{S}_b$ 的特征值。
+
+运用拉格朗日乘子法，我们可以得到
+
+$$
+\phi(\mathbf{W}, \lambda)=\mathbf{W}^T S_B \mathbf{W}-\lambda\left(\mathbf{W}^T S_W \mathbf{W}-1\right)
+$$
+
+令 $\frac{\partial \phi}{\partial \mathbf{W}} = 1$ 可得
+
+$$
+\begin{aligned}
+\frac{\partial \phi}{\partial \mathbf{w}}=2 S_B \mathbf{w}-\lambda 2 S_W \mathbf{w} & =0 \\
+S_B \mathbf{w} & =\lambda S_W \mathbf{w}
 \end{aligned}
 $$
 
 该优化问题可以通过广义特征值分解求解[^liao]。
-
-$$
-J(w)=\frac{\left(w^T\left(m_2-m_1\right)\right)^2}{s_1^2+s_2^2}=\frac{w^T S_B w}{w^T S_W w}
-$$
-
-令 $\frac{\partial J(w)}{\partial w} = 0$，
-
-$$
-\left(w^T S_B w\right) S_W w=\left(w^T S_W w\right) S_B w
-$$
 
 ## 瑞利商（Rayleigh quotient）与广义瑞利商（genralized Rayleigh quotient）
 

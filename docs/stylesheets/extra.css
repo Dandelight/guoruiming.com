@@ -4,6 +4,8 @@
   --md-primary-fg-color--dark: rgb(165, 70, 39);
 }
 
-* {
+/*
+html {
   filter: grayscale(100%);
 }
+*/
