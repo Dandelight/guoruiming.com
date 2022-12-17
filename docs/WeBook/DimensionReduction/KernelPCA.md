@@ -210,3 +210,17 @@ def main():
     plt.tight_layout()
     plt.show()
 ```
+
+简单理解就是，核方法就是在距离矩阵上做文章，比如普通 LDE 的求解的等式为
+
+$$
+X (D' - W') X^T \mathbf{v} = \lambda X (D - W) X^T \mathbf{v}
+$$
+
+Kernel LDE 求解的等式为
+
+$$
+K (D' - W') K \mathbf{\alpha} = \lambda K (D-W) K \mathbf{\alpha}
+$$
+
+其中 $K$ 为 kernel matrix，$K_{ij}=\mathrm{k}(\mathbf{x}_i, \mathbf{x}_j)$，因核函数 $\mathrm{k}(\cdot)$ 的对称性，$K$ 也为对称矩阵。

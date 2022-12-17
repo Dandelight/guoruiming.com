@@ -30,3 +30,5 @@ Gitee：https://gitee.com/dandelight
 GitHub：https://github.com/Dandelight
 
 CSDN：[凉风映夏](https://blog.csdn.net/qq_38056431)
+
+文章中原创内容采用 Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License 授权；非原创内容均已在文中相应位置使用尾注等形式进行了标注。

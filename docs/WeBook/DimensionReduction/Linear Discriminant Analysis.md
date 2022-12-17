@@ -37,7 +37,7 @@ $$
 
 其中，因为 $\mathbf{w}$ 仅指方向，其大小并没有实际意义，所以约束其为单位向量；$\mathbf{w}$ 两两正交，故有 $\mathbf{W}^T\mathbf{W}= \mathbf{I}$。
 
-假设 $\mathbf{S}_w$ 为满秩矩阵，故 $\mathbf{S}_w^{-1}$ 存在。设 $\mathbf{S}_w^{1/2}$ 为对称、正定矩阵，满足 $\mathbf{S}_w = \mathbf{S}_w^{-1/2}\mathbf{S}_w^{-1/2}$，设其逆为 $\mathbf{S}_w^{-1/2}$。设
+假设 $\mathbf{S}_w$ 为满秩矩阵，故 $\mathbf{S}_w^{-1}$ 存在。设 $\mathbf{S}_w^{1/2}$ 为对称、正定矩阵，满足 $\mathbf{S}_w = \mathbf{S}_w^{1/2}\mathbf{S}_w^{1/2}$，设其逆为 $\mathbf{S}_w^{-1/2}$。设
 
 $$
 \mathbf{z} = \mathbf{S}_w^{1/2}\mathbf{w}
@@ -46,7 +46,7 @@ $$
 则准则函数变为
 
 $$
-\frac{\mathbf{v}^{\mathrm{T}} \mathbf{S}_b \mathbf{v}}{\mathbf{v}^{\mathrm{T}} \mathbf{S}_w \mathbf{v}}=\frac{\mathbf{z}^{\mathrm{T}} \mathbf{S}_w^{-\frac{1}{2}} \mathbf{S}_b \mathbf{S}_w^{-\frac{1}{2}} \mathbf{Z}}{\mathbf{z}^{\mathrm{T}} \mathbf{z}}
+\frac{\mathbf{v}^{\mathrm{T}} \mathbf{S}_b \mathbf{v}}{\mathbf{v}^{\mathrm{T}} \mathbf{S}_w \mathbf{v}}=\frac{\mathbf{z}^{\mathrm{T}} \mathbf{S}_w^{-\frac{1}{2}} \mathbf{S}_b \mathbf{S}_w^{-\frac{1}{2}} \mathbf{z}}{\mathbf{z}^{\mathrm{T}} \mathbf{z}}
 $$
 
 因为
