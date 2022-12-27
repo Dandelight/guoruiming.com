@@ -1,3 +1,5 @@
+注意：本文内容全文由 GitHub Copilot 合成，不保证其中信息真实准确。
+
 # Kernel PCA
 
 Kernel PCA is a dimensionality reduction technique that uses the kernel trick to project the data into a higher dimensional space where it is linearly separable. This is useful when the data is not linearly separable in the original space, but is linearly separable in the higher dimensional space.
