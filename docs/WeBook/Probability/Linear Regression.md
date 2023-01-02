@@ -118,14 +118,100 @@ $$
 
 ### 正则化线性回归
 
-过拟合（overfitting）问题指一个模型的效果在某个特定的数据集上表现很好，但泛化能力差的现象。过拟合困扰着大多数机器学习模型，尤其是模型复杂（参数量大）的时候。我们可以减少参数，也可以使用一个参数的函数（如 $\ell_2$ 范数）来控制模型的复杂程度。典型的正则化方法是在目标函数上加上一项 $R(\theta)$。
+过拟合（overfitting）问题指一个模型的效果在某个特定的数据集上表现很好，但泛化能力差的现象。过拟合困扰着大多数机器学习模型，尤其是模型复杂（参数量大）的时候。我们可以减少参数，也可以使用一个参数的函数（如 $\ell_2$ 范数）来控制模型的复杂程度。典型的正则化方法是在目标函数上加上一项 $R(\theta)$。但与直接给出目标函数不同，我们从概率论出发，先假设数据服从某先验分布，再逐步推导出目标函数。
 
-在之前，我们将 $\theta$ 视为未知但确定的参数，但我们也可以认为 $\theta$ 是未知的随机变量。在此设定下，我们认为 $\theta$ 服从某先验分布 $p(\theta)$。该先验分布通常来源于我们的先验知识。给定数据集 $S=\{\left( x^{(i)}, y^{(i)} \right)\}_{i=1}^N$，我们需要根据现有观测找到最可能的 $\theta$，该问题用数学表示为
+在上一节中，我们将 $\theta$ 视为未知但确定的参数，但我们也可以认为 $\theta$ 是未知的随机变量。$p(y^{(i)} | x^{(i)}, \theta)$ 表示 $x^{(i)}$ 和 $\theta$ 都是影响 $y^{(i)}$ 的随机变量。在此设定下，我们认为 $\theta$ 服从某先验分布 $p(\theta)$，该先验分布通常来源于我们的领域知识。给定数据集 $S=\{\left( x^{(i)}, y^{(i)} \right)\}_{i=1}^N$，我们需要**根据现有观测**，求得能**最大化后验概率**的 $\theta$。该问题用数学表示为
 
 $$
-\hat{\theta}_\mathit{MAP} = \arg \underset{\theta}{\max}\ p(\theta \mid S),
+\hat{\theta}_\mathit{MAP} = \arg \underset{\theta}{\max}\ p(\theta | S),
 $$
 
-其中 $p(\theta \mid S)$ 是后验分布
+其中 $p(\theta | S)$ 是后验概率分布，$\hat{\theta}_\mathit{MAP}$ 被称为 $\theta$ 的**最大后验估计（maximum a posteriori）**。使用贝叶斯定理（如果对这里不熟可以参考 [[Bayesian]]），我们得出
 
-CS229 Lecture Notes, Andrew Ng. <https://cs229.stanford.edu/>
+$$
+p(\theta | S) \propto p(S|\theta)p(\theta),
+$$
+
+因此，最大化 $p(\theta|S)$ 等价于最大化 $p(S|\theta)p(\theta)$。又因为 $S$ 的采样是独立同分布的，有$p(S|\theta) = \prod_{i=1}^Np(y^{(i)} | x^{(i)}, \theta)p(\theta)$，综上有
+
+$$
+\begin{aligned}
+\hat{\theta}_\mathit{MAP} &= \arg \underset{\theta}{\max}\ p(S|\theta)p(\theta)\\
+&= \arg \underset{\theta}{\max}\ \prod_{i=1}^Np(y^{(i)} | x^{(i)}, \theta)p(\theta).
+\end{aligned}
+$$
+
+现在，我们假设 $p(\theta)$ 的概率分布为多变量高斯分布，即 $p(\theta)\sim\mathcal{N}(0, \mathbf{I}\sigma^2/\lambda)$。综合上式，我们有
+
+$$
+\begin{gathered}
+\hat{\theta}_{M A P}=\arg \max _\theta Q(\theta)=\arg \max _\theta q(\theta)\\
+Q(\theta) \equiv\left({\color{orange} \prod_{i=1}^N }\frac{1}{\sqrt{2 \pi} \sigma} \exp \left(\frac{{ \color{orange} -\left(y^{(i)}-\theta^T x^{(i)}\right)^2}}{2 \sigma^2}\right)\right)
+\sqrt{\frac{\lambda}{2 \pi}} \frac{1}{\sigma} \exp \left(-\frac{{\color{blue} \lambda \theta^T \theta}}{2 \sigma^2}\right) \\
+q(\theta)=\log (Q(\theta))=N \log \frac{1}{\sqrt{2 \pi} \sigma}+\frac{1}{2} \log \frac{\lambda}{2 \pi}-\log \sigma-\frac{1}{2\sigma^2}
+\left\{\color{orange} {\left[\sum_{i=1}^N\left(y^{(i)}-\theta^T x^{(i)}\right)^2\right]}+{\color{blue} \lambda \theta^T \theta} \right\} \\
+\end{gathered}
+$$
+
+最大化 $q(\theta)$ 等价于最小化目标函数
+
+$$
+J(\theta) \equiv \left[ \sum_{i=1}^N \left( y^{(i)} - \theta^T x^{(i)} \right)^2\right] + \lambda \theta^T\theta.
+$$
+
+优化问题变为
+
+$$
+\hat{\theta}_\mathit{MAP} = \arg \underset{\theta}{\min} \left[ \sum_{i=1}^N \left( y^{(i)} - \theta^T x^{(i)} \right)^2\right] + \lambda \theta^T\theta.
+$$
+
+注意 $\lambda\theta^T \theta = \lambda \left\| \theta \right\|_2^2$，即 $\ell_2$ 范数正则化项。科学家总是喜欢取名字，使用 $\ell_2$ 范数正则化的线性回归问题也不例外。它也叫**岭回归（Ridge Regression）**。
+
+注意，当 $\lambda \to 0$ 时，高斯分布将占据 $(-\infty, +\infty)$，即没有先验知识，退化为无正则化的情况；当 $\lambda \to +\infty$ 时，$p(\theta) = \delta(\theta)$，领域知识非常强，~~那你还做线性回归干什么~~线性回归方法从数据中学不到知识。
+
+### 使用其他范数正则化的线性回归
+
+刚刚讨论了基于高斯先验的 $\ell_2$ 正则化线性回归，我们会想：
+
+- 对于其他先验知识，对于线性回归来说，代表着什么正则化项？
+- 特定的正则化项，如 $\ell_1$ 正则化，如何通过概率论进行解释？
+
+二者其实是同一个问题的两个方向。可以说明的是，当我们假设数据服从双指数分布（Double Exponential Distribution，又称拉普拉斯分布 Laplace Distribution[^tsukkomi]），对应于 $\ell_1$ 正则化的线性回归（又称 **L**east **A**bsolute **S**hrinkage and **S**election **O**perator Regression，LASSO 回归）。拉普拉斯分布的概率密度函数如下
+
+$$
+f(\theta) = \frac{\exp\left( - \left| \frac{x-\mu}{\sigma} \right|\right)}{2\sigma},
+$$
+
+其中 $\mu$ 为均值，$\sigma$ 为 scale。对于 $\mu=0$，$\sigma=1$ 的情况 $f(\theta) = \exp(-|x|)/2$，绘图如下
+
+![[laplace.svg]]
+
+我们假设 $p(\theta) \sim \mathrm{Laplace}(0, t^2\mathbf{I})\,(t\ge0)$，
+
+$$
+\begin{aligned}
+\hat{\theta}_\mathit{MAP} &= \arg \underset{\theta}{\max}\ p(S|\theta)p(\theta)\\
+&= \arg \underset{\theta}{\max}\ \prod_{i=1}^Np(y^{(i)} | x^{(i)}, \theta)p(\theta)\\
+&=\arg \max _\theta Q(\theta) \\
+&=\arg \max _\theta q(\theta) \\
+\end{aligned}
+
+
+$$
+
+$$
+\begin{gathered}
+Q(\theta) \equiv\left({\color{orange} \prod_{i=1}^N }\frac{1}{\sqrt{2 \pi} \sigma} \exp \left(\frac{{ \color{orange} -\left(y^{(i)}-\theta^T x^{(i)}\right)^2}}{2 \sigma^2}\right)\right)
+\frac{1}{2t} \exp \left(- \left|\frac{\theta}{t}\right|\right) \\
+q(\theta)=\log (Q(\theta))=
+N \log \frac{1}{\sqrt{2 \pi} \sigma} -\log \sigma -\log\left( 2t \right) -\frac{1}{2\sigma^2}
+\left\{{\color{orange} \left[\sum_{i=1}^N\left(y^{(i)}-\theta^T x^{(i)}\right)^2\right]}+{\color{blue} \lambda |\theta|} \right\} \\
+\end{gathered}
+$$
+
+其中 $\lambda = {2\sigma^2}/{t}$。
+
+- CS229 Lecture Notes, Andrew Ng. <https://cs229.stanford.edu/>
+- Engineering Statistics Handbook, National Institute of Standards and Technology, <https://doi.org/10.18434/M32189>
+
+[^tsukkomi]: 最讨厌人名命名的定理、常量和数据结构了。但大家都在用，也就跟着用吧。毕竟和人交流比自己开心重要。
