@@ -4,7 +4,7 @@
   "baseFontSize": 15,
   "nativeMenus": false,
   "translucency": false,
-  "interfaceFontFamily": "微软雅黑",
+  "interfaceFontFamily": "微软雅黑,方正黑体_GBK",
   "monospaceFontFamily": "JetBrains Mono",
-  "textFontFamily": "微软雅黑"
+  "textFontFamily": "微软雅黑,方正黑体_GBK"
 }
