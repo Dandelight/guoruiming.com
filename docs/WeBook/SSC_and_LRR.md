@@ -6,7 +6,7 @@
 
 稀疏子空间聚类（SSC）基于“同一类的数据点在同一子空间内”的假设。该假设与传统聚类方法（K-Means、谱聚类）的不同之处在于，子空间聚类不以欧氏距离为判定标准，而是以是否在一个子空间中为标准。这一点在论文中以图示形式说明[^tpami_ssc]。
 
-![[Pasted image 20230104104410.png]]
+![subspace](./media/subspace.png)
 
 ### 单一子空间中的稀疏表示
 
@@ -135,6 +135,35 @@ $$
 \|s+h_i\|_1 < \| s + h_i + h_{i^c}\|_1 = \|s^*\|_1.
 $$
 
-即，$s+h_i$ 是目标函数的更优的可行解，这与我们假设 $s^*$ 为可行解相**矛盾**。故**必有**$h_{c^i}=0$，即有 $s^*_{i^c} = s_{i^c} = 0$，也就是只有 $\mathcal{S}_i$ 子空间对应的下标非零。**QED**。
+即，$s+h_i$ 是目标函数的更优的可行解，这与我们假设 $s^*$ 为可行解相**矛盾**。故**必有**$h_{c^i}=0$，即有 $s^*_{i^c} = s_{i^c} = 0$，也就是只有 $\mathcal{S}_i$ 子空间对应的下标非零。**Quod Erat Demonstrandum**。
+
+该定理给出了将新数据点表示为在同一子空间的训练数据的线性组合形式的充分条件（对于子空间和矩阵而言）。~~艰难证毕之后，我们可以放心大胆地使用该定理了。~~下面给出该定理在多子空间降维中的应用。
+
+设 $Y_{\hat{i}} \in \mathbb{R}^{D\times(N-1)}$ 为从 $Y$ 中去掉 $y_i$ 后得到的矩阵。假设 $y_i \in \mathcal{S}_j$，那么它可以表示为 $Y_{\hat{i}}$ 和一个块稀疏向量 $c_i$ 的矩阵积，$c_i$ 可以通过如下 $\ell_1$ 规划求得
+
+$$
+\min\ \| c_i \|_1 \quad \text{subject to } y_i = Y_{\hat{i}}c_i.
+$$
+
+最优解 $c_i \in \mathbb{R}^{N-1}$ 为块稀疏向量，非零值的下标对应 $Y_{\hat{i}}$ 中统一子空间的向量。
+
+For $i=1, \ldots, N$ 求解上式后，我们得到了一个系数矩阵 $C = [\hat{c}_1, \hat{c}_2, \ldots, \hat{c}_N] \in \mathbb{R}^{N\times N}$。使用该矩阵，我们定义一张有向图 $G = (V, E)$，其中 $V$ 表示 $N$ 个数据点，存在一条有向边 $(v_i, v_j) \in E$ 当且仅当 $y_j$ 是 $y_i$ 的稀疏表示中的一个向量，当且仅当 $C_{ji} \neq 0$。$G$ 的邻接矩阵为 $C$~~，白费这么半天功夫定义它~~。
+
+当然，$C$ 不一定对称。为了让 $C$ 对称，定义图 $\tilde{G}$，其邻接矩阵为 $\tilde{C}$，其中 $\tilde{C}_{ij} = | C_{ij} | + | C_{ji} |$。因为“处于同一子空间”是一种等价关系，$y_i$ 的稀疏表达里有 $y_j$，$y_j$ 的系数表达里也应该有 $y_j$，故这种处理是合理的。
+
+依据定理一，在同一子空间的点构成图 $\tilde{G}$ 的一个强联通分量，于是 $\tilde{C}$ 可写为块对角矩阵
+
+$$
+\tilde{C} = \begin{bmatrix}
+\tilde{C}_1 & 0 & \ldots & 0 \\
+0 & \tilde{C}_2 & \ldots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \ldots & \tilde{C}_n \\
+\end{bmatrix}\Gamma
+$$
+
+其中 $\Gamma$ 为排列矩阵。
+
+下面终于到了我们熟悉的 Spectral Graph Theory 时间。该理论已经介绍过了~~（其实没有我看什么时候放上来）~~，便不再重复。总而言之，我们可以在 $\tilde{C}$ 的列向量上跑一个 K-Means 或任何一个聚类算法聚类结果就出来啦\~
 
 [^tpami_ssc]: Elhamifar, E., Vidal, R., 2013. Sparse Subspace Clustering: Algorithm, Theory, and Applications. IEEE Trans. Pattern Anal. Mach. Intell. 35, 2765–2781. [https://doi.org/10.1109/TPAMI.2013.57](https://doi.org/10.1109/TPAMI.2013.57)
