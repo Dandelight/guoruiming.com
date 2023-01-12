@@ -166,4 +166,77 @@ $$
 
 下面终于到了我们熟悉的 Spectral Graph Theory 时间。该理论已经介绍过了~~（其实没有我看什么时候放上来）~~，便不再重复。总而言之，我们可以在 $\tilde{C}$ 的列向量上跑一个 K-Means 或任何一个聚类算法聚类结果就出来啦\~
 
+### 仿射子空间聚类
+
+线性子空间聚类中，子空间度相交于原点——但很多情况下我们需要聚类仿射子空间（affine subspace）的点。
+
+### 含有噪声的子空间聚类
+
+### 缺失数据的聚类
+
+## Low Rank Representation
+
+在 $D$ 维欧氏空间中，给定从 $k$ 个子空间 ${\mathcal{S}_i}_{i=1}^k$ 中足够密集地采样的 $n$ 个点 $X=[x_1, x_2, \ldots, x_n]$，将所有向量分割到它们各自的子空间中。
+
+对于该问题我们有两个假设，两个假设难度递增。
+
+1. 子空间**低秩**且**无关**（独立），数据无噪声
+2. 一部分数据被噪声或离群点污染，即数据有稀疏且 properly bounded 误差
+
+数据中的噪声使得问题极具挑战性，但当噪声稀疏、误差不会混淆不同的子空间时，LRR 是相当鲁棒的。
+
+### 低秩表达
+
+还是那 $n$ 个点 $X$，每个 $x_i$ 可以表示为字典 $A = [a_1, a_2, \ldots, a_m]$ 的线性组合，即
+
+$$
+X = AZ,
+$$
+
+其中 $Z=[z_1, z_2, \ldots, z_n]$ 为系数矩阵，$z_i$ 为表示 $x_i$ 的表示。虽然字典学习可以获悉 $x_i$ 的聚类情况，但不一定能捕捉 $X$ 的全局结构。**低秩**是一个更合适的准则，即
+
+$$
+\begin{gathered}
+\underset{Z}{\min}\, \operatorname{rank}(Z), \\
+\text{s.t. } X = AZ.
+\end{gathered}
+$$
+
+我们称最优解 $Z^*$ 为数据 $X$ 关于字典 $A$ 的**最低秩表达**。但因为秩函数是稀疏的~~，这个函数同样只具有理论意义~~，我们可以将其通过矩阵补全（matrix completioin）方法，优化一个 $Z$ 的凸函数以得到一个理想的替代
+
+$$
+\begin{gathered}
+\underset{Z}{\min}\| Z \|_* \\
+\text{s.t. } X = AZ.
+\end{gathered}
+$$
+
+其中 $\|\cdot\|_*$ 是矩阵的核范数（nuclear norm，注意这里的“核”是“原子核”的“核”），即矩阵的特征值之和，定义为
+
+$$
+\| X \|_* = \operatorname{trace}\left( \sqrt{X^T X} \right)
+$$
+
+推导出该结论的过程为
+
+$$
+\begin{aligned}
+\operatorname{tr}\left(\sqrt{X^T X}\right) & =\operatorname{tr}\left(\sqrt{\left(U \Sigma V^T\right)^T U \Sigma V^T}\right) \\
+& =\operatorname{tr}\left(\sqrt{V \Sigma^T U^T U \Sigma V^T}\right) \\
+& =\operatorname{tr}\left(\sqrt{V \Sigma^2 V^T}\right) \\
+& =\operatorname{tr}\left(\sqrt{V^T V \Sigma^2}\right) \\
+& =\operatorname{tr}(\Sigma)
+\end{aligned}
+$$
+
+或者
+
+```python
+def nuclear_norm(A):
+    """Nuclear norm of input matrix"""
+    return np.sum(np.linalg.svd(A, compute_nv=False))
+```
+
+核范数能近似矩阵的秩，因为 $\operatorname{rank}$ 是非零奇异值值的个数，而核范数是奇异值之和，奇异值一定是正数；这和之前提到的 $\ell_0$ 与 $\ell_1$ 的等价性是一样的。
+
 [^tpami_ssc]: Elhamifar, E., Vidal, R., 2013. Sparse Subspace Clustering: Algorithm, Theory, and Applications. IEEE Trans. Pattern Anal. Mach. Intell. 35, 2765–2781. [https://doi.org/10.1109/TPAMI.2013.57](https://doi.org/10.1109/TPAMI.2013.57)
