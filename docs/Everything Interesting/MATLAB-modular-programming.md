@@ -91,6 +91,10 @@ end
 
 一个比较老的特性，和 `Jupyter Notebook` 非常类似，但个人感觉 MATLAB 功能更加强大。
 
+### Implicit Expansion
+
+同 NumPy 的广播（broadcast），从 2016b 开始支持。
+
 ## 为啥要折腾这么多
 
 MATLAB 一直被语法问题和工程性不足而饱受诟病[^terrible]，但最近的更新，尤其是近三年的更新，让我看 到了这门语言的发展希望。

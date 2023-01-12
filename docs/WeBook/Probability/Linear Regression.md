@@ -195,8 +195,6 @@ $$
 &=\arg \max _\theta Q(\theta) \\
 &=\arg \max _\theta q(\theta) \\
 \end{aligned}
-
-
 $$
 
 $$
