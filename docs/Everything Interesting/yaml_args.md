@@ -1,4 +1,109 @@
-# `YAML`与`ArgumentParser`的共舞
+# `Hydra`：`Python` 配置管理
+
+本文的模板依照 。
+
+[`hydra`](https://hydra.cc/) 是一个由 Meta (Facebook) 开源的配置管理软件。其基于 `yaml` 语言，并支持模块化配置。它基于 [`OmegaConf`](https://omegaconf.readthedocs.io/)。具体使用请看官方文档，下面依照文档列举一下使用范例。
+
+## 基础使用
+
+```yaml
+# conf/config.yaml
+db:
+  driver: mysql
+  user: omry
+  pass: secret
+```
+
+```python
+# app.py
+import hydra
+from omegaconf import DictConfig, OmegaConf
+
+@hydra.main(version_base=None, config_path="conf", config_name="config")
+def app(cfg : DictConfig) -> None:
+    print(OmegaConf.to_yaml(cfg))
+
+if __name__ == "__main__":
+    app()
+```
+
+```shell
+$ python my_app.py
+db:
+  driver: mysql
+  pass: secret
+  user: omry
+```
+
+```shell
+$ python my_app.py db.user=root db.pass=1234
+db:
+  driver: mysql
+  user: root
+  pass: 1234
+```
+
+## 组合使用
+
+假设我们有一个项目，可以用 `MySQL` 或者 `PostgreSQL` 作为数据库。依据控制反转的思想，我们想在不影响代码的情况下在两种数据库之间自由切换。现在代码已经写好，目录结构如下
+
+```
+├── conf
+│   ├── config.yaml
+│   ├── db
+│   │   ├── mysql.yaml
+│   │   └── postgresql.yaml
+│   └── __init__.py
+└── app.py
+```
+
+其中主配置文件 `conf/config.yaml` 如下
+
+```yaml
+defaults:
+  - db: mysql
+```
+
+其中的 `defaults.db: mysql` 表示默认使用 `config/db/mysql.yaml` 作为 `db` 这一项的配置。`app.py` 和上一节中相同。正常使用 `python app.py` 的结果显然是使用 `mysql` 作为配置，但如果我们想使用 `postgresql`，只需要在命令行指定
+
+```shell
+$ python my_app.py db=postgresql db.timeout=20
+db:
+  driver: postgresql
+  pass: drowssap
+  timeout: 20
+  user: postgres_user
+```
+
+## Multirun
+
+使用 `-m|--multirun` 参数可以通过命令行控制使用不同参数运行多次，适用于持续集成等场景。命令如下：
+
+```shell
+$ python my_app.py --multirun db=mysql,postgresql
+[HYDRA] Sweep output dir : multirun/2020-01-09/01-16-29
+[HYDRA] Launching 2 jobs locally
+[HYDRA]        #0 : db=mysql
+db:
+  driver: mysql
+  pass: secret
+  user: omry
+
+[HYDRA]        #1 : db=postgresql
+db:
+  driver: postgresql
+  pass: drowssap
+  timeout: 10
+  user: postgres_user
+```
+
+## 在深度学习研究项目中与 `Pytorch-lightning` 结合使用
+
+[ashleve/lightning-hydra-template](https://github.com/ashleve/lightning-hydra-template) 提供了一个友好的，基于 `hydra` 和 `pytorch-lightning` 的项目模板（或者按 `Spring Boot` 的惯例，叫做 `starter`）。
+
+## `YAML`与`ArgumentParser`的共舞（过时）
+
+> 此文档已过时，个人认为 `argparse` 相比于 `hydra` 略逊一筹——从一开始我就是想把 `argparse` 换掉的。
 
 你，见过怎样的深度学习代码？
 
