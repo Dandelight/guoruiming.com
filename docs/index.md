@@ -2,6 +2,20 @@
 
 尘世中的旅行者，欢迎来此小憩。吾辈不才，但愿意将自己积累的知识悉数与君分享。
 
+## 改版进行中
+
+正在准备博客改版。首页应该要改得学术一点，将现有页面移动至 `/wiki` （暂定）路径下。以前的模块划分也比较随意，之后将大概分为
+
+* Research: My graduate work.
+* Engineering
+* Technology & Technique: For small tricks that cannot find a home.
+* Course: Notes for courses both on-site or on-line.
+* Life: Things that make me happy.
+* WeBook: Books to-be.
+* Meta: About this site, its implementation and deployment.
+
+七大板块
+
 ## 学习与项目
 
 列了一系列项目，有在研的，有结束的，有自己做的，有帮朋友做的，有自己没有充足的时间做的，希望有志同道合之人可与我同行。
