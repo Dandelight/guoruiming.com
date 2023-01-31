@@ -1,3 +1,5 @@
+# 绕过网站复制控制的一些方法
+
 ```js
 // ==UserScript==
 // @namespace    http://tampermonkey.net/
