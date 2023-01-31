@@ -2,9 +2,9 @@
 
 # Overview
 
-This notebook covers the step by step process of builing a Machine Learning model to predict the House price. As in a standard machine learning workflow, the process is divided into the following steps:
+This notebook covers the step by step process of building a Machine Learning model to predict the House price. As in a standard machine learning workflow, the process is divided into the following steps:
 
-1. Undestanding the Problem;
+1. Understanding the Problem;
 2. Exploratory Data Analysis;
 3. Data Preprocessing;
 4. Feature Selection;
@@ -1249,7 +1249,7 @@ axarr[0].set_title("Feature importance of numaric columns")
 axarr[1].set_title("Feature importance of categorical columns");
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_16_0.svg)
 ​
 
@@ -1504,7 +1504,7 @@ plt.ylabel("SalePrice")
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_26_0.svg)
 ​
 
@@ -1519,7 +1519,7 @@ plt.ylabel("SalePrice")
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_29_0.svg)
 ​
 
@@ -1539,7 +1539,7 @@ plt.ylabel("SalePrice")
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_33_0.svg)
 ​
 
@@ -1559,7 +1559,7 @@ plt.ylabel("SalePrice")
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_37_0.svg)
 ​
 
@@ -1576,7 +1576,7 @@ ax1.axis('equal')
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_39_0.svg)
 ​
 
@@ -1589,7 +1589,7 @@ fig = sns.barplot(x = 'OverallQual',y = 'SalePrice', data = train)
 fig.set_xticklabels(labels=['Very Poor', 'Poor', 'Fair', 'Below Average', 'Average', 'Above Average', 'Good', 'Very Good', 'Excellent', 'Very Excellent'], rotation=90);
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_41_0.svg)
 ​
 
@@ -1606,7 +1606,7 @@ ax1.axis('equal')
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_43_0.svg)
 ​
 
@@ -1616,7 +1616,7 @@ fig.set_xticklabels(labels=['Poured Contrete', 'Cinder Block', 'Brick & Tile', '
 plt.xlabel("Types of Foundation");
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_44_0.svg)
 ​
 
@@ -1628,7 +1628,7 @@ fig.set_xticklabels(labels=['No car', '1 car', '2 cars', '3 cars', '4 cars'], ro
 plt.xlabel("Number of cars in Garage");
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_46_0.svg)
 ​
 
@@ -1638,7 +1638,7 @@ fig.set_xticklabels(labels=['No Fireplace', '1 Fireplaces', '2 Fireplaces', '3 F
 plt.xlabel("Number of Fireplaces");
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_47_0.svg)
 ​
 
@@ -1648,7 +1648,7 @@ Let's plot a distribution plot of `YearBuilt` column representing the year of a 
 sns.displot(x = 'YearBuilt', y = 'SalePrice', data = train);
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_49_0.svg)
 ​
 
@@ -1661,7 +1661,7 @@ sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.3, center=0,
             square=True, linewidths=.5, cbar_kws={"shrink": .5});
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_50_0.svg)
 ​
 
@@ -1678,7 +1678,7 @@ plt.title("Before applying transform technique")
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_53_0.svg)
 ​
 
@@ -1693,7 +1693,7 @@ plt.title("After applying transform technique")
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_54_0.svg)
 ​
 
@@ -1706,7 +1706,7 @@ plt.title("Before applying transform technique")
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_55_0.svg)
 ​
 
@@ -1720,7 +1720,7 @@ plt.title("After applying transform technique")
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_56_0.svg)
 ​
 
@@ -1733,7 +1733,7 @@ plt.title("Before applying transform technique")
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_57_0.svg)
 ​
 
@@ -1747,7 +1747,7 @@ plt.title("After applying transform technique")
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_58_0.svg)
 ​
 
@@ -2624,7 +2624,7 @@ plt.xticks(rotation=30, size=12)
 plt.show()
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_94_0.svg)
 ​
 
@@ -2632,7 +2632,7 @@ plt.show()
 ax = result_df.plot(x="Model", y=["Score", "R^2 Score", "R^2(CV) Score"], kind='bar', figsize=(6, 6))
 ```
 
-​  
+​
 ![svg](e-house-price-prediction-full_files/e-house-price-prediction-full_95_0.svg)
 ​
 
