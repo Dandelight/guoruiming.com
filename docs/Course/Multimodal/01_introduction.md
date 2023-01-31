@@ -6,7 +6,7 @@ Multimodal Communicative Behaviors
 - Vocal
 - Visual
 
-## Prior Research on \*Multimodal
+## Prior Research on Multimodal
 
 - behavioral
 - computational
