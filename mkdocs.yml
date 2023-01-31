@@ -54,7 +54,7 @@ plugins:
 
 extra_css:
   - https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css
-  - stylesheets/extra.css
+  - assets/stylesheets/extra.css
 extra_javascript:
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   # - https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js
