@@ -1,8 +1,19 @@
-## 项目概况
+# 项目概况
 
-使用 [`mkdocs`](https://github.com/mkdocs/mkdocs/) 进行编译，采用 [`mkdocs-material`](https://squidfunk.github.io/mkdocs-material/) 主题，各项配置可在本项目仓库中查看。
+使用 [`mkdocs`](https://github.com/mkdocs/mkdocs/) 进行编译，采用 [`mkdocs-material`](https://squidfunk.github.io/mkdocs-material/) 主题，各项配置可在本项目仓库中 `.github/workflows/deploy_to_pages.yml`。
 
-依赖 `mkdocs-git-revision-date-plugin` 在页脚处显示更新时间（没错，我就是懒得写 YAML Front Matter）。
+依赖 `mkdocs-git-revision-date-plugin` 在页脚处显示更新时间（没错，我就是懒得在 YAML Front Matter 里写更新日期）。
+
+目前项目托管在 `GitHub Pages`，使用 `Cloudflare CDN` 加速访问。在此之前，我曾使用过
+
+* 租用云服务器，自己用 C 语言写静态服务器，使用 `WebHook` 实现 `git push` 后部署。
+* 租用云服务器，使用 `Nginx` 作为静态服务器。
+* 对象存储托管，本地编译后上传。
+* 利用 `GitHub Actions`，`push` 后触发编译部署流程，部署到 `GitHub Pages`。通过设置 `CNAME` 自定义域名。
+
+~~由此可见我的技术是怎么一点点退化的。~~
+
+## 之前的情况
 
 项目发布流程如下：
 

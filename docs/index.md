@@ -2,55 +2,91 @@
 
 尘世中的旅行者，欢迎来此小憩。吾辈不才，但愿意将自己积累的知识悉数与君分享。
 
-## 改版进行中
+## 目录
 
-正在准备博客改版。首页应该要改得学术一点，将现有页面移动至 `/wiki` （暂定）路径下。以前的模块划分也比较随意，之后将大概分为
-
-- Research: My graduate work.
+<!-- - Research: My graduate work.
 - Engineering
-- Technology & Technique: For small tricks that cannot find a home.
+- Technology & Technique: Take-home small tricks.
 - Course: Notes for courses both on-site or on-line.
 - Life: Things that make me happy.
 - WeBook: Books to-be.
-- Meta: About this site, its implementation and deployment.
+- Meta: About this site, its implementation and deployment. -->
 
-七大板块
+- 研究：我的研究生工作
+- 工程：改变世界
+- 技术：积跬步，成千里
+- 课程：学习使我快乐
+- 生活：学习之外的快乐
+- WeBook：尝试写书
+- Meta：关于本站、关于我
 
-## 学习与项目
+## 研究：我的研究生工作
 
-列了一系列项目，有在研的，有结束的，有自己做的，有帮朋友做的，有自己没有充足的时间做的，希望有志同道合之人可与我同行。
+<!-- ![le](media/index/le.gif) -->
+<!-- 图：Laplacian Eigenmap 在 MNIST 数据集上的效果可视化 -->
 
-`Gitee`地址：https://gitee.com/dandelight/
+### 科研
 
-## Featured Research
+- 方向：多模态学习、噪声关联学习
+- 导师：<http://pengxi.me/>
 
-在读研究生了！好想把这一块快点填满啊……（回去读论文）
+## 工程：技术改变世界
 
-![le](media/index/le.gif)
-
-图：Laplacian Eigenmap 在 MNIST 数据集上的效果可视化
-
-### 在研
+### 课余工程
 
 招人！长期招人，~~没工资，~~包教技术
 
-- 小小逗：语言 Cosplay 聊天社交 APP（Alpha 1 测试结束，整体重构进行中）
+- 即时通讯底层系统
 - Shape of Voice
-- LISTEN 耳阅读屏
+- LISTEN 耳阅读屏：端侧推理的多模态模型
+- [读英语背单词](https://gitee.com/dandelight/readEnglish)
 
 ### 已鸽
 
 战略性放弃~~（随写随扔的课程作业）~~：
 
 - [PaperPeer](https://gitee.com/dandelight/paperpeer)
-- [读英语背单词](https://gitee.com/dandelight/readEnglish)
 - [A Silly 2D Game](https://gitee.com/dandelight/starller)
 
 难度过高：
 
 - 点云目标检测
 
-## 课程
+## 技术：积跬步，成千里
+
+### 科研
+
+* Multi-modal Learning, Learning with Noisy Correspondence
+* ~~Vision Transformer~~
+
+### Web 前端
+
+* 语言：`CSS`、`LESS`、`JavaScript`、`TypeScript`、`Dart`
+* 框架：`Vue.js`、`React.js`、`Flutter`
+* 工程化：`Jest`/`Mocha` 单元测试
+
+### Web 后端
+
+* 框架：`Express.js`、`Spring Boot`
+
+### 嵌入式硬件设计
+
+* 嘉立创 EDA
+
+### 嵌入式软件设计
+
+* 语言
+  * `MIPS`
+  * `ARM`
+
+### 基础工具软件
+
+* `Linux`
+* `Python`: `NumPy`, `PyTorch`
+* `MATLAB`
+* `MongoDB`
+
+## 课程：学习使我快乐
 
 > 按照熟悉程度排序
 
@@ -60,6 +96,16 @@
 - 操作系统
 - 数据库系统原理
 - 软件工程
+
+## 生活：学习之外的快乐
+
+## WeBook：尝试写书
+
+记在 [WeBook](./WeBook/index) 页面。
+
+## Meta：关于本站、关于我
+
+关于本站的构建原理，请见 [Meta](./meta/index)
 
 ## Gitee Status
 
