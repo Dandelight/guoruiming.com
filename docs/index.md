@@ -30,6 +30,9 @@
 - 方向：多模态学习、噪声关联学习
 - 导师：<http://pengxi.me/>
 
+* Multi-modal Learning, Learning with Noisy Correspondence
+* ~~Vision Transformer~~
+
 ## 工程：技术改变世界
 
 ### 课余工程
@@ -53,11 +56,6 @@
 - 点云目标检测
 
 ## 技术：积跬步，成千里
-
-### 科研
-
-* Multi-modal Learning, Learning with Noisy Correspondence
-* ~~Vision Transformer~~
 
 ### Web 前端
 
@@ -104,7 +102,7 @@
 
 ## Meta：关于本站、关于我
 
-关于本站的构建原理，请见 [Meta](./meta/index)
+关于本站的构建原理，请见 [Meta](./meta/index)；关于本人，请见 [About](./abouts)
 
 ## Gitee Status
 
