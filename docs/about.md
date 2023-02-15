@@ -27,6 +27,9 @@
 * 一个不会写 `CSS` 的全栈 `JavaScript`-er
 * 一个沉稳且活泼的男孩子
 
+<a href="https://codeforces.com/profile/dandelight"><img src="https://cp-logo.vercel.app/codeforces/dandelight"/></a>
+<a href="https://atcoder.jp/users/dandelight"><img src="https://cp-logo.vercel.app/atcoder/dandelight"/></a>
+
 - Where I show my (future) academic achievements...
   - ORCID：<https://orcid.org/0000-0002-1135-7676>
   - ResearchGate：<https://www.researchgate.net/profile/Ruiming-Guo>

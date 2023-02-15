@@ -75,16 +75,15 @@
 
 ### 嵌入式软件设计
 
-* 语言
-  * `MIPS`
-  * `ARM`
+* 汇编语言：`MIPS`、`ARM`
+* 硬件平台：`ESP32`、`Arduino`
 
 ### 基础工具软件
 
-* `Linux`
-* `Python`: `NumPy`, `PyTorch`
-* `MATLAB`
-* `MongoDB`
+* Shell：`PowerShell`、`bash`
+* 数值计算：`NumPy`, `PyTorch`、`MATLAB`
+* 数据库：`MySQL`、`MongoDB`
+* 容器：`Docker`、`Vagrant`
 
 ## 课程：学习使我快乐
 
@@ -122,8 +121,3 @@
 .osc_desc_color {color: #666666 !important;}
 .osc_link_color * {color: #9b9b9b !important;}
 </style>
-
-## Something Else
-
-<a href="https://codeforces.com/profile/dandelight"><img src="https://cp-logo.vercel.app/codeforces/dandelight"/></a>
-<a href="https://atcoder.jp/users/dandelight"><img src="https://cp-logo.vercel.app/atcoder/dandelight"/></a>
