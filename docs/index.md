@@ -102,7 +102,7 @@
 
 ## Meta：关于本站、关于我
 
-关于本站的构建原理，请见 [Meta](./meta/index)；关于本人，请见 [About](./abouts)
+关于本站的构建原理，请见 [Meta](./meta/index)；关于本人，请见 [About](./about)。
 
 ## Gitee Status
 
