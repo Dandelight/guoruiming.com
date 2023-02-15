@@ -1,3 +1,7 @@
+# macOS
+.DS_store
+._*
+
 /site
 /venv
 node_modules/
