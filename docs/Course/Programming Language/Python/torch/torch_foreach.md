@@ -1,3 +1,7 @@
+# PyTorch `foreach` 中的暗坑
+
+可以看到，`NumPy` 中返回的是一个 `copy`，而 `PyTorch` 中返回的是一个引用。
+
 ```python
 >>> import numpy as np
 >>> a = np.arange(1, 10)
