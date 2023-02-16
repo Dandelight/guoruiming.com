@@ -30,9 +30,9 @@ In general, a pattern has four essential elements:
    they are critical for evaluating design alternatives and for understanding
    the costs and benefits of applying the pattern.
 
-![image-20211218131455609](image-20211218131455609.png)
+![image-20211218131455609](./media/Design_Patterns/image-20211218131455609.png)
 
-![image-20211218131622185](image-20211218131622185.png)
+![image-20211218131622185](./media/Design_Patterns/image-20211218131622185.png)
 
 ## Creational Patterns 创建型设计模式
 
@@ -128,7 +128,7 @@ classDiagram
 > Provide an interface for creating families of related or dependent objects
 > without specifying their concrete classes.
 
-![image-20211218135116744](image-20211218135116744.png)
+![image-20211218135116744](./media/Design_Patterns/image-20211218135116744.png)
 
 ```mermaid
 classDiagram
@@ -265,7 +265,7 @@ classDiagram
 - 抽象产品：被程序依赖
 - 具体产品：具体执行工作的产品
 
-![image-20211218143808459](image-20211218143808459.png)
+![image-20211218143808459](./media/Design_Patterns/image-20211218143808459.png)
 
 ```java
 public class Main {
@@ -474,7 +474,7 @@ class ClassAdapter extends Adaptee implements Target {
 当一个设计有一种抽象和多种实现时，常见的方法是让实现继承抽象。但这样复用性差。桥
 接模式的基本思想是将**抽象和实现分离**，让两者可以相互独立地变化。
 
-![image-20211218153235516](image-20211218153235516.png)
+![image-20211218153235516](./media/Design_Patterns/image-20211218153235516.png)
 
 #### 角色
 
@@ -483,7 +483,7 @@ class ClassAdapter extends Adaptee implements Target {
 - 实现 Implementation
 - 具体实现 Concrete Implementation
 
-![image-20211218153358214](image-20211218153358214.png)
+![image-20211218153358214](./media/Design_Patterns/image-20211218153358214.png)
 
 ```mermaid
 classDiagram
@@ -577,16 +577,16 @@ classDiagram
 
 将系统内部的复杂接口用统一、简单的接口暴露给外部
 
-![image-20211218155737212](image-20211218155737212.png)
+![image-20211218155737212](./media/Design_Patterns/image-20211218155737212.png)
 
-![image-20211218155927026](image-20211218155927026.png)
+![image-20211218155927026](./media/Design_Patterns/image-20211218155927026.png)
 
 #### 角色
 
 - 门面 Facade
 - 子系统 Subsystem
 
-![image-20211218160138475](image-20211218160138475.png)
+![image-20211218160138475](./media/Design_Patterns/image-20211218160138475.png)
 
 ```mermaid
 classDiagram
@@ -607,7 +607,7 @@ classDiagram
 > 如果一个对象实例一经创建就不可变，那么反复创建相同的实例就没有必要，直接向调用
 > 方返回一个共享的实例就行，[^liaoxuefeng]
 
-![image-20211218160420764](image-20211218160420764.png)
+![image-20211218160420764](./media/Design_Patterns/image-20211218160420764.png)
 
 #### 角色
 
@@ -638,7 +638,7 @@ public class Main {
   public static void main(String[] args) {
     ImagePool imagePool = new ImagePool();
     Image image = imagePool.getImage("123456");
-    System.out.println(image);
+    System.out.println(./media/Design_Patterns/image);
     image = imagePool.getImage("123456");
     image = imagePool.getImage("123456");
     image = imagePool.getImage("876543");
@@ -700,7 +700,7 @@ class ImagePool {
 
   private void storeLocally(String checksum, Image image) {
     try (Writer output = new FileWriter("images/" + checksum)) {
-      output.write(image.content);
+      output.write(./media/Design_Patterns/image.content);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1018,7 +1018,7 @@ public class ValidateHandler extends Handler {
 
 <div><button onclick="alert('Hello')">clickme!</button></div>
 
-![image-20211221165558283](image-20211221165558283.png)
+![image-20211221165558283](./media/Design_Patterns/image-20211221165558283.png)
 
 优点
 
@@ -1066,9 +1066,9 @@ public class ValidateHandler extends Handler {
 定义一个中介对象来封装一系列对象之间的交互，使原有对象之间的耦合松散，且可以独
 立地改变它们之间的交互。中介者模式又叫调停模式，它是迪米特法则的典型应用。
 
-![image-20211218195350474](image-20211218195350474.png)
+![image-20211218195350474](./media/Design_Patterns/image-20211218195350474.png)
 
-![image-20211218195357087](image-20211218195357087.png)
+![image-20211218195357087](./media/Design_Patterns/image-20211218195357087.png)
 
 ```java
 import java.util.ArrayList;
@@ -1265,7 +1265,7 @@ class Context {
 
 在抽象类中定义算法的公共部分，在子类中各自实现不同的部分
 
-![image-20211218201711777](image-20211218201711777.png)
+![image-20211218201711777](./media/Design_Patterns/image-20211218201711777.png)
 
 ```mermaid
  classDiagram
