@@ -10,9 +10,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.11
+          cache: pip
+          check-latest: true
       - run: pip install -r requirements.txt
-      - run: mkdocs gh-deploy --force # 使用mkdocs-material部署gh-pages分支
+      - run: mkdocs build
+      - uses: actions/upload-pages-artifact@v1.0.7
+        with:
+          # Artifact name
+          # Path of the directory containing the static assets.
+          path: site/
+      - uses: actions/deploy-pages@v1.2.4
