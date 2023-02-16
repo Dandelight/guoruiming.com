@@ -56,12 +56,9 @@ extra_css:
   - assets/stylesheets/extra.css
 extra_javascript:
   - https://polyfill.io/v3/polyfill.min.js?features=es6
-  # - https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js
   - assets/javascripts/config.js
-  # - javascripts/mathjax.js
-  # - javascripts/highlight.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-  - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js
+  # - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js # Use built-in mermaid plugin
   - https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.3.1/highlight.min.js
 
 copyright: 'Copyleft. All wrongs reversed.<br/><a href="https://beian.miit.gov.cn">冀ICP备2021025718号</a> | <a href="http://www.beian.gov.cn/">川公安网备51012202001103号</a>'
