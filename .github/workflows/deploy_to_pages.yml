@@ -6,7 +6,7 @@ on:
   pull_request:
     branches:
       - master
-      
+
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
@@ -24,7 +24,7 @@ jobs:
           cache: pip
           check-latest: true
       - run: pip install -r requirements.txt
-      - run: mkdocs build
+      - run: mkdocs build && python scripts/add_meta.py
       - uses: actions/upload-pages-artifact@v1.0.7
         with:
           # Artifact name
