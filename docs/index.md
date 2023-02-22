@@ -41,6 +41,7 @@
 
 - 即时通讯底层系统
 - Shape of Voice
+- Grow: AI 虚拟人陪伴系统
 - LISTEN 耳阅读屏：端侧推理的多模态模型
 - [读英语背单词](https://gitee.com/dandelight/readEnglish)
 
