@@ -24,7 +24,8 @@ jobs:
           cache: pip
           check-latest: true
       - run: pip install -r requirements.txt
-      - run: mkdocs build && python scripts/add_meta.py
+      - run: mkdocs build
+      - run: python scripts/add_meta.py
       - uses: actions/upload-pages-artifact@v1.0.7
         with:
           # Artifact name
