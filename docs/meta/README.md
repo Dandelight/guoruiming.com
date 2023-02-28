@@ -70,3 +70,9 @@ service sshd restart # centos
 service ssh restart # ubuntu
 /etc/init.d/ssh restart # debian
 ```
+
+## 被攻击实录
+
+![attach](./media/README/attach.jpg)
+
+2022 年 12 月 16 日 14:20 开始，本主机遭到来自日本 IP 的 `ssh` 爆破攻击，攻击者使用大量枚举常见的用户名和弱口令。本机因 `git` 用户密码设置过于简单而被登录，所幸 `git` 用户的 `login shell` 是 `no-login`，攻击者没能进行进一步攻击。此事件及时发现之后，本主机关闭了 `git` 用户的密码登录。
