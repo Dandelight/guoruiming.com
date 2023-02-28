@@ -53,6 +53,9 @@ plugins:
   # - mermaid2
   - git-revision-date
   - callouts
+  # feature of callouts plugin is covered by obsidian-support plugin
+  # but it is unstable
+  # - obsidian-support
 
 extra_css:
   - https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css
