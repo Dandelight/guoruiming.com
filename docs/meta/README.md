@@ -6,6 +6,7 @@
 
 > [!INFO] 最近又支持了 `Callouts`，感谢 <https://github.com/sondregronas/mkdocs-callouts>
 > 编辑器端，Obsidian 提供了[官方 Callouts 支持](https://help.obsidian.md/Editing+and+formatting/Callouts)，网页端通过 `mkdocs-callouts` 插件转义为 [`mkdocs-material` 支持的 `adomotion` 格式](https://squidfunk.github.io/mkdocs-material/reference/admonitions/)，实现了统一的富文本编辑功能。
+> 如果要支持 Obsidian 的 wikilink 语法，可以考虑 <https://github.com/ndy2/mkdocs-obsidian-support-plugin> （新项目，实测有些问题，再观察一段时间）
 
 目前项目托管在 `GitHub Pages`，使用 `Cloudflare CDN` 加速访问。在此之前，我曾使用过
 
