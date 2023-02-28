@@ -6,10 +6,10 @@
 
 目前项目托管在 `GitHub Pages`，使用 `Cloudflare CDN` 加速访问。在此之前，我曾使用过
 
-* 租用云服务器，自己用 C 语言写静态服务器，使用 `WebHook` 实现 `git push` 后部署。
-* 租用云服务器，使用 `Nginx` 作为静态服务器。
-* 对象存储托管，本地编译后上传。
-* 利用 `GitHub Actions`，`push` 后触发编译部署流程，部署到 `GitHub Pages`。通过设置 `CNAME` 自定义域名。
+- 租用云服务器，自己用 C 语言写静态服务器，使用 `WebHook` 实现 `git push` 后部署。
+- 租用云服务器，使用 `Nginx` 作为静态服务器。
+- 对象存储托管，本地编译后上传。
+- 利用 `GitHub Actions`，`push` 后触发编译部署流程，部署到 `GitHub Pages`。通过设置 `CNAME` 自定义域名。
 
 ~~由此可见我的技术是怎么一点点退化的。~~
 
@@ -67,3 +67,9 @@ service sshd restart # centos
 service ssh restart # ubuntu
 /etc/init.d/ssh restart # debian
 ```
+
+## 被攻击实录
+
+![attach](./media/README/attach.jpg)
+
+2022 年 12 月 16 日 14:20 开始，本主机遭到来自日本 IP 的 `ssh` 爆破攻击，攻击者使用大量枚举常见的用户名和弱口令。本机因 `git` 用户密码设置过于简单而被登录，所幸 `git` 用户的 `login shell` 是 `no-login`，攻击者没能进行进一步攻击。此事件及时发现之后，本主机关闭了 `git` 用户的密码登录。
