@@ -5,7 +5,7 @@
 依赖 `mkdocs-git-revision-date-plugin` 在页脚处显示更新时间（没错，我就是懒得在 YAML Front Matter 里写更新日期）。
 
 > [!INFO] 最近又支持了 `Callouts`，感谢 <https://github.com/sondregronas/mkdocs-callouts>
-> Callout 能通过 Obsidian 代码块支持，实现了编辑器和网站上一致的体验。
+> 编辑器端，Obsidian 提供了[官方 Callouts 支持](https://help.obsidian.md/Editing+and+formatting/Callouts)，网页端通过 `mkdocs-callouts` 插件转义为 [`mkdocs-material` 支持的 `adomotion` 格式](https://squidfunk.github.io/mkdocs-material/reference/admonitions/)，实现了统一的富文本编辑功能。
 
 目前项目托管在 `GitHub Pages`，使用 `Cloudflare CDN` 加速访问。在此之前，我曾使用过
 
