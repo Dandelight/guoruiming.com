@@ -5,10 +5,12 @@
 依赖 `mkdocs-git-revision-date-plugin` 在页脚处显示更新时间（没错，我就是懒得在 YAML Front Matter 里写更新日期）。
 
 > [!INFO] 最近又支持了 `Callouts`，感谢 <https://github.com/sondregronas/mkdocs-callouts>
-> 编辑器端，Obsidian 提供了[官方 Callouts 支持](https://help.obsidian.md/Editing+and+formatting/Callouts)，网页端通过 `mkdocs-callouts` 插件转义为 [`mkdocs-material` 支持的 `adomotion` 格式](https://squidfunk.github.io/mkdocs-material/reference/admonitions/)，实现了统一的富文本编辑功能。
+> 编辑器端，Obsidian 提供了[官方 Callouts 支持](https://help.obsidian.md/Editing+and+formatting/Callouts)，网页端通过 `mkdocs-callouts` 插件转义为 [`mkdocs-material` 支持的 `Admonitions` 格式](https://squidfunk.github.io/mkdocs-material/reference/admonitions/)，实现了统一的富文本编辑功能。
 > 如果要支持 Obsidian 的 wikilink 语法，可以考虑 <https://github.com/ndy2/mkdocs-obsidian-support-plugin> （新项目，实测有些问题，再观察一段时间）
 
-目前项目托管在 `GitHub Pages`，使用 `Cloudflare CDN` 加速访问。在此之前，我曾使用过
+目前项目托管在 `GitHub Pages`，通过 `GitHub Actions` 自动编译部署 [![Deploy to GitHub Pages](https://github.com/Dandelight/dandelight.github.io/actions/workflows/deploy_to_pages.yml/badge.svg)](https://github.com/Dandelight/dandelight.github.io/actions/workflows/deploy_to_pages.yml)，使用 `Cloudflare CDN` 加速访问。
+
+在此之前，我曾使用过
 
 - 租用云服务器，自己用 C 语言写静态服务器，使用 `WebHook` 实现 `git push` 后部署。
 - 租用云服务器，使用 `Nginx` 作为静态服务器。
