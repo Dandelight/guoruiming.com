@@ -3,6 +3,9 @@ theme:
   language: zh
   features:
     - navigation.instant
+  favicon: assets/images/favicon.ico
+  icon:
+    logo: material/book
 site_name: 郭睿明的小屋
 site_url: http://guoruiming.com
 markdown_extensions:
