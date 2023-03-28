@@ -51,18 +51,36 @@ $$
 \mathcal{L}_{\text {Pre-training }}=\mathcal{L}_{\mathrm{MTL}}+\mathcal{L}_{\mathrm{C}}
 $$
 
+## Relations with BERT
+
+Despite the fact that Bert and Oscar are both characters in [Sesame Street](https://www.sesamestreetchina.com.cn/), the design of Oscar's training procedure shares lots of similarities with the BERT. As a recap, the BERT model is pretrained on two tasks:
+
+- Masked Language Modeling (MLM): As a _Cloze_ task, BERT masks 15% of training tokens, and feed the final hidden vectors corresponding to the mask tokens into an output softmax over the vocabulary. This helps the model build a deep bidirectional modeling of the representation.
+
+  - However, the `[MASK]` token does not appear in fine-tuning, creating a mismatch between pretraining and fine-tuning. To mitigate this, for a masked token, it is replaced with
+    - the `[MASK]` token for 80% of the time
+    - a random token for 10% of the time
+    - itself for 10% of the time
+
+- Next Sentence Prediction (NSP): Suppose we have `A` as a question and `B` as its answer. we randomly replace `B` with another sentense from the corpus with a probability of 50%. The final hidden vector corresponding to the `[CLS]` token is used for NSP prediction. It is a binary prediction of whether `B` `isNext` or `isNotNext`. This helps the model understand the _relationships_ between two sentences, which is not directly captured by language modeling.
+
+And we can assert that the two objectives of Oscar have the following reasons.
+
+- Modality View: Analogy to NSP, to capture the relationship between two modalities.
+- Dictionary View: Analogy to MLM, to capture the deep bidirectional modeling of the representation.
+
+## Q & A
+
+### Why the feature corresponding to the `[CLS]` loss can be used in the Contrastive loss? Why not others?
+
 ## Appendix
 
-### vision and language models
+### Vision model
 
-Oscar method requires good features. In the paper, the authors use Faster R-CNN to extract vision features and use BERT to extract text features. We briefly introduce these methods to gain a deeper understanding of the Oscar method.
-
-#### BERT
-
-the training of BERT share some similarities with Oscar.
+Oscar method requires good features. In the paper, the authors use Faster R-CNN to extract vision features. For an understanding of the Oscar methods, you can refer to <https://zhuanlan.zhihu.com/p/31426458>.
 
 ### Weakly-supervised methods
 
-### Why it is called Oscar
-
-Because BERT and Oscar are friends.
+- Incomplete supervision
+- Inexact supervision
+- Inaccurate supervision
