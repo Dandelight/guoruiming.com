@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "mkdocs build && python scripts/add_meta.py",
+    "build": "mkdocs build",
     "deploy": "python upload_qcloud.py",
     "go": "npm run build && npm run deploy",
     "prepare": "husky install"
