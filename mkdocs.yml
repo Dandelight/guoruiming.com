@@ -50,26 +50,26 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
 
-repo_url: https://gitee.com/dandelight/blog
-repo_name: dandelight/blog
+repo_url: https://github.com/dandelight/dandelight.github.io
+repo_name: dandelight/dandelight.github.io
 
 plugins:
   - search
-  # - mermaid2
   - git-revision-date
   - callouts
+  # - mermaid2
   # feature of callouts plugin is covered by obsidian-support plugin
   # but it is unstable
   # - obsidian-support
 
 extra_css:
-  - https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css
+  - https://npm.elemecdn.com/@highlightjs/cdn-assets@11.8.0/styles/default.min.css
   - assets/stylesheets/extra.css
 extra_javascript:
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://npm.elemecdn.com/mathjax@3/es5/tex-mml-chtml.js
+  - https://npm.elemecdn.com/@highlightjs/cdn-assets@11.8.0/highlight.min.js
   - assets/javascripts/config.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  # - https://polyfill.io/v3/polyfill.min.js?features=es6 # No need to polyfill
   # - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js # Use built-in mermaid plugin
-  - https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.3.1/highlight.min.js
 
 copyright: 'Copyleft. All wrongs reversed.<br/><a href="https://beian.miit.gov.cn">冀ICP备2021025718号</a> | <a href="http://www.beian.gov.cn/">川公安网备51012202001103号</a>'
