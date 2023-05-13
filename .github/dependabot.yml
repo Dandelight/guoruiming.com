@@ -8,9 +8,17 @@ updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "weekly"
+      day: "sunday"
+      time: "10:00"
+      timezone: "Asia/Shanghai"
     open-pull-requests-limit: 20
     ignore:
       - dependency-name: "Markdown"
         versions:
           - ">=3.4"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      day: "sunday"
+      time: "10:00"
+      timezone: "Asia/Shanghai"
