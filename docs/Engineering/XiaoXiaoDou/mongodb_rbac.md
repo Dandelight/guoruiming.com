@@ -16,7 +16,7 @@ db.createUser({
 });
 ```
 
-其中，权限由**数据库资源**和在指定资源上的**操作**组成。其中，资源可以是数据库、集合、部分集合和集群；操作包括对资源的增删改查。常用的内置角色有：
+其中，权限由**数据库资源**和在指定资源上的**操作**组成。其中，资源可以是数据库、集合、部分集合和集群；操作包括对资源的增删改查。常用的[内置角色](https://www.mongodb.com/docs/manual/reference/built-in-roles/)有：
 
 |                   角色 | 权限                                                                                        |
 | ---------------------: | ------------------------------------------------------------------------------------------- |
@@ -29,3 +29,5 @@ db.createUser({
 | `readWriteAnyDatabase` | 对除 `config` 和 `local` 之外的数据库拥有 `readWrite` 权限                                  |
 |   `dbAdminAnyDatabase` | 对除 `config` 和 `local` 之外的数据库拥有 `dbAdmin` 权限                                    |
 | `userAdminAnyDatabase` | 对除 `config` 和 `local` 之外的数据库拥有 `userAdmin` 权限                                  |
+
+一般来说，内置角色已经足够，用户也可以通过 `db.CreateRole()` [创建自定义角色](https://www.mongodb.com/docs/manual/core/security-user-defined-roles/)。
