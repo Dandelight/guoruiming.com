@@ -1,3 +1,7 @@
+---
+hide: ["navigation"]
+---
+
 # 欢迎回家
 
 尘世中的旅行者，欢迎来此小憩。吾辈不才，但愿意将自己积累的知识悉数与君分享。
@@ -60,29 +64,29 @@
 
 ### Web 前端
 
-* 语言：`CSS`、`LESS`、`JavaScript`、`TypeScript`、`Dart`
-* 框架：`Vue.js`、`React.js`、`Flutter`
-* 工程化：`Jest`/`Mocha` 单元测试
+- 语言：`CSS`、`LESS`、`JavaScript`、`TypeScript`、`Dart`
+- 框架：`Vue.js`、`React.js`、`Flutter`
+- 工程化：`Jest`/`Mocha` 单元测试
 
 ### Web 后端
 
-* 框架：`Express.js`、`Spring Boot`
+- 框架：`Express.js`、`Spring Boot`
 
 ### 嵌入式硬件设计
 
-* 嘉立创 EDA
+- 嘉立创 EDA
 
 ### 嵌入式软件设计
 
-* 汇编语言：`MIPS`、`ARM`
-* 硬件平台：`ESP32`、`Arduino`
+- 汇编语言：`MIPS`、`ARM`
+- 硬件平台：`ESP32`、`Arduino`
 
 ### 基础工具软件
 
-* Shell：`PowerShell`、`bash`
-* 数值计算：`NumPy`, `PyTorch`、`MATLAB`
-* 数据库：`MySQL`、`MongoDB`
-* 容器：`Docker`、`Vagrant`
+- Shell：`PowerShell`、`bash`
+- 数值计算：`NumPy`, `PyTorch`、`MATLAB`
+- 数据库：`MySQL`、`MongoDB`
+- 容器：`Docker`、`Vagrant`
 
 ## 课程：学习使我快乐
 

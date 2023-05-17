@@ -4,11 +4,15 @@ theme:
   language: zh
   features:
     - navigation.instant
+    - navigation.tabs
+    - content.action.edit
   favicon: assets/images/favicon.ico
   icon:
     logo: material/book
+    repo: fontawesome/brands/github
 site_name: 郭睿明的小屋
 site_url: http://guoruiming.com
+
 markdown_extensions:
   - admonition
   - nl2br
@@ -38,7 +42,6 @@ markdown_extensions:
         # emoji_generator: !!python/name:pymdownx.emoji.to_awesome
         # emoji_generator: !!python/name:pymdownx.emoji.to_alt
 
-
   - pymdownx.inlinehilite
   - pymdownx.mark
   - pymdownx.smartsymbols
@@ -54,7 +57,11 @@ repo_url: https://github.com/dandelight/dandelight.github.io
 repo_name: dandelight/dandelight.github.io
 
 plugins:
-  - search
+  - search:
+      lang:
+        - en
+        - zh
+  - tags
   - git-revision-date
   - callouts
   # - mermaid2
@@ -72,4 +79,4 @@ extra_javascript:
   # - https://polyfill.io/v3/polyfill.min.js?features=es6 # No need to polyfill
   # - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js # Use built-in mermaid plugin
 
-copyright: 'Copyleft. All wrongs reversed.<br/><a href="https://beian.miit.gov.cn">冀ICP备2021025718号</a> | <a href="http://www.beian.gov.cn/">川公安网备51012202001103号</a>'
+copyright: 'Copyleft. All wrongs reversed.<br/><a href="https://beian.miit.gov.cn"><img alt="冀ICP备2021025718号" src="https://img.shields.io/badge/%E5%86%80ICP%E5%A4%87-2021025718%E5%8F%B7-blue"></img></a> <a href="http://www.beian.gov.cn/"><img alt="川公安网备51012202001103号" src="https://img.shields.io/badge/%E5%B7%9D%E5%85%AC%E5%AE%89%E7%BD%91%E5%A4%87-51012202001103%E5%8F%B7-blue"></img></a>  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Dandelight/dandelight.github.io?color=blue">'

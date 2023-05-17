@@ -51,12 +51,15 @@
 > 补充一点：
 > 这里要补充一点 python 回调函数调用时，传参的知识：
 >
+> ```
 > #define the callback method:
 > def callback(arg1, arg2, arg3):
 > ...
 >
 > #next, Subscriber:
 > rospy.Subscriber(topicName, data_type, callback, arg2)
+> ```
+>
 > 上面 callback 的 arg1 一般是 subscriber 读到的数据，直接作为第一个参数传入 callback 函数。arg2 传入 callback 的 arg2 位置。 2. 重点是 TransformBroadcaster() 类
 > 参考：http://mirror.umd.edu/roswiki/doc/diamondback/api/tf/html/python/tf_python.html#transformbroadcaster
 >
