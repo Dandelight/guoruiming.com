@@ -1,5 +1,7 @@
-// MathJax
+// 每次Instant Reload之后重渲染
 
+// MathJax
+// 因为 MathJax 的配置问题，必须先于其它脚本加载
 window.MathJax = {
   tex: {
     inlineMath: [
@@ -28,7 +30,6 @@ document$.subscribe(() => {
 });
 
 // mermaid.js
-// 每次Instant Reload之后重渲染Mermaid
-document$.subscribe(() => {
-  mermaid.init();
-});
+// document$.subscribe(() => {
+//   mermaid.init();
+// });

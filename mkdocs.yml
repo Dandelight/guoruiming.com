@@ -42,6 +42,7 @@ markdown_extensions:
         # emoji_generator: !!python/name:pymdownx.emoji.to_awesome
         # emoji_generator: !!python/name:pymdownx.emoji.to_alt
 
+
   - pymdownx.inlinehilite
   - pymdownx.mark
   - pymdownx.smartsymbols
@@ -73,9 +74,9 @@ extra_css:
   - https://npm.elemecdn.com/@highlightjs/cdn-assets@11.8.0/styles/default.min.css
   - assets/stylesheets/extra.css
 extra_javascript:
+  - assets/javascripts/config.js # 必须添加在 MathJax 之前
   - https://npm.elemecdn.com/mathjax@3/es5/tex-mml-chtml.js
   - https://npm.elemecdn.com/@highlightjs/cdn-assets@11.8.0/highlight.min.js
-  - assets/javascripts/config.js
   # - https://polyfill.io/v3/polyfill.min.js?features=es6 # No need to polyfill
   # - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js # Use built-in mermaid plugin
 
