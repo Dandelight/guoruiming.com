@@ -106,7 +106,7 @@ On the left, there is the quantity that we want to optimize: $\log P(X)$ (plus a
 
 The right side of the equation is referred to as the _Evidence Lower Bound_ (ELBO，证据率下界), in which _Evidence_ means $P(X)$. The KL-Divergence has the special property that $D_{K L}(p(x) \| q(x)) \geq 0, D_{K L}(p(x) \| q(x))=0$ if and only if $p=q$. Another proof of the existence of the ELBO leverages Jensen's inequality.
 
-> ![Theorem] [Jensen Inequility](https://en.wikipedia.org/wiki/Jensen's_inequality)
+> [!Theorem] [Jensen Inequility](https://en.wikipedia.org/wiki/Jensen's_inequality)
 >
 > For a convex function $f$ and $t \in [0, 1]$, we have
 >
