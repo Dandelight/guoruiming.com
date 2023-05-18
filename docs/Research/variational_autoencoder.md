@@ -1,8 +1,8 @@
 # Variational Autoencoder
 
-First, we start from such a senario: we have a set of observations $X = \{x_1, x_2, \ldots, x_n\}$. We want to model the data _generatively_. For instance, an image is made up of millions or billions of pixels, which can be seen as a data point located in a high dimensional space. The images in the high-dimensional space have some unknown structures, and we'd like to capture this latent structure. One straightforward kind of generative model is to directly compute the $P(X)$ numerically. In the example of images, $x$'s which look like real images have high probabilities, and those that look unlike real images, or even like random noise, should have a low probability.
+First, we start from such a scenario: we have a set of observations $X = \{x_1, x_2, \ldots, x_n\}$. We want to model the data _generatively_. For instance, an image is made up of millions or billions of pixels, which can be seen as a data point located in a high-dimensional space. The images in the high-dimensional space have some unknown structures, and we'd like to capture this latent structure. One straightforward kind of generative model is to directly compute the $P(X)$ numerically. In the example of images, $x$'s which look like real images have high probabilities, and those that look unlike real images, or even like random noise, should have a low probability.
 
-In contrast to getting random noises, generate real images is more valuable to explore. This is decisive in our choice of KL divengence as the cost function, who enforces large probability to be ==larger==(?) and relatively ignores small ground truth probabilities. Formally, we'd like to get examples $X$ distributed according to some unknown distribution $P_{gt}(X)$. If getting the exact $P_{gt}(X)$ is infeasible, we'd at least learn a model $P$ which we can sample from, such that $P$ is as close (similar) as possible to $P_{gt}(X)$.
+In contrast to getting random noises, generating real images is more valuable to explore. This is decisive in our choice of KL divergence as the cost function, which preserves larger probabilities and relatively ignores small ground truth probabilities. Formally, we'd like to get examples $X$ distributed according to some unknown distribution $P_{gt}(X)$. If getting the exact $P_{gt}(X)$ is infeasible, we'd at least learn a model $P$ which we can sample from, such that $P$ is as close (similar) as possible to $P_{gt}(X)$.
 
 Most previous attempts have had one of the three limitations
 
@@ -10,13 +10,13 @@ Most previous attempts have had one of the three limitations
 2. Make severe approximations, leading to sub-optimal models
 3. Rely on computationally expensive inference procedures like Markov Chain Monte Carlo.
 
-Recent advancements in nerual networks have given rise to promising frameworks which can use backpropagation-based function approximatiors to build generative models.
+Recent advancements in neural networks have given rise to promising frameworks which can use backpropagation-based function approximators to build generative models.
 
 ## Latent Variable Models
 
-Suppose we have an image $x$. How can we generate it, from void? When we say 'an image of rose', we have a mental image of a rose. So we assume a image-generating model also have a 'mental image', which is formally called the _latent variable_. However, this latent variable is hard to be assigned by hand, and we need a method to infer it.
+Suppose we have an image $x$. How can we generate it, from the void? When we say 'an image of a rose', we have a mental image of a rose. So we assume an image-generating model also has a 'mental image', which is formally called the _latent variable_. However, this latent variable is hard to be assigned by hand, and we need a method to infer it.
 
-Before we can say anything about our model, we need to make sure that for every datapoint $x_i \in X$, there is one or more settings of latent variables which causes the model to generate $x_i$. Formally, say we have a vector of latent variables $z$ in a high-dimensional space $\mathcal{Z}$ which we can easily sample according to some probability density function (PDF) $P(z)$ defined over $\mathcal{Z}$. After obtaining $z$, we use a family of deterministic functions $f(z; \theta)$ to map $z$ to $x$. The function $f(z; \theta)$ is a _family_ of functions in the sense that the functions are different with different $\theta$'s, and _deterministic_ for once the $\theta \in \Theta$ is set, the value of the function only rely on the $z$ it is evaluated on. So we have $f(\cdot; \theta): \mathcal{Z} \to \mathcal{X}$.We hope to find a $\theta$ such that we sample $z$ from $P(z)$ and, with high probability, $f(z; \theta)$ will be like the $x$'s in $X$.
+Before we can say anything about our model, we need to make sure that for every datapoint $x_i \in X$, there are one or more settings of latent variables which cause the model to generate $x_i$. Formally, say we have a vector of latent variables $z$ in a high-dimensional space $\mathcal{Z}$ which we can easily sample according to some probability density function (PDF) $P(z)$ defined over $\mathcal{Z}$. After obtaining $z$, we use a family of deterministic functions $f(z; \theta)$ to map $z$ to $x$. The function $f(z; \theta)$ is a _family_ of functions in the sense that the functions are different with different $\theta$'s, and _deterministic_ for once the $\theta \in \Theta$ is set, the value of the function only rely on the $z$ it is evaluated on. So we have $f(\cdot; \theta): \mathcal{Z} \to \mathcal{X}$.We hope to find a $\theta$ such that we sample $z$ from $P(z)$ and, with high probability, $f(z; \theta)$ will be like the $x$'s in $X$.
 
 Mathematically, we are aiming at maximizing the probability of each $x$ in the training set under the entire generative process, according to:
 
@@ -26,7 +26,7 @@ $$
 
 Here, the probability distribution $P(x|z; \theta)$ allows us to make the dependence of $x$ on $z$ explicit by using **the law of total probability**. This framework, called **maximum likelihood**, aims at making the model more likely to produce samples similar to those in the dataset.
 
-It is called the Variational Inference, which means the inference of functions. Variation is the extension of differential in function space. It represents the principal part of the change in a functional $F(y(x))$ with respect to changes in the independent variable $y(x)$. Variational problem is the extreme value problem of functional. The essence of variational inference is to solve the extremum problem of functional. Given a set of observations $X = \{x_1, x_2, \ldots, x_n\}$ and a latent variable model $P(X, Z)$, how to inference $P(Z|X)$?
+It is called the Variational Inference, which means the inference of functions. Variation is the extension of differential in function space. It represents the principal part of the change in a functional $F(y(x))$ concerning changes in the independent variable $y(x)$. Variational problem is the extreme value problem of functional. The essence of variational inference is to solve the extremum problem of the functional. Given a set of observations $X = \{x_1, x_2, \ldots, x_n\}$ and a latent variable model $P(X, Z)$, how to infer $P(Z|X)$?
 
 According to the Bayes' Theorem
 
@@ -48,14 +48,14 @@ $$
 Q(Z) \approx P(Z|X)
 $$
 
-Now we want to optimize $P(x)$. We can use gradient-based methods such as stochastic gradient descent (SGD) if the $P(x|z)$ is differenciatable.
+Now we want to optimize $P(x)$. We can use gradient-based methods such as stochastic gradient descent (SGD) if the $P(x|z)$ is differentiable.
 
 Two solve the equation, there are two problems that we must deal with:
 
 1. How to define the latent variable $z$
 2. How to deal with the integral over $z$
 
-For the first problem, the 'latent' decisions thatthe model needs to make can be rather complicated. Ideally, we want to avoid deciding by hand what information each dimension of $z$ encodes. We also want to avoid explicitly describing the dependencies, i.e., the latent structure, between the dimensions of $z$.
+For the first problem, the 'latent' decisions that the model needs to make can be rather complicated. Ideally, we want to avoid deciding by hand what information each dimension of $z$ encodes. We also want to avoid explicitly describing the dependencies, i.e., the latent structure, between the dimensions of $z$.
 
 For the second problem, if we can find a computable formula for $P(X)$, and we can take the gradient of that formula, then we can optimize the model using SGD. It is straightforward:
 
@@ -63,15 +63,15 @@ $$
 P(X) \approx \frac{1}{n}\sum_i P(X|z_i)
 $$
 
-The only problem remains is that in high dimensional spaces, $n$ might need to be extremely large before we have an accurate estimate of $P(X)$. If we use the metric of mean square error (MSE), minimizing Euclidean distance between the ground truth and the generated images, we may be posed to a rather difficult optimization problem, and need much more data to optimize.
+The only problem that remains is that in high dimensional spaces, $n$ might need to be extremely large before we have an accurate estimate of $P(X)$. If we use the metric of mean square error (MSE), minimizing Euclidean distance between the ground truth and the generated images, we may be posed with a rather difficult optimization problem, and need much more data to optimize.
 
-The variation inference works by choosing a family of probability density functions and then finding the one closest to the actual probability density. In Variational Autoencoders, the choice of the output distribution of Gaussian, i.e., $P(X | z ; \theta)=\mathcal{N}\left(X | f(z ; \theta), \sigma^2 * I\right)$. It has mean $f(z;\theta)$ and covariance equal to the identity matrix $I$ times some scalar $\sigma$, which is a hyperparameter. By using Gaussian distribution, we can take the gradient descent method --- which is impossible if $P(X|z)$ was a Dirac delta function, as it would be if we used $X = f(z; \theta)$ deterministically. In fact, the $P(X|z)$ need not to be Gaussian: the important property is that $P(X|z)$ can be computed, and continuous in $\theta$.
+The variation inference works by choosing a family of probability density functions and then finding the one closest to the actual probability density. In Variational Autoencoders, the choice of the output distribution of Gaussian, i.e., $P(X | z ; \theta)=\mathcal{N}\left(X | f(z ; \theta), \sigma^2 * I\right)$. It has mean $f(z;\theta)$ and covariance equal to the identity matrix $I$ times some scalar $\sigma$, which is a hyperparameter. By using Gaussian distribution, we can take the gradient descent method --- which is impossible if $P(X|z)$ was a Dirac delta function, as it would be if we used $X = f(z; \theta)$ deterministically. In fact, the $P(X|z)$ need not be Gaussian: the important property is that $P(X|z)$ can be computed, and continuous in $\theta$.
 
 VAE makes a special assumption on the latent variable: the $z$ is drawn from the standard normal distribution $\mathcal{N}(\mathbf{0}, I)$, where the mean $\mathbf{0}$ is a vector of zeros, and the covariance matrix $I$ is the identity matrix. The key is that any distribution in $d$ dimensions can be generated by taking a set of $d$ variables that are normally distributed and mapped through a sufficiently complicated function, which can be approximated by neural networks.
 
-As for the questing of how to maximize the Equation, as now we have $P(z)=\mathcal{N}(z|0, I)$. It is differenciable with regrad to $\theta$. In practice, for most $z$, $P(X|z)$ will be nearly zero, contributing almost nothing to our estimate of $P(X)$. The key idea of VAE is to attempt to sample values of $z$ that are likely to ==have produced== $X$, and compute $P(X)$ just from those.
+As for the questing of how to maximize the Equation, now we have $P(z)=\mathcal{N}(z|0, I)$. It is differentiable with regard to $\theta$. In practice, for most $z$, $P(X|z)$ will be nearly zero, contributing almost nothing to our estimate of $P(X)$. The key idea of VAE is to attempt to sample values of $z$ that are likely to ==have produced== $X$, and compute $P(X)$ just from those.
 
-For this problem, we need a new function $Q(z|X)$ which can take a value of $X$ and give us a distribution over $z$ values that are likely to produce $X$. Hopefully, the space of $z$ values taht are likely under $Q$ will be much smaller that the space of all $z$'s that are likely under the prior $P(z)$. This lets us compute $E_{z\sim Q}P(X|z)$ relatively easily.
+For this problem, we need a new function $Q(z|X)$ which can take a value of $X$ and give us a distribution over $z$ values that are likely to produce $X$. Hopefully, the space of $z$ values that are likely under $Q$ will be much smaller than the space of all $z$'s that are likely under the prior $P(z)$. This lets us compute $E_{z\sim Q}P(X|z)$ relatively easily.
 
 > However, if $z$ is sampled from an arbitrary PDF, not $\mathcal{N}(0, I)$, then how does that help us optimize $P(X)$?
 
@@ -100,11 +100,11 @@ $$
 \label{eq:obj}
 $$
 
-On the left, there are quantity that we want to optimize: $\log P(X)$ (plus an error term, which makes $Q$ produce $z$'s that can reproduce a given $X$). On the right is something we can optimize via SGD.
+On the left, there is the quantity that we want to optimize: $\log P(X)$ (plus an error term, which makes $Q$ produce $z$'s that can reproduce a given $X$). On the right is something we can optimize via SGD.
 
 ## Evidence Lower Bound
 
-The right side of the equation is the referred to as the _Evidence Lower Bound_ (ELBO，证据率下界), in which _Evidence_ means $P(X)$. The KL-Divergence have the special property that $D_{K L}(p(x) \| q(x)) \geq 0, D_{K L}(p(x) \| q(x))=0$ if and only if $p=q$. Another proof of the existence of the ELBO leverages the Jensen' inequality.
+The right side of the equation is referred to as the _Evidence Lower Bound_ (ELBO，证据率下界), in which _Evidence_ means $P(X)$. The KL-Divergence has the special property that $D_{K L}(p(x) \| q(x)) \geq 0, D_{K L}(p(x) \| q(x))=0$ if and only if $p=q$. Another proof of the existence of the ELBO leverages Jensen's inequality.
 
 > ![Theorem] [Jensen Inequility](https://en.wikipedia.org/wiki/Jensen's_inequality)
 >
@@ -135,11 +135,11 @@ $$
 \end{aligned}
 $$
 
-So if we want to optimize $P(X)$, one of the tractable solution is to optimize the ELBO. In the next section will discuss how the optimization is conducted.
+So if we want to optimize $P(X)$, one of the tractable solutions is to optimize the ELBO. The next section will discuss how the optimization is conducted.
 
 ## Optimizing the objective
 
-So how can we perform stochastic gradient descent on the right hand side of Equation $(\ref{eq:obj})$? First we need to be a bit more specific about the form that $Q(z|X)$ will take. The usual choice is to say that $Q(z|X) = \mathcal{N}(z|\mu(X;\phi), \Sigma(X, \phi))$, where $\mu$ and $\Sigma$ are arbitraty deterministic functions with parameters $\phi$ that can be learned from data. In practice, $\mu$ and $\Sigma$ are also generated by nerual networks, and $\Sigma$ is constrained to be a diagonal matrix. Now the last term, $\mathcal{D}[Q(z | X) \| P(z)]$, is now a KL-divergence between two multivariate Gaussian distributions, which can be computed in closed form as (proof at the end of the article):
+So how can we perform stochastic gradient descent on the right-hand side of Equation $(\ref{eq:obj})$? First, we need to be a bit more specific about the form that $Q(z|X)$ will take. The usual choice is to say that $Q(z|X) = \mathcal{N}(z|\mu(X;\phi), \Sigma(X, \phi))$, where $\mu$ and $\Sigma$ are arbitrary deterministic functions with parameters $\phi$ that can be learned from data. In practice, $\mu$ and $\Sigma$ are also generated by neural networks, and $\Sigma$ is constrained to be a diagonal matrix. Now the last term, $\mathcal{D}[Q(z | X) \| P(z)]$, is now a KL-divergence between two multivariate Gaussian distributions, which can be computed in closed form as (proof at the end of the article):
 
 $$
 \mathcal{D}\left[\mathcal{N}\left(\mu_0, \Sigma_0\right) \| \mathcal{N}\left(\mu_1, \Sigma_1\right)\right]= \frac{1}{2}\left(\operatorname{tr}\left(\Sigma_1^{-1} \Sigma_0\right)+\left(\mu_1-\mu_0\right)^{\top} \Sigma_1^{-1}\left(\mu_1-\mu_0\right)-k+\log \left(\frac{\operatorname{det} \Sigma_1}{\operatorname{det} \Sigma_0}\right)\right)
@@ -164,20 +164,20 @@ $$
 \log P(X | z)-\mathcal{D}[Q(z | X) \| P(z)]
 $$
 
-However, this equation have a significant problem. $\log P(X | z)$ depends on the value of $Q$ through $z$. This dependency disappeared in the Equation. This is because the Gaussian sampling is non-differentiable. The solution, called the _reparameterization trick_, is to move a sampling to an input layer. Given $\mu(X)$ and $\Sigma(X)$, the mean and the covariance of $Q(z|X)$, we can sample from $\mathcal{N}(\mu(X), \Sigma(X))$ by first sampling $\epsilon \sim \mathcal{N}(0, 1)$, then computing $z = \mu(X) + \Sigma^{1/2}*\epsilon$. The equation that we actually take gradient of is:
+However, this equation has a significant problem. $\log P(X | z)$ depends on the value of $Q$ through $z$. This dependency disappeared from the Equation. This is because the Gaussian sampling is non-differentiable. The solution called the _reparameterization trick_, is to move a sampling to an input layer. Given $\mu(X)$ and $\Sigma(X)$, the mean and the covariance of $Q(z|X)$, we can sample from $\mathcal{N}(\mu(X), \Sigma(X))$ by first sampling $\epsilon \sim \mathcal{N}(0, 1)$, then computing $z = \mu(X) + \Sigma^{1/2}*\epsilon$. The equation that we actually take the gradient of is:
 
 $$
 E_{X \sim D}\left[E_{\epsilon \sim \mathcal{N}(0, I)}\left[\log P\left(X | z=\mu(X)+\Sigma^{1 / 2}(X) * \epsilon\right)\right]-\mathcal{D}[Q(z | X) \| P(z)]\right]
 $$
 
-## Implement as Variational Autoencoder
+## Implement as a Variational Autoencoder
 
 In practice, variational autoencoder takes an Expectation-Maximization approach.
 
 - Expectation: compute $z$ from $X$ as $Q(z|X)$.
 - Maximization: Maximize the likelihood $P(X|z)$,
 
-where $P(X|z;\theta)$ and $Q(z|X; \phi)$ are implemented as nerual networks. They are differenciable with regard to $\theta$ and $\phi$ respectively, so an end-to-end SGD optimization is tractable.
+where $P(X|z;\theta)$ and $Q(z|X; \phi)$ are implemented as nerual networks. They are differentiable with regard to $\theta$ and $\phi$ respectively, so an end-to-end SGD optimization is tractable.
 
 ## Testing
 
