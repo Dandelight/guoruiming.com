@@ -41,9 +41,11 @@ hide: ["navigation"]
 
 ### 课余工程
 
-招人！长期招人，~~没工资，~~包教技术
+招人！长期招人， ~~没工资，~~ 包教技术
 
-- 即时通讯底层系统
+- `submit` 作业提交调度平台
+- 用于科研论文/代码/数据/笔记管理的 `VS Code` 插件
+- 基于 Rust 的跨平台即时通讯底层系统
 - Shape of Voice
 - Grow: AI 虚拟人陪伴系统
 - LISTEN 耳阅读屏：端侧推理的多模态模型
@@ -108,6 +110,59 @@ hide: ["navigation"]
 ## Meta：关于本站、关于我
 
 关于本站的构建原理，请见 [Meta](./meta/index)；关于本人，请见 [About](./about)。
+
+## GitHub Status
+
+<div id="repo-card">正在加载 GitHub commit 信息</div>
+<script>
+(function () {
+  const username = "Dandelight";
+  const repo = "dandelight.github.io";
+
+function toUrlEncoded(obj) {
+const keyValuePairs = [];
+for (const key in obj) {
+keyValuePairs.push(
+encodeURIComponent(key) + "=" + encodeURIComponent(obj[key])
+);
+}
+return keyValuePairs.join("&");
+}
+const config = {
+"per_page": 5
+}
+const apiEndpoint = `https://api.github.com/repos/${username}/${repo}/commits?${toUrlEncoded(config)}`;
+
+// Make API request to fetch commits
+fetch(apiEndpoint)
+.then((response) => response.json())
+.then((commits) => {
+const recentCommits = commits; // Get the first 5 commits
+// Create repository card HTML
+let cardHTML = "<h3>Recent Commits</h3><ul>";
+recentCommits.forEach((commit) => {
+const author = commit.commit.author.name;
+const message = commit.commit.message;
+const commitURL = commit.html_url;
+const commitHash = commit.sha.substring(0, 7);
+const localDateTime = new Date(
+commit.commit.author.date
+).toLocaleString();
+cardHTML += `<li>${localDateTime} <a href="${commitURL}"><code>${commitHash}</code> </a>${author}: ${message}</li>`;
+});
+cardHTML += "</ul>";
+
+      // Display repository card
+      document.getElementById("repo-card").innerHTML = cardHTML;
+    })
+    .catch((error) => {
+      document.getElementById("repo-card").innerHTML =
+        "加载最近 commit 出错";
+      console.error("Error:", error);
+    });
+
+})();
+</script>
 
 ## Gitee Status
 
