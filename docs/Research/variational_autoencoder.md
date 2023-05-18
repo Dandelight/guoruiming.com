@@ -179,11 +179,23 @@ In practice, variational autoencoder takes an Expectation-Maximization approach.
 
 where $P(X|z;\theta)$ and $Q(z|X; \phi)$ are implemented as nerual networks. They are differentiable with regard to $\theta$ and $\phi$ respectively, so an end-to-end SGD optimization is tractable.
 
+![net](./assets/variational_autoencoder/net.png)
+
 ## Testing
 
 The testing is remarkably simple. We remove the encoder and directly input values $z \sim \mathcal{N}(0, 1)$ into the encoder.
 
 ~~First, we need to relate $E_{z\sim Q}P(X|z)$ and $P(X)$.~~
+
+## Experiments
+
+The reconstructed images in the training (images are presented in pairs, for each pair, the left is the GT, and the right is the model prediction)
+
+![epoch150-reconstructed](./assets/variational_autoencoder/epoch150-reconstructed.png)
+
+The images generated from random normally distributed $z$:
+
+![epoch150-generated](./assets/variational_autoencoder/epoch150-generated.png)
 
 ## Limitations
 
