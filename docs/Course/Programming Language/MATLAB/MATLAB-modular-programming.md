@@ -95,6 +95,12 @@ end
 
 同 NumPy 的广播（broadcast），从 2016b 开始支持。
 
+## 比内置编辑器好用一万倍的 VS Code 扩展
+
+![matlab-vscode](./assets/MATLAB-modular-programming/matlab-vscode.jpeg)
+
+说了这么多，我们灵活使用 MATLAB 的唯一阻碍就是那个非常难用的内置编辑器了。现在，这种情况已经得到了改观——MathWorks 官方为 VS Code 提供了扩展。不仅有非常优雅的界面，而且拥有悬浮提示、代码片段、打开源码等功能。虽然到 2023 年 5 月还没有调试运行功能，但已经让人满意了。
+
 ## 为啥要折腾这么多
 
 MATLAB 一直被语法问题和工程性不足而饱受诟病[^terrible]，但最近的更新，尤其是近三年的更新，让我看 到了这门语言的发展希望。
