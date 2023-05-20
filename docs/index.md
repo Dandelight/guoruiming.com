@@ -113,6 +113,8 @@ hide: ["navigation"]
 
 ## GitHub Status
 
+<a href="https://github.com/Dandelight" target="_blank"><img alt="GitHub Heatmap Snake" src="https://raw.githubusercontent.com/Dandelight/dandelight/output/github-snake.svg"></img></a>
+
 <div id="repo-card">正在加载 GitHub commit 信息</div>
 <script>
 (function () {
@@ -148,7 +150,7 @@ const commitHash = commit.sha.substring(0, 7);
 const localDateTime = new Date(
 commit.commit.author.date
 ).toLocaleString();
-cardHTML += `<li>${localDateTime} <a href="${commitURL}"><code>${commitHash}</code> </a>${author}: ${message}</li>`;
+cardHTML += `<li>${localDateTime} <a href="${commitURL}" target="_blank"><code>${commitHash}</code> </a>${author}: ${message}</li>`;
 });
 cardHTML += "</ul>";
 
