@@ -1,1 +1,1 @@
-![lorenz](lorenz.gif)
+![lorenz](image/lorenz/lorenz.gif)

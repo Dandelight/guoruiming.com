@@ -86,11 +86,11 @@
 
 Switch_2960 1 台；PC 1 台；将二者通过直通线相连。
 
-![image-20220417165049526](image-20220417165049526.png)
+![image-20220417165049526](media/PacketTracer/image-20220417165049526.png)
 
 单击 PC0，进入`config`页面，配置`FastEthernet0`的带宽为 100Mbps，工作模式为全双工（Full Duplex）。
 
-![image-20220417165152653](image-20220417165152653.png)
+![image-20220417165152653](media/PacketTracer/image-20220417165152653.png)
 
 单击 Switch0，进入`CLI`页面，进行如下配置：
 
@@ -105,7 +105,7 @@ S2960(config-if)# duplex full      //修改为全双工模式
 S2960(config-if)# exit             //退出端口设置
 ```
 
-![image-20220417165223379](image-20220417165223379.png)
+![image-20220417165223379](media/PacketTracer/image-20220417165223379.png)
 
 查看交换机各项配置参数
 
@@ -116,15 +116,15 @@ Switch#show interface          //查看端口信息
 Switch#show mac-address-table  //查看交换机的MAC地址
 ```
 
-![image-20220417165321771](image-20220417165321771.png)
+![image-20220417165321771](media/PacketTracer/image-20220417165321771.png)
 
-![image-20220417165403537](image-20220417165403537.png)
+![image-20220417165403537](media/PacketTracer/image-20220417165403537.png)
 
-![image-20220417170011049](image-20220417170011049.png)
+![image-20220417170011049](media/PacketTracer/image-20220417170011049.png)
 
-![image-20220417170040813](image-20220417170040813.png)
+![image-20220417170040813](media/PacketTracer/image-20220417170040813.png)
 
-![image-20220417170054581](image-20220417170054581.png)
+![image-20220417170054581](media/PacketTracer/image-20220417170054581.png)
 
 登录密码设置与取消、console 访问设置
 
@@ -139,7 +139,7 @@ Switch(config-line)#login    //用于打开登录认证功能
 Switch(config-line)#no password//取消密码
 ```
 
-![image-20220417170146839](image-20220417170146839.png)
+![image-20220417170146839](media/PacketTracer/image-20220417170146839.png)
 
 ## 总结
 
