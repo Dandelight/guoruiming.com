@@ -8,16 +8,14 @@
 > 编辑器端，Obsidian 提供了[官方 Callouts 支持](https://help.obsidian.md/Editing+and+formatting/Callouts)，网页端通过 `mkdocs-callouts` 插件转义为 [`mkdocs-material` 支持的 `Admonitions` 格式](https://squidfunk.github.io/mkdocs-material/reference/admonitions/)，实现了统一的富文本编辑功能。
 > 如果要支持 Obsidian 的 wikilink 语法，可以考虑 <https://github.com/ndy2/mkdocs-obsidian-support-plugin> （新项目，实测有些问题，再观察一段时间）
 
-目前项目托管在 `GitHub Pages`，通过 `GitHub Actions` 自动编译部署 [![Deploy to GitHub Pages](https://github.com/Dandelight/dandelight.github.io/actions/workflows/deploy_to_pages.yml/badge.svg)](https://github.com/Dandelight/dandelight.github.io/actions/workflows/deploy_to_pages.yml)，使用 `Cloudflare CDN` 加速访问。
-
-在此之前，我曾使用过
+目前项目托管在 [`Cloudflare Pages`](https://pages.cloudflare.com/)。这应该是目前来说最简单、稳定、成本低、效果好的方案了。在此之前，我曾先后使用过
 
 - 租用云服务器，自己用 C 语言写静态服务器，使用 `WebHook` 实现 `git push` 后部署。
 - 租用云服务器，使用 `Nginx` 作为静态服务器。
-- 对象存储托管，本地编译后上传。
-- 利用 `GitHub Actions`，`push` 后触发编译部署流程，部署到 `GitHub Pages`。通过设置 `CNAME` 自定义域名。
+- 腾讯云 COS 对象存储托管，本地编译后上传。
+- `GitHub Pages`，通过 `GitHub Actions` 自动编译部署 [![Deploy to GitHub Pages](https://github.com/Dandelight/dandelight.github.io/actions/workflows/deploy_to_pages.yml/badge.svg)](https://github.com/Dandelight/dandelight.github.io/actions/workflows/deploy_to_pages.yml)，通过设置 `CNAME` 自定义域名，使用 `Cloudflare CDN` 加速访问。
 
-~~由此可见我的技术是怎么一点点退化的。~~
+由此可见 ~~我的技术是怎么一点点退化的。~~ 事物的发展总是向着简化的方向进行的。
 
 ## 之前的情况
 
