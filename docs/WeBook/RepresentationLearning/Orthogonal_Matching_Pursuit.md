@@ -34,7 +34,7 @@ $$
 
 > 其实可以做个动画演示的，当年大二《表达学习》课，老师的 PPT 上的动画真的很生动，一听就会了。
 
-![algorithm_omp](algorithm_omp.png)
+![algorithm_omp](media/algorithm_omp.png)
 
 ```matlab
 % https://zhuanlan.zhihu.com/p/322180659

@@ -22,19 +22,19 @@ https://arxiv.org/abs/2111.06377
 
 **以上这些话就是 Self-Supervised Learning 的核心思想**，如下图 1 所示，后面还会再次提到它。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2F16fbaab9j00r33yb4000fc000hs007rg.jpeg)
+![img](media/MAE_ref/pretrain-finetune.jpeg)
 
 图 1：Self-Supervised Learning 的核心思想
 
 Self-Supervised Learning 不仅是在 NLP 领域，在 CV, 语音领域也有很多经典的工作，如下图 2 所示。它可以分成 3 类：**Data Centric, Prediction (也叫 Generative) 和 Contrastive**。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2F6dd553b4j00r33yb4000vc000hs00aeg.jpeg)
+![img](media/MAE_ref/evolution.jpeg)
 
 图 2：各个领域的 Self-Supervised Learning
 
 其中的主流就是基于 Generative 的方法和基于 Contrative 的方法。如下图 3 所示这里简单介绍下。基于 Generative 的方法主要关注的重建误差，比如对于 NLP 任务而言，一个句子中间盖住一个 token，让模型去预测，令得到的预测结果与真实的 token 之间的误差作为损失。基于 Contrastive 的方法不要求模型能够重建原始输入，而是希望模型能够在特征空间上对不同的输入进行分辨。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2Fad539115j00r33yb4000mc000k0005dg.jpeg)
+![img](media/MAE_ref/generative-predictive-contrastive.jpeg)
 
 图 3：基于 generative 的方法和基于 contrastive 的方法的总结图片
 
@@ -60,7 +60,7 @@ Self-Supervised Learning 不仅是在 NLP 领域，在 CV, 语音领域也有很
 
 基于以上分析，作者提出了 MAE 方法，如下图 4 所示就是 MAE 的架构。MAE 的方法很简单：**Mask 掉输入图像的随机的 patches 并重建它们。它基于两个核心理念：研究人员开发了一个非对称编码器 - 解码器架构，其中一个编码器只对可见的 patch 子集进行操作**(即没有被 mask 掉的 token)，另一个简单解码器可以从**潜在表征和被 masked 掉的 token**重建原始图像。Decoder 的架构可以是十分轻量化的模型，且具体的架构对模型性能影响很大。研究人员进一步发现，Mask 掉大部分输入图像 (例如 75%) 会产生重要且有意义的自监督任务。结合这两种设计，我们就能高效地训练大型模型：提升训练速度至 3 倍或更多，并提高准确性。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2F0d640ecbj00r33yb5000mc000hs009wg.jpeg)
+![framework](media/MAE_ref/framework.jpeg)
 
 图 4：MAE 自监督学习架构
 
@@ -104,7 +104,7 @@ MAE 的具体实现方法是：
 - 82.5 是作者自己实现的，ViT-Large 使用 ImageNet 训练的结果，这里不得不佩服 Kaiming 强大的实验能力啊，单训 ViT 就能比原作者高出 6 个点来，作者认为要使用较大的 weight decay = 0.3。82.5 的实验设置如下图 6 所示。
 - 84.9 是作者自己实现的，ViT-Large 使用 MAE pretrain 之后，再在 ImageNet 上做完整 Fine-tuning 的结果，可以看到优于有监督的 82.5。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2F0cbe3b24j00r33yb50014c000hs00bvg.jpeg)
+![config](media/MAE_ref/config.jpeg)
 
 图 6：82.5 的实验设置
 
@@ -114,7 +114,7 @@ MAE 的具体实现方法是：
 
 图 7 还显示了 linear probing 和 fine-tuning 的结果随着的不同的变化趋势。对于 fine-tuning，结果是 40-80%的 masking ratio 都能 work well。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2F06adff93j00r33yb6000pc000hs00asg.jpeg)
+![img](media/MAE_ref/ablation-masking-ratio.jpeg)
 
 图 7：masking ratio 对结果的影响
 
@@ -122,7 +122,7 @@ MAE 的具体实现方法是：
 
 如下图 8 所示，作者做了一些不同实验设置下的对比实验。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2Fa9f516afj00r33yb6000yc000k0006hg.jpeg)
+![img](media/MAE_ref/ablation.jpeg)
 
 图 8：观察到的一些实验现象
 
@@ -142,7 +142,7 @@ MAE 的具体实现方法是：
 
 **图 8 (9)，图 9：**不同 mask 采样策略的影响。block-wise masking 在 mask 50%时的效果还行，但是当 mask ratio 达到 75%时性能就大幅下降了。grid-wise sampling 使得任务变得更简单，但相应的，图像重建质量也下降了。简单的随机抽样最适合 MAE 模型。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2F120c9f15j00r33yb6000yc000hs0078g.jpeg)
+![img](media/MAE_ref/ablation-masking-ratio.jpeg)
 
 图 9：不同 mask 采样策略的影响
 
@@ -150,7 +150,7 @@ MAE 的具体实现方法是：
 
 下图 10 展示了不同 training epochs 的影响。在 training epochs=1600 时 MAE 还没有达到饱和。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2F865eba15j00r33yb6000nc000hs00aug.jpeg)
+![img](media/MAE_ref/mask-ratio-sample.jpeg)
 
 图 10：不同 training epochs 的影响
 
@@ -158,7 +158,7 @@ MAE 的具体实现方法是：
 
 如下图 11 所示为不同自监督方法性能对比，对于 ViT-B 模型，所有的方法性能相似，但是对于更大的 ViT-L 模型，性能差距就拉开了，证明了 MAE 对于大模型的泛化性能。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2F4fd959afj00r33yb7001ic0011000agg.jpeg)
+![img](media/MAE_ref/accuracy.jpeg)
 
 图 11：不同自监督方法性能对比
 
@@ -172,7 +172,7 @@ MAE 的具体实现方法是：
 
 **Partial Fine-tuning**是指**只训练最后模型的若干层的参数**。如下图 12 所示，值得注意的是，Fine-tuning 1 个 Transformer Block 可以把 Accuracy 从 73.0%提升至 81.0%。此外，如果我们只 Fine-tuning 1 个 Transformer Block 的 MLP block，我们可以得到 79.1% ，比 Linear Proing 要好得多。
 
-![img](media/MAE_ref/url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F1125%2F2f1775e3j00r33yb7000kc000hs0091g.jpeg)
+![img](media/MAE_ref/blocks-fine-tuned.jpeg)
 
 图 12：Partial Fine-tuning
 

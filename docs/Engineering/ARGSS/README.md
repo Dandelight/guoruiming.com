@@ -22,7 +22,7 @@ https://github.com/stefan-ainetter/grasp_det_seg_cnn
 
 SLAM 是 Simultaneous Localization and Mapping 的缩写，翻译过来是同时定位与重建，指搭载特定传感器的主体在没有先验环境知识的情况下，于运动过程中建立环境的模型，同时估计自己的运动。
 
-![SLAM流程图.drawio](media/Untitled/SLAM流程图.drawio.png)
+![SLAM流程图.drawio](media/README/SLAM流程图.drawio.png)
 
 在本项目中，环境是先验、已知的，甚至是不容许差错的；而视觉感知也仅限于“传感器信息读取”和“前端”。
 
@@ -50,7 +50,7 @@ SLAM 是 Simultaneous Localization and Mapping 的缩写，翻译过来是同时
 
 理论上讲，三位空间中六个自由度是完备的，为了简化问题，我们从平面坐标开始，平面坐标有两个参数，可以直接解析解
 
-![img](media/Untitled/1765442-20210331173847732-1400585782.png)
+![img](media/README/1765442-20210331173847732-1400585782.png)
 
 正运动学求解：
 
@@ -162,7 +162,7 @@ $$
 \frac{x_i}{x_c} = \frac{y_i}{y_c} = \frac{f}{d}
 $$
 
-![2021_12_13 10_31 Office Lens](media/fromSLAM/2021_12_13 10_31 Office Lens.jpg)
+![2021_12_13 10_31 Office Lens](media/README/2021_12_13 10_31 Office Lens.jpg)
 
 像素坐标系的定义方式为：原点$o’$位于图像的左上角，$u$轴向下与$x$轴平行，$v$轴向右与$y$轴平行；像素坐标系与成像平面之间相差一个仿射变换，即
 

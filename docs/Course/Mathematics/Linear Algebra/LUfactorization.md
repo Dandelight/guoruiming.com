@@ -11,7 +11,7 @@ x + y &= 3 \\
 \end{aligned}
 $$
 
-![image-20220111173046874](image-20220111173046874.png)
+![image-20220111173046874](media/LUfactorization/image-20220111173046874.png)
 
 这两个函数画出来是这样
 

@@ -39,7 +39,7 @@ TCP（Transmission Control Protocol）是面向连接的传输层协议，不仅
 
 也就是说，Window 大小是接收方愿意接受的数据的大小；这个数据会有一个放大倍数，是客户端和服务协商好的，比如下边这个是 256。
 
-![image-20211228132700764](image-20211228132700764.png)
+![image-20211228132700764](media/flow_control_and_congesting_control/image-20211228132700764.png)
 
 现在的问题是，如何计算自己的 Window size 呢？
 
@@ -86,13 +86,13 @@ TCP 缓冲区不能溢出，所以我们规定：`LastByteRcvd - LastByteRead <=
 
 网络拓扑如下
 
-![image-20211228135436151](image-20211228135436151.png)
+![image-20211228135436151](media/flow_control_and_congesting_control/image-20211228135436151.png)
 
 当发送速率在$0 \sim R/2$之间，接收方的吞吐量等于发送方的吞吐量。当发送速率超过$R/2$时，吞吐量停止在$R/2$，不再增长。
 
 当$λ_{in}$逐渐增大时，时延也在增大。当$λ_{in}$靠近$R/2$时，时延快速增长到无穷大。
 
-![image-20211228140111298](image-20211228140111298.png)
+![image-20211228140111298](media/flow_control_and_congesting_control/image-20211228140111298.png)
 
 由此可以看出，拥塞带来的代价是吞吐的时延极大
 
@@ -108,7 +108,7 @@ $$
 λ_{in}^′– λ_{in}= 重传的数据发送速率
 $$
 
-![image-20211228140425554](image-20211228140425554.png)
+![image-20211228140425554](media/flow_control_and_congesting_control/image-20211228140425554.png)
 
 方式 a：发送方可以获取路由器的 buffer 信息（实际上不存在这种情况），当路由器 buffer 有空闲时才发送分组。在这种情况下，不会产生丢包，吞吐量就是$λ_{in}$。
 
@@ -120,7 +120,7 @@ $$
 
 **代价：需要做更多的重传，并造成资源的浪费。**（重传数据需要再次使用数据链路）
 
-![image-20211228140455602](image-20211228140455602.png)
+![image-20211228140455602](media/flow_control_and_congesting_control/image-20211228140455602.png)
 
 #### 情况三：四个发送方和具有有限缓存的多台路由器及多跳路径
 
@@ -132,9 +132,9 @@ $$
 4. 路由器缓存有限
 5. $λ_{in}$依然表示初始数据的传送速率，$λ_{in}^′$表示初始数据+重传数据的传送速率
 
-![image-20211228140750183](image-20211228140750183.png)
+![image-20211228140750183](media/flow_control_and_congesting_control/image-20211228140750183.png)
 
-![image-20211228140755314](image-20211228140755314.png)
+![image-20211228140755314](media/flow_control_and_congesting_control/image-20211228140755314.png)
 
 对路由器 R2 进行分析：
 
@@ -147,7 +147,7 @@ $$
 
 > When a packet is dropped along a path, the transmission capacity that was use at each of the upstream links to forward that packet to the point at which it is dropped ends up having been wasted.
 
-![image-20211228140808946](image-20211228140808946.png)
+![image-20211228140808946](media/flow_control_and_congesting_control/image-20211228140808946.png)
 
 ### TCP 拥塞控制
 
@@ -157,7 +157,7 @@ TCP 采用端到端的可靠数据传输机制（因为 IP 不提供可靠数据
 2. TCP 发送方怎么知道网络中发生了拥塞？
 3. 发送方知道网络中发生了拥塞，它根据何种算法调节自身的发送速度？
 
-上面[流量控制](#流量控制)讲到，TCP 使用一个`rwnd`变量控制发送方的发送速率，因此，我们也可以用同样的方式进行拥塞控制
+上面[流量控制](media/flow_control_and_congesting_control/#流量控制)讲到，TCP 使用一个`rwnd`变量控制发送方的发送速率，因此，我们也可以用同样的方式进行拥塞控制
 
 ```
 LastByteSent - LastByteAcked <= min{cwnd, rwnd}
