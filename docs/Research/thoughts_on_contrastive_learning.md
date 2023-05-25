@@ -22,7 +22,7 @@ $$
 
 为啥突然想起总结对比学习是因为 _Learning to Retrieve Prompts for In-Context Learning_ 提出的 Efficient Prompt Retriever (EPR) 方法，它在 retrieve 部分的方法来源于 Facebook Research 的 Dense Passage Retrieval (DPR)。
 
-设数据集为 $\mathcal{D}$.在训练阶段，对于每对训练样本 $(x, y)$，使用一个无监督的检索网络 $\bar{\mathcal{E}} = R_u((x, y), \mathcal{D})$。得到的 $\overline{\mathcal{E}}=\left\{\bar{e}_1, \cdots, \overline{e_L}\right\}$，使用一个打分网络对每个样本进行打分，如
+设数据集为 $\mathcal{D}$。在训练阶段，对于每对训练样本 $(x, y)$，使用一个无监督的检索方法 $\bar{\mathcal{E}} = R_u((x, y), \mathcal{D})$。得到的 $\overline{\mathcal{E}}=\left\{\bar{e}_1, \cdots, \overline{e_L}\right\}$，使用一个打分网络对每个样本进行打分，如
 
 $$
 s\left(\bar{e}_l\right)=\operatorname{Prob}_{\hat{g}}\left(y \mid \bar{e}_l, x\right),
@@ -38,7 +38,7 @@ $$
 
 - 一个从 $\mathcal{E}_\mathrm{neg}^{(i)}$ 中抽取的 hard negative
 - $B-1$ 个从同 mini-batch 中其它样本的 $\mathcal{E}_\mathrm{pos}$ 中抽取（每个集合抽一个）
-- $B-1$ 个从同 mini-batch 中其它样本的 $\mathcal{E}_\mathrm{neg}$ 中抽取（同上）
+- $B-1$ 个从同 mini-batch 中其它样本的 $\mathcal{E}_\mathrm{neg}$ 中抽取（每个集合抽一个）
 
 。设相似性函数
 
@@ -46,7 +46,7 @@ $$
 \operatorname{sim}(x, e)=E_X(x)^{\top} E_P(e)
 $$
 
-计算对比学习 loss
+其中 $E_X$ 和 $E_P$ 是两个不同的 `encoder`。计算对比学习 loss
 
 $$
 L\left(x_i, e_i^{+}, e_{i, 1}^{-}, \ldots e_{i, 2 B-1}^{-}\right) = -\log \frac{e^{\operatorname{sim}\left(x_i, e_i^{+}\right)}}{e^{\operatorname{sim}\left(x_i, e_i^{+}\right)}+\sum_{j=1}^{2 B-1} e^{\operatorname{sim}\left(x_i, e_{i, j}^{-}\right)}}
