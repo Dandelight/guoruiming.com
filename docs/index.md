@@ -66,29 +66,26 @@ hide: ["navigation"]
 
 ### Web 前端
 
-- 语言：`CSS`、`LESS`、`JavaScript`、`TypeScript`、`Dart`
-- 框架：`Vue.js`、`React.js`、`Flutter`
+- 语言：**`JavaScript`**、**`TypeScript`**、**`Dart`**、`CSS`、`LESS`、
+- 框架：**`Flutter`**、`Vue.js`、`React.js`
 - 工程化：`Jest`/`Mocha` 单元测试
 
 ### Web 后端
 
-- 框架：`Express.js`、`Spring Boot`
-
-### 嵌入式硬件设计
-
-- 嘉立创 EDA
-
-### 嵌入式软件设计
-
-- 汇编语言：`MIPS`、`ARM`
-- 硬件平台：`ESP32`、`Arduino`
+- 框架：**`Spring Boot`**、`Express.js`
 
 ### 基础工具软件
 
-- Shell：`PowerShell`、`bash`
-- 数值计算：`NumPy`, `PyTorch`、`MATLAB`
-- 数据库：`MySQL`、`MongoDB`
-- 容器：`Docker`、`Vagrant`
+- Shell：**`PowerShell`**、`bash`
+- 数值计算：**`PyTorch`**、`NumPy`、`MATLAB`
+- 数据库：**`MongoDB`**、`MySQL`
+- 容器：**`Docker`**、`Vagrant`
+
+### 嵌入式软硬件设计
+
+- 硬件平台：`ESP32`、`Arduino`
+- 汇编语言：`MIPS`、`ARM`（的 `move` 指令）
+- 嘉立创 EDA（的打开与关闭）
 
 ## 课程：学习使我快乐
 
