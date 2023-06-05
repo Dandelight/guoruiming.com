@@ -59,3 +59,11 @@ $$
 The final expression above is equivalent to the `CrossEntropyLoss` formula. The first term, $\log\left(\sum\limits_{j=1}^{\text{{num\_classes}}} \exp(x[j])\right)$, is the logarithm of the sum of exponential values of all logits, which acts as a normalization factor. The second term, $x[y]$, represents the logit value corresponding to the target class. Thus, minimizing `CrossEntropyLoss` encourages the model to assign a high probability to the correct class and lower probabilities to the incorrect classes.
 
 In summary, by combining `LogSoftmax` and `NLLLoss`, the `CrossEntropyLoss` function provides a convenient and efficient way to compute the loss for multi-class classification problems while ensuring proper handling of logarithmic scaling and probability distributions.
+
+`torch` 的 `CrossEntropyLoss` 还有一个可选的 `label_smoothing` 参数，记为 $\varepsilon$。这是因为 one-hot label 可能让网络过于自信，影响了预测。
+
+$$
+q^{\prime}(k)=(1-\epsilon) q(k|x) +\frac{\epsilon}{K}
+$$
+
+其中 $K$ 是种类数。
