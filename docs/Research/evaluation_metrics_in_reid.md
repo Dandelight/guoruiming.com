@@ -11,14 +11,17 @@ mAP 是信息检索领域常用的指标。回忆下 Precision（查准率）和
 $$
 \text { precision }=\frac{\mid\{\text { relevant documents }\} \cap\{\text { retrieved documents }\} \mid}{\mid \text { retrieved documents }\} \mid}
 $$
+
 $$
 \text { recall }=\frac{\mid\{\text { relevant documents }\} \cap\{\text { retrieved documents }\} \mid}{\mid \text { relevant documents }\} \mid}
 $$
+
 设查全率为 $r$，查准率 $p(r)$ 是 $r$ 的函数，则 Average Precision 定义为
 
 $$
 \mathrm{AveP} = \int_0^1 p(r) \,\mathrm{d} r
 $$
+
 即 Precision-Recall 函数在 $[0, 1]$ 上的积分。回忆信息检索时，检索引擎返回的是一个文档的有序列表，我们希望更有用的信息排名更靠前。设文档的排名为 $k$，则有
 
 $$
@@ -46,7 +49,7 @@ $$
 
 Sadly，如果 $G$ 中有大于一个相关文档时，CMC 的定义并不统一[^open-reid]。
 
-- [CUHK03](https://cysu.github.io/open-reid/notes/www.cv-foundation.org/openaccess/content_cvpr_2014/papers/Li_DeepReID_Deep_Filter_2014_CVPR_paper.pdf): Query and gallery sets are from different camera views. For each query, they randomly sample one instance for each gallery identity, and compute a CMC curve in the _single-gallery-shot_ setting. The random sampling is repeated for $N$ times and the expected CMC curve is reported.
+- [CUHK03](https://cysu.github.io/open-reid/notes/www.cv-foundation.org/openaccess/content_cvpr_2014/papers/Li_DeepReID_Deep_Filter_2014_CVPR_paper.pdf): Query and gallery sets are from different camera views. For each query, they randomly sample one instance for each gallery identity, and compute a CMC curve in the *single-gallery-shot* setting. The random sampling is repeated for $N$ times and the expected CMC curve is reported.
 - [Market-1501](http://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Zheng_Scalable_Person_Re-Identification_ICCV_2015_paper.pdf): Query and gallery sets could have same camera views, but for each individual query identity, his/her gallery samples from the same camera are excluded. They do not randomly sample only one instance for each gallery identity. This means the query will always match the “easiest” positive sample in the gallery while does not care other harder positive samples when computing CMC.
 - 还有，去掉了 `Gallary samples` 中与 `query` 有同样的 PersionID 和 CameraID 的样本，再计算 CMC 的，比如 [alibaba/cluster-contrast-reid/clustercontrast/evaluation_metrics/ranking.py](https://github.com/alibaba/cluster-contrast-reid/blob/57b62e95eb3ade3da4a464c5eead69ca7d5f4e1d/clustercontrast/evaluation_metrics/ranking.py#L46)。
 

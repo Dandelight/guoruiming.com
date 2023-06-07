@@ -6,9 +6,9 @@
 
 ## 基本概念
 
-* `PLANET`：`ZeroTier`根节点，由官方维护，全球只有四个
-* `MOON`：用户自建 `ZeroTier` 中继节点
-* `LEAF`：`ZeroTier`用户端，也就是叶节点
+- `PLANET`：`ZeroTier`根节点，由官方维护，全球只有四个
+- `MOON`：用户自建 `ZeroTier` 中继节点
+- `LEAF`：`ZeroTier`用户端，也就是叶节点
 
 ## 安装、使用与管理
 

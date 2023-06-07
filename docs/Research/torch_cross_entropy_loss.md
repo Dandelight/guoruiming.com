@@ -5,7 +5,8 @@ Cross Entropy 的公式为
 $$
 H(p, q) = - \sum_x p(x) \log q(x)
 $$
-其中 $p$ 为真实标签值，$q$  为网络预测值。因为 $p$ 经常是 one-hot label，而 $q$ 通常是通过 `softmax` 函数得到的 `logits`，所以上式可化为
+
+其中 $p$ 为真实标签值，$q$ 为网络预测值。因为 $p$ 经常是 one-hot label，而 $q$ 通常是通过 `softmax` 函数得到的 `logits`，所以上式可化为
 
 Given an input $x$ of size $(N, C)$, where $N$ is the batch size and $C$ is the number of classes, and a target class index $y$ of size $(N,)$, the `CrossEntropyLoss` is calculated as:
 

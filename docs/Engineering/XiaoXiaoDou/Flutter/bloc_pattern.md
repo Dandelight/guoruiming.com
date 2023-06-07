@@ -2,7 +2,7 @@
 
 简而言之，定义 `event` 和 `state`，`bloc` 负责响应来自视图层的 `event`，维护自身的的 `state`；另外有 `repository` 提供数据源。
 
-传统的MVC模式中，Model和View是分开的，Controller将二者联系起来；BLoC 是 Google 提出的一种新的响应式风格，将app内所有内容都表现为事件流，部分widget发送事件，另一部分widget接收事件。
+传统的 MVC 模式中，Model 和 View 是分开的，Controller 将二者联系起来；BLoC 是 Google 提出的一种新的响应式风格，将 app 内所有内容都表现为事件流，部分 widget 发送事件，另一部分 widget 接收事件。
 
 `BLoC` 的一大优点是文档丰富，可以在 `examples` 目录下找到很多使用示例。
 
@@ -16,14 +16,14 @@
 
 `cubit` 是 `bloc` 的子集，包含了基本的状态管理功能。简单地说，就是 `Cubit` 与 `State` 之间通过 `emit` 交互——`State` 定义状态，而 `Cubit` 相应状态。
 
-，Bloc框架对开发页面，做了很清晰划分，框架强行定了两种开发模式
+，Bloc 框架对开发页面，做了很清晰划分，框架强行定了两种开发模式
 
-- Bloc模式：该模式划分四层结构 
+- Bloc 模式：该模式划分四层结构
   - bloc：逻辑层
   - state：数据层
   - event：所有的交互事件
   - view：页面
-- Cubit模式：该模式划分了三层结构 
+- Cubit 模式：该模式划分了三层结构
   - cubit：逻辑层
   - state：数据层
   - view：页面
@@ -214,7 +214,7 @@ final class LoginState extends Equatable {
 
 简而言之，定义 `event` 和 `state`，`bloc` 负责响应来自视图层的 `event`，维护自身的的 `state`；另外有 `repository` 提供数据源。
 
-传统的MVC模式中，Model和View是分开的，Controller将二者联系起来；BLoC 是 Google 提出的一种新的响应式风格，将app内所有内容都表现为事件流，部分widget发送事件，另一部分widget接收事件。
+传统的 MVC 模式中，Model 和 View 是分开的，Controller 将二者联系起来；BLoC 是 Google 提出的一种新的响应式风格，将 app 内所有内容都表现为事件流，部分 widget 发送事件，另一部分 widget 接收事件。
 
 `BLoC` 的一大优点是文档丰富，可以在 `examples` 目录下找到很多使用示例。
 
@@ -228,14 +228,14 @@ final class LoginState extends Equatable {
 
 `cubit` 是 `bloc` 的子集，包含了基本的状态管理功能。简单地说，就是 `Cubit` 与 `State` 之间通过 `emit` 交互——`State` 定义状态，而 `Cubit` 相应状态。
 
-，Bloc框架对开发页面，做了很清晰划分，框架强行定了两种开发模式
+，Bloc 框架对开发页面，做了很清晰划分，框架强行定了两种开发模式
 
-- Bloc模式：该模式划分四层结构 
+- Bloc 模式：该模式划分四层结构
   - bloc：逻辑层
   - state：数据层
   - event：所有的交互事件
   - view：页面
-- Cubit模式：该模式划分了三层结构 
+- Cubit 模式：该模式划分了三层结构
   - cubit：逻辑层
   - state：数据层
   - view：页面

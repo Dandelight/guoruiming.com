@@ -10,5 +10,5 @@
 
 ，不同点是：
 
-* `stack` 会插入一维；相应地要求其他维度都相等
-* `cat | concat | concatenate` 不会插入一维；要求除 `dim` 外的所有维度都相等。
+- `stack` 会插入一维；相应地要求其他维度都相等
+- `cat | concat | concatenate` 不会插入一维；要求除 `dim` 外的所有维度都相等。

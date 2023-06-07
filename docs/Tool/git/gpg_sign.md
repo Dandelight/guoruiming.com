@@ -72,6 +72,6 @@ git push
 
 ## 参考
 
-* <https://docs.github.com/en/github/authenticating-to-github/managing-commit-signature-verification>
-* <https://juejin.cn/post/7047440793920864287>
-* 部分内容由 GitHub Copilot 生成
+- <https://docs.github.com/en/github/authenticating-to-github/managing-commit-signature-verification>
+- <https://juejin.cn/post/7047440793920864287>
+- 部分内容由 GitHub Copilot 生成
