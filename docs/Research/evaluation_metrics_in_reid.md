@@ -52,6 +52,7 @@ Sadly，如果 $G$ 中有大于一个相关文档时，CMC 的定义并不统一
 - [CUHK03](https://cysu.github.io/open-reid/notes/www.cv-foundation.org/openaccess/content_cvpr_2014/papers/Li_DeepReID_Deep_Filter_2014_CVPR_paper.pdf): Query and gallery sets are from different camera views. For each query, they randomly sample one instance for each gallery identity, and compute a CMC curve in the *single-gallery-shot* setting. The random sampling is repeated for $N$ times and the expected CMC curve is reported.
 - [Market-1501](http://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Zheng_Scalable_Person_Re-Identification_ICCV_2015_paper.pdf): Query and gallery sets could have same camera views, but for each individual query identity, his/her gallery samples from the same camera are excluded. They do not randomly sample only one instance for each gallery identity. This means the query will always match the “easiest” positive sample in the gallery while does not care other harder positive samples when computing CMC.
 - 还有，去掉了 `Gallary samples` 中与 `query` 有同样的 PersionID 和 CameraID 的样本，再计算 CMC 的，比如 [alibaba/cluster-contrast-reid/clustercontrast/evaluation_metrics/ranking.py](https://github.com/alibaba/cluster-contrast-reid/blob/57b62e95eb3ade3da4a464c5eead69ca7d5f4e1d/clustercontrast/evaluation_metrics/ranking.py#L46)。
+- 还有更怪的，比如对于检索出的样本的 PersonID 为 `[3, 3, 2, 1, 3, 3, 4, 4]`，query 样本的 PersonID 是 4，那么怎么算？它先去个重，得到 `[3, 2, 1, 4]`，然后得到 $\mathrm{CMC}_3 = 0$，$\mathrm{CMC}_4 = 1$ 的结果。
 
 ```python
 def cmc(distmat, query_ids=None, gallery_ids=None,
