@@ -97,3 +97,12 @@ brew update
 echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.aliyun.com/homebrew/homebrew-bottles' >> ~/.zshrc
 source ~/.zshrc
 ```
+
+## JDK
+
+<https://www.oracle.com/java/technologies/jdk-script-friendly-urls/>
+
+```shell
+wget https://download.oracle.com/java/20/latest/jdk-20_linux-x64_bin.tar.gz
+wget https://download.oracle.com/graalvm/17/latest/graalvm-jdk-17_linux-x64_bin.tar.gz
+```
