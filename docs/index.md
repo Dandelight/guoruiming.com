@@ -48,38 +48,47 @@ hide: ["navigation"]
 - 基于 Rust 的跨平台即时通讯底层系统
 - Shape of Voice
 - Grow: AI 虚拟人陪伴系统
-- LISTEN 耳阅读屏：端侧推理的多模态模型
+- LISTEN 耳阅读屏：基于多模态模型 Serverless 和端侧推理的视障人士手机屏幕阅读软件
+- 基于点云目标检测的机械臂抓取位点预测与动作规划
 - [读英语背单词](https://gitee.com/dandelight/readEnglish)
 
 ### 已鸽
 
-战略性放弃~~（随写随扔的课程作业）~~：
+战略性放弃 ~~（随写随扔的课程作业）~~ ：
 
 - [PaperPeer](https://gitee.com/dandelight/paperpeer)
 - [A Silly 2D Game](https://gitee.com/dandelight/starller)
 
-难度过高：
-
-- 点云目标检测
-
 ## 技术：积跬步，成千里
+
+### 人工智能与高性能计算
+
+- 语言：**`Python`**、**`CUDA`**、`C++`、`Rust`、 ~~`Fortran`~~
+- 数值计算：**`PyTorch`**、`NumPy`、`MATLAB`
+- 训练：`Lightning`
+- 部署：`ray.io`
+- 可视化：`WandB`
 
 ### Web 前端
 
 - 语言：**`JavaScript`**、**`TypeScript`**、**`Dart`**、`CSS`、`LESS`、
-- 框架：**`Flutter`**、`Vue.js`、`React.js`
-- 工程化：`Jest`/`Mocha` 单元测试
+- 框架：**`Flutter`**、`React.js`、`Vue.js`
+- 单元测试：**`Jest`**、`Mocha`
+- 工程化：`Webpack`、`Vite`
 
 ### Web 后端
 
 - 框架：**`Spring Boot`**、`Express.js`
-
-### 基础工具软件
-
-- Shell：**`PowerShell`**、`bash`
-- 数值计算：**`PyTorch`**、`NumPy`、`MATLAB`
 - 数据库：**`MongoDB`**、`MySQL`
 - 容器：**`Docker`**、`Vagrant`
+- 消息队列：`RabbitMQ`
+
+### 运维与自动化
+
+- Shell：**`PowerShell`**、**`bash`**
+- 云安全：**`Cloudflare`**
+  <!-- - 配置管理：**`Ansible`**、`SaltStack` -->
+  <!-- - 部署：**`Kubernetes`**、`Docker Swarm` -->
 
 ### 嵌入式软硬件设计
 
