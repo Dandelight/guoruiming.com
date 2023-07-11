@@ -26,10 +26,11 @@ hide:
 - 就读于 四川大学
 - 语言 简体中文 English
 
+* 一个努力爬上前人的肩膀的机器学习研究者
+* 一个 `JavaScript` 转 `Flutter`，兼修 `Java`、`Golang` 和 `Rust`，用 `Python` 跑实验的 ~~前端~~ 全栈工程师
 * 一个刷了千来道题刚刚入门的算法竞赛选手
-* 一个知道 How 在求解 Why 的机器学习研究者
-* 一个不会写 `CSS` 的全栈 `JavaScript`-er
 * 一个沉稳且活泼的男孩子
+* 一个幸福的人，一个对社会有用的人
 
 <a href="https://codeforces.com/profile/dandelight"><img src="https://cp-logo.vercel.app/codeforces/dandelight"/></a>
 <a href="https://atcoder.jp/users/dandelight"><img src="https://cp-logo.vercel.app/atcoder/dandelight"/></a>
