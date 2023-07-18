@@ -31,3 +31,10 @@ config.learning_rate = 0.01
 # 3. Log metrics over time to visualize performance
 wandb.log({"loss": loss})
 ```
+
+## 保存代码
+
+`wandb.init` 有一个 `save_code` 选项，但该选项只能保存调用了 `wandb.init` 的代码。如果要保存整个项目，可以
+
+- 在 `wandb.init()` 之后调用  `wandb.run.log_code(".")`
+- 给 `wandb.init`  传一个 `code_dir` 参数: `wandb.init(settings=wandb.Settings(code_dir="."))`
