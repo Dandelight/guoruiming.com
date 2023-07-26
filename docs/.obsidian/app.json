@@ -2,10 +2,7 @@
   "strictLineBreaks": true,
   "showFrontmatter": true,
   "spellcheck": true,
-  "spellcheckLanguages": [
-    "zh-CN",
-    "en-US"
-  ],
+  "spellcheckLanguages": ["zh-CN", "en-US"],
   "newFileLocation": "current",
   "attachmentFolderPath": "./media",
   "pdfExportSettings": {
@@ -17,5 +14,6 @@
   },
   "useTab": false,
   "showLineNumber": false,
-  "alwaysUpdateLinks": true
+  "alwaysUpdateLinks": true,
+  "useMarkdownLinks": true
 }
