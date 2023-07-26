@@ -24,6 +24,10 @@ hide: ["navigation"]
 - WeBook：尝试写书
 - Meta：关于本站、关于我
 
+> [!IMPORTANT]
+>
+> 最近在将新项目的点子记录下来，详见：[项目孵化器](./Engineering/index)。
+
 ## 研究：我的研究生工作
 
 <!-- ![le](media/index/le.gif) -->
