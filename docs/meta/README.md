@@ -23,6 +23,10 @@ hide:
 
 由此可见 ~~我的技术是怎么一点点退化的。~~ 事物的发展总是向着简化的方向进行的。
 
+## RSS 支持
+
+本人不常用 RSS (RDF Site Summary or Really Simple Syndication)，但考虑到订阅的需求，还是需要加上 RSS 功能的。目前调研到 [Guts/mkdocs-rss-plugin](https://github.com/Guts/mkdocs-rss-plugin) 可以简便地提供 RSS 功能，已经在规划中。
+
 ## 之前的情况
 
 项目发布流程如下：
