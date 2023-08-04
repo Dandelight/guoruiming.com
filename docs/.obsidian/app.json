@@ -15,5 +15,6 @@
   "useTab": false,
   "showLineNumber": false,
   "alwaysUpdateLinks": true,
-  "useMarkdownLinks": true
+  "useMarkdownLinks": true,
+  "autoPairMarkdown": false
 }
