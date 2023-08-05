@@ -7,5 +7,6 @@
   "interfaceFontFamily": "微软雅黑,方正黑体_GBK",
   "monospaceFontFamily": "JetBrains Mono",
   "textFontFamily": "微软雅黑,方正黑体_GBK",
-  "cssTheme": "Minimal"
+  "cssTheme": "Minimal",
+  "enabledCssSnippets": ["table-wrap"]
 }
