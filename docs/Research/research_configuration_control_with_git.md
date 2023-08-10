@@ -32,3 +32,7 @@ Upstream first 适合于 Android、Linux 需要多个参与方的项目。上游
 这种模式并不适合科研用代码的编写，因为科研代码很难做到“一堆优点合在一起都是优点”，所以维护一个 long running 的 `production` 分支并不合适。
 
 ## 新的模式
+
+基于 [`worktree`](https://git-scm.com/docs/git-worktree/zh_HANS-CN) 的模式，分多个目录，每个目录下都有一个 `.git` 文件，其中一个目录下的 `.git` 是完整的 `git` 文件夹，其他的都是一个文本文件，指向 `.git`：类比一下就是一个人，他有很多分身，对每个分身的修改都会影响到本体。
+
+在本体中，我们主要做一些对下游不会产生本质影响的修改，如重构、`fix typo` 等；而在分身中，我们做一些 `task specific` 的修改，同时在实验数据表格中记录 `commit hash`。
