@@ -49,7 +49,9 @@ python upload_qcloud.py # 托管到腾讯云
 
 想自己搭建博客，还是推荐 [`Wordpress`](https://wordpress.org/)，便捷高效，主题和插件丰富，又方便管理。虽然自己没实际应用过就推荐是不太负责任的行为……
 
-> 另外有一个很离谱的事情，Windows 编译一分钟，macOS 编译 7 秒。
+> ~~另外有一个很离谱的事情，Windows 编译一分钟，macOS 编译 7 秒。~~
+>
+> 破案了，只是因为 `mkdocs` 更新了，Windows 编译也很快
 
 ## 服务器
 
