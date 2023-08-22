@@ -192,6 +192,7 @@ VS Code 配置如下：
       "name": "makeindex"
     }
   ],
+  "latex-workshop.synctex.afterBuild.enabled": true,
   "latex-workshop.view.pdf.invert": 0.9,
   "latex-workshop.view.pdf.invertMode.brightness": 0.7,
   "latex-workshop.view.pdf.invertMode.enabled": "auto",
