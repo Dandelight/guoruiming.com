@@ -1,4 +1,6 @@
-# `latexmk` 及 `VS Code` 配置
+# $\mathrm{\LaTeX}$ 模板，`latexmk` 及 `VS Code` 配置
+
+这篇文章的内容已经做成模板仓库，见 <https://github.com/dandelight/latex-starter>。
 
 `latexmk` 是一个管理  $\mathrm{\LaTeX}$ 编译的程序，使用 `Perl` 语言编写。我的配置如下：
 
