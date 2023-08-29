@@ -35,11 +35,10 @@ hide: ["navigation"]
 
 ### 科研
 
-- 方向：多模态学习、噪声关联学习
+- 方向：多模态学习、噪声标签/噪声关联学习
 - 导师：<http://pengxi.me/>
 
-* Multi-modal Learning, Learning with Noisy Correspondence
-* ~~Vision Transformer~~
+* 目前对学术界的唯一贡献是审了一篇稿
 
 ## 工程：技术改变世界
 
