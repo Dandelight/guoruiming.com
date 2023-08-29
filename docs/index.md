@@ -112,6 +112,12 @@ hide: ["navigation"]
 
 ## 生活：学习之外的快乐
 
+偶尔做点小项目
+
+* [dandelight/dandelight](https://github.com/Dandelight/dandelight)
+* [dandelight/latex-starter](https://github.com/Dandelight/latex-starter)
+* [dandelight/scuthesis](https://github.com/Dandelight/scuthesis)
+
 ## WeBook：尝试写书
 
 记在 [WeBook](./WeBook/index) 页面。
