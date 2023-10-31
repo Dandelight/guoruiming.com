@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "mkdocs build",
-    "deploy": "python upload_qcloud.py",
+    "deploy": "bash upload.sh",
     "go": "npm run build && npm run deploy",
     "prepare": "husky install"
   },
