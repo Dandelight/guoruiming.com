@@ -27,4 +27,4 @@ hide:
 2. Good Samaritan's Rule: 在引用一个公式的时候，不仅使用标号引用，同时带上一个短语来描述，以免读者摸不着头脑或者翻老远去看；
 3. Math Is Prose Rule: 在行间公式的结尾加上标点。公式不像图表，公式是嵌入行文之中的，如果出现在一句中间，需要有标点符号。
 
-[^mermin]: What's Wrong with these Equations?. N. David Mermin. Cornell University<https://doi.org/10.1063/1.2811173>
+[^mermin]: What's Wrong with these Equations?. N. David Mermin. Cornell University https://doi.org/10.1063/1.2811173
