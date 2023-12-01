@@ -31,7 +31,7 @@ region = os.getenv("QCLOUD_COS_REGION")      # 替换为用户的 region，已�
 token = None               # 如果使用永久密钥不需要填入token，如果使用临时密钥需要填入，临时密钥生成和使用指引参见https://cloud.tencent.com/document/product/436/14048
 bucket = os.getenv("QCLOUD_COS_BUCKET")
 uploadDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "site")
-cosBase = "/"
+cos_base = "/"
 incremental = bool(os.getenv("BLOG_BUILD_INCREMENTAL"))
 
 config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token)  # 获取配置对象
@@ -84,27 +84,37 @@ def _filter_paths(basename: str, path: str, is_dir: bool, exclude) -> bool:
             return True
     return False
 
+
 def do_upload(config: CosConfig):
+    print("?")
     client = CosS3Client(config)
-    g = os.walk(uploadDir)
     # 创建上传的线程池
+    print("?")
     pool = SimpleThreadPool()
+    print("?")
     for file in get_files(uploadDir):
-        srcKey = os.path.join(uploadDir, file)
-        cosObjectKey = (cosBase + file.replace('\\', '/')).strip('/')
-        pool.add_task(client.upload_file, bucket, cosObjectKey, srcKey)
+        print(file)
+        src_key = os.path.join(uploadDir, file)
+        cos_object_key = (cos_base + file.replace('\\', '/')).strip('/')
+        pool.add_task(client.upload_file, bucket, cos_object_key, src_key)
+    print("?")
 
     pool.wait_completion()
+    print("?")
     result = pool.get_result()
     if not result['success_all']:
         logging.warning("Not all files upload sucessed. you should retry")
     else:
         logging.info("All files uploaded successfully.")
 
-if __name__ == '__main__':
+def main():
+    print("uploading...")
     try:
         do_upload(config)
     except CosClientError:
         logging.error("Client Error: {}".format(CosClientError))
     except CosServiceError:
         logging.error("Server Error: {}".format(CosServiceError))
+
+if __name__ == '__main__':
+    main()
