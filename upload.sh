@@ -6,4 +6,5 @@ then
     exit
 fi
 
-coscmd upload -rs ./site /
+cd site
+coscmd upload -rs . /
