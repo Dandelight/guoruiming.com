@@ -1,5 +1,119 @@
 # Tensor 的基本操作
 
+## Tensor 作为数组的基本操作
+
+一些同学（比如……我）还没熟悉基本的 Tensor 操作，就去学习高阶 API 或者搭建神经网络，所以经常在 `dim` 参数上出问题，所以在打基础的阶段就要解决这些问题。
+
+### 取值
+
+打印出来的 Tensor 以很 Pythonic 的嵌套列表方式展示，但作为 C 程序员还是愿意将其理解为二维数组，比如下边这个 `x`，就是一个 $3\times 4$ 的二维数组：
+
+```python
+In [3]: x = torch.arange(12).reshape(3, 4)
+
+In [4]: x
+Out[4]:
+tensor([[ 0,  1,  2,  3],
+        [ 4,  5,  6,  7],
+        [ 8,  9, 10, 11]])
+```
+
+而取 `x[0]`，则是取了 $3\times 4$ 二维数组的一维，就是长度为 $4$ 的一维数组
+
+```python
+In [5]: x[0]
+Out[5]: tensor([0, 1, 2, 3])
+```
+
+如果要取某一个值，可以使用 `x[0, 1]` 的方式，**注意不鼓励用 `x[0][1]` 的方式**，因为这种方式是先取一个一维数组 `x[0]`，再从 `x[0]` 中取 `x[0][1]`，在一些 corner case（比如使用 Tensor 下标操作） 会出现赋值失败的问题。
+
+```python
+In [6]: x[0][1] # 错误示例
+Out[6]: tensor(1)
+
+In [7]: x[0, 1] 
+Out[7]: tensor(1)
+```
+
+下面是一个 corner case
+
+```python
+In [7]: a = torch.tensor((1, 2))
+
+In [8]: b = torch.tensor((0, 2, 3))
+
+In [9]: a
+Out[9]: tensor([1, 2])
+
+In [10]: b
+Out[10]: tensor([0, 2, 3])
+
+In [11]: x[a, b]
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+Cell In[11], line 1
+----> 1 x[a, b]
+
+IndexError: shape mismatch: indexing tensors could not be broadcast together with shapes [2], [3]
+
+In [12]: x.shape
+Out[12]: torch.Size([3, 4])
+
+In [13]: a = a[:, None]
+
+In [14]: b = b[None, a]
+
+In [15]: x[a, b]
+Out[15]:
+tensor([[[ 6],
+         [11]]])
+
+In [16]: x[a, b][1] = 99
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+Cell In[16], line 1
+----> 1 x[a, b][1] = 99
+
+IndexError: index 1 is out of bounds for dimension 0 with size 1
+
+In [17]: x[a, b][0][0][1] = 99
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+Cell In[17], line 1
+----> 1 x[a, b][0][0][1] = 99
+
+IndexError: index 1 is out of bounds for dimension 0 with size 1
+
+In [18]: x[a, b][0][0]
+Out[18]: tensor([6])
+
+In [19]: x[a, b][0][0][0] = 99
+
+In [20]: x
+Out[20]:
+tensor([[ 0,  1,  2,  3],
+        [ 4,  5,  6,  7],
+        [ 8,  9, 10, 11]])
+
+In [21]: x[a, b][0, 0, 0] = 99
+
+In [22]: x
+Out[22]:
+tensor([[ 0,  1,  2,  3],
+        [ 4,  5,  6,  7],
+        [ 8,  9, 10, 11]])
+
+```
+
+最后发现，`x` 并未被改变。为了保证真实性我保留了所有中间信息。
+
+顺带说一句 C-order 和 F-order，中文名分别为“行优先存储”和“列优先存储”。在 C 语言数组中，最后一个数字的元素是紧贴的，而 Fortran 中，第一个数字的元素是紧贴的。
+
+在 `torch.sum` 等 `reduce` 操作中的 `dim` 参数表示“按该维度求”。举个例子，对一个 `NCHW` 的四维数组（`n_samples, channels, height, width）`），`torch.mean(x, dim=0)` 表示对所有 `sample` 的 `channel, height, width` 位置上的数求均值，而 `torch.mean(x, dim=1)` 表示对通道求均值，
+
+* `torch.mean(x, dim=0)[0, 1, 2]` 是所有样本在第 $0$ 个通道上，$(1, 2)$ 像素点的均值，
+* `torch.mean(x, dim=1)[0, 1, 2]` 是第 $0$ 个样本在 $(1, 2)$ 号像素点， $c$ 个通道的均值。
+
 ## 基本算数操作
 
 作为一个张量计算库，算数操作是最基本的修养。`PyTorch` 中有一百来个算数操作算子。

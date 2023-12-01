@@ -420,3 +420,7 @@ for epoch in range(num_epochs):
 $$
 P(X|Z) = \frac{P(Z|X)P(X)}{P(Z)}
 $$
+
+# Reference
+
+<https://www.bilibili.com/video/BV1Gs4y157BU/>
