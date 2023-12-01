@@ -26,7 +26,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: mkdocs build
       - run: python scripts/add_meta.py
-      - uses: actions/upload-pages-artifact@v1.0.8
+      - uses: actions/upload-pages-artifact@v2.0.0
         with:
           # Artifact name
           # Path of the directory containing the static assets.
