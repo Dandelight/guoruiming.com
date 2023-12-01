@@ -17,6 +17,9 @@ updates:
       - dependency-name: "Markdown"
         versions:
           - ">=3.4"
+      - dependency-name: "regex"
+        versions:
+          - ">2022.4"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
