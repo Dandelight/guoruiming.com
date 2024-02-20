@@ -4,6 +4,11 @@
 
 ## 一些工具
 
+### 命令行工具
+
+- `homebrew`: macOS 的软件管理工具
+- `CocoaPods`: Swift/Objective-C 的包管理工具
+
 ### VS Code
 
 平台：Windows、macOS、Linux
@@ -40,6 +45,30 @@ AltTab 解决了这两个痛点，真的很好用。
 ### MonitControl
 
 很方便的外接显示屏调亮度
+
+### `Royal TSX`（对标 Windows 上的 `MobaXTerm`）
+
+### 外设管理类
+
+- `MonitorControl`：外接显示屏亮度控制
+- `stats`: 在状态栏上显示统计信息
+
+### 解决刘海屏挡图标问题
+
+- `Hidden Bar`
+- `iBar`
+
+### 磁盘清理
+
+- `Tencent Lemon`
+- `CleanMyMac`
+- `Disk Space Analyzer`
+
+### 其他
+
+- 键指如飞：快捷键管理
+- 全能解压：压缩、解压、局域网分享
+- `AnyGo`：`iPhone` 免越狱改定位
 
 ### Time Machine
 
