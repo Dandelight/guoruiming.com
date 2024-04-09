@@ -4,9 +4,13 @@ theme:
   language: zh
   features:
     - navigation.instant
+    - navigation.instant.progress
     - navigation.tabs
+    - navigation.sections
     - navigation.footer
     - content.action.edit
+    - navigation.indexes
+    - toc.follow
     # - header.autohide
   favicon: assets/images/favicon.ico
   icon:

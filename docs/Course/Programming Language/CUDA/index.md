@@ -1,7 +1,7 @@
 参考：<https://blog.csdn.net/dcrmg/article/details/54867507>
 
-![](Pasted%20image%2020230916094720.png)
-![](Pasted%20image%2020230916094734.png)
+![](./media/Pasted%20image%2020230916094720.png)
+![](./media/Pasted%20image%2020230916094734.png)
 
 ```cuda
 int blockId = blockIdx.x + blockIdx.y * gridDim.x

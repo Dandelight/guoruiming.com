@@ -34,23 +34,27 @@ hide:
 
 ---
 
-* 一个努力爬上前人的肩膀的机器学习研究者
-* 一个 `JavaScript` 转 `Flutter`，兼修 `Java`、`Golang` 和 `Rust`，用 `Python` 跑实验的 ~~前端~~ 全栈工程师
-* 一个刷了千来道题刚刚入门的算法竞赛选手
-* 一个沉稳且活泼的男孩子
-* 一个幸福的人，一个对社会有用的人
+- 一个努力爬上前人的肩膀的机器学习研究者
+- 一个 `JavaScript` 转 `Flutter`，兼修 `Java`、`Golang` 和 `Rust`，用 `Python` 跑实验的 ~~前端~~ 全栈工程师
+- 一个刷了千来道题刚刚入门的算法竞赛选手
+- 一个沉稳且活泼的男孩子
+- 一个幸福的人，一个对社会有用的人
 
 ---
 
-* Where I show my (future) academic achievements...
+- Where I show my (future) academic achievements...
   - ORCID：<https://orcid.org/0000-0002-1135-7676>
   - ResearchGate：<https://www.researchgate.net/profile/Ruiming-Guo>
-* Where I host my (mostly forked) code...
+- Where I host my (mostly forked) code...
   - Gitee：<https://gitee.com/dandelight>
   - GitHub：<https://github.com/Dandelight>
-* Elsewhere I blog...
+- Elsewhere I blog...
   - CSDN：[凉风映夏](https://blog.csdn.net/qq_38056431)
 
 ---
 
 文章中原创内容采用 Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License 授权；非原创内容均已在文中相应位置使用尾注等形式进行了标注。
+
+---
+
+彩蛋：如果你是一个守规矩的爬虫，这个站点会给你点惊喜。

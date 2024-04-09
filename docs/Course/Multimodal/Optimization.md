@@ -1,4 +1,4 @@
-For some basic knowledge you can see [Deep Learning](../Deep Learning/cs231n/01).
+For some basic knowledge you can see [Deep Learning](../Deep Learning/cs231n/01.md).
 
 ## Adaptive Learning Rate
 

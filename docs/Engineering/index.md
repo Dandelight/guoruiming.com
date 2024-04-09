@@ -24,7 +24,7 @@
 
 `Markdown` 编辑器千千万，没有哪款能像 Typora 一样集简单、优雅于一体，可谓出道即巅峰。但是，在出道之后基本没有添加新功能。Obsidian、Zettlr 等 Markdown 编辑器，飞书、语雀等兼容 Markdown 语法的在线工具的流畅度也远不如 Typora。但 Typora 并非全能，其可定制性在界面上不如可以在 Marndown 中使用 React 组件的 [MDX](https://mdxjs.com/) ，在插件生态上不如 Obsidian。能否通过一个开源的 Typora 替代品解决界面可定制性和插件生态的双重问题？
 
-> [MarkText](../Tool/typora-alternative)
+> [MarkText](../Tool/typora-alternative.md)
 
 ## 不打书签
 
