@@ -59,12 +59,10 @@ markdown_extensions:
   - pymdownx.emoji:
       # emoji_generator: !!python/name:pymdownx.emoji.to_png
       emoji_generator: !!python/name:pymdownx.emoji.to_svg
-        # emoji_generator: !!python/name:pymdownx.emoji.to_png_sprite
-        # emoji_generator: !!python/name:pymdownx.emoji.to_svg_sprite
-        # emoji_generator: !!python/name:pymdownx.emoji.to_awesome
-        # emoji_generator: !!python/name:pymdownx.emoji.to_alt
-
-
+      # emoji_generator: !!python/name:pymdownx.emoji.to_png_sprite
+      # emoji_generator: !!python/name:pymdownx.emoji.to_svg_sprite
+      # emoji_generator: !!python/name:pymdownx.emoji.to_awesome
+      # emoji_generator: !!python/name:pymdownx.emoji.to_alt
   - pymdownx.inlinehilite
   - pymdownx.mark
   - pymdownx.smartsymbols
@@ -85,13 +83,20 @@ plugins:
         - zh
   - tags
   - git-revision-date
-  - callouts
+  # - pub-blog:
+  #     blog_dir: Blog
+  - pub-obsidian
+  # - pub-social
+  # - pub-meta
+  - pub-minifier
+  # - callouts
   # - mermaid2
   # feature of callouts plugin is covered by obsidian-support plugin
   # but it is unstable
   # - obsidian-support
 
 extra_css:
+  - https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css
   - https://npm.elemecdn.com/@highlightjs/cdn-assets@11.8.0/styles/default.min.css
   - assets/stylesheets/extra.css
 extra_javascript:

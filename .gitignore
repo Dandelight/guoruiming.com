@@ -9,3 +9,6 @@ node_modules/
 *.log
 last_build_finish.txt
 __pycache__
+
+.pub_blog_temp
+.pub_min_cache

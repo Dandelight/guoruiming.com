@@ -1,3 +1,5 @@
+# Swin-Transformer
+
 > 各位小伙伴们，大家下午好。下周四（2021 年 11 月 26 日）我将进行研读论文的题目是《Res2Net: A New Multi-Scale Backbone Architecture》和《Swin Transformer: Hierarchical Vision Transformer Using Shifted Windows》，论文 PDF 已上传至群文件，请感兴趣的小伙伴自行查阅。
 
 [http://scuvis.org/2021autumnpaper-1202/](http://scuvis.org/2021autumnpaper-1202/)
@@ -21,17 +23,37 @@ Transformer 是在自然语言处理领域大获成功的 RNN 模型，并且在
 
 > to expand the applicability of Transformer such that it can serve as a general-purpose backbone for computer vision, as it does for NLP and as CNNs do in vision.
 
-相较于 CV 界各种维度、各种残差连接、各种计算层（研究结构、研究单层（depth wise convolution [70] and deformable convolution [18, 84].））的卷积神经网络百花齐放，NLP 界的 Transformer 一枝独秀。Transformer 具有强大的学习数据中长期依赖的能力，在以往的研究中，将 Transformer 迁移到计算机视觉领域取得了成功，但在 CV 任务上完全发挥 Transformer 的能力有很大挑战，主要有两点：1. 在 NLP 中，文字的 token 即为实体的最小元素；而在 CV 中，一个实体可以由几个到几万个像素表达；2. 在基于 Transformer 的模型中，token 的大小处于固定不变的尺度，但在 CV 中不是如此，甚至在场景分割等任务中需要预测每一个像素点所属类别，Transformer 计算量过大而不可行。
+相较于 CV 领域各种维度、各种残差连接、各种计算层（研究结构、研究单层（depth wise convolution [70] and deformable convolution [18, 84].））的卷积神经网络百花齐放，NLP 领域的 Transformer 以其强大的建模数据中长依赖的能力一统江湖。因为 Transformer 在 NLP 里太成功了，所以很多研究者在尝试把 Transformer 应用在视觉领域。在 Swin-Transformer 之前，将 Transformer 迁移到计算机视觉领域取得了一定成功（如 ViT），但在 CV 任务上完全发挥 Transformer 的能力有很大挑战，主要有两点：
+
+1. 在 NLP 中，文字的 token 即为实体的最小元素；而在 CV 中，一个实体可以由几个到几万个像素表达。
+2. 在基于 Transformer 的模型中，token 的大小处于固定不变的尺度，但在 CV 中不是如此，甚至在场景分割等任务中需要预测每一个像素点所属类别，Transformer 计算量过大而不可行。
 
 ### Transformer
 
-要理解文中的 Swin Transformer，需要先了解 Transformer 和 Vision Transformer。
+要理解文中的 Swin Transformer，需要先了解 Transformer 和 Vision Transformer。而要了解 Transformer，需要先了解 Attention 和 Self-attention。
 
-![ModalNet-20](media/Swin-Transformer/ModalNet-20.png)
+#### Attention
+
+Attention机制是一种在深度学习领域中，特别是在自然语言处理（NLP）任务中广泛应用的模型组件。它源于人类注意力机制的概念，即我们在处理信息时会聚焦于最关键的部分，而忽略不太相关的信息。在机器学习模型中引入Attention机制，使得模型能够更加灵活和高效地处理输入数据，尤其是长序列数据，如文本或者时间序列。
 
 $$
 \mathrm{Attention}(Q, K, V) = \mathrm{softmax}(\frac{QK^T}{\sqrt{d_k}})V
 $$
+是 Transformer 中使用到的 Attention，这里涉及到三个主要的向量：查询（Query, $Q$）、键（Key, $K$）和值（Value, $V$）。这个公式描述了如何通过查询向量来加权值向量，从而获得上下文相关的输出。具体解释如下：
+
+- **查询（Query, $Q$）**：代表当前要处理的信息或者说是“问题”，模型试图基于这个查询从其他信息中找出最相关部分。
+- **键（Key, $K$）**：是来自输入序列的表示，每个键与输入序列中的一个位置或元素相对应，用于衡量该位置信息与查询的相关性。
+- **值（Value, $V$）**：同样对应于输入序列中的每个位置，包含了实际需要关注的信息内容。一旦确定了哪些键（即输入序列中的哪些部分）与查询最为相关，就根据这些键对应的值来计算输出。
+
+公式中的$\frac{QK^T}{\sqrt{d_k}}$部分是用来计算查询向量$Q$与所有键向量$K$之间的相似度得分矩阵，其中$d_k$是键向量的维度，除以$\sqrt{d_k}$是为了缩放得分，避免在维度较大时softmax函数的梯度消失问题。接着，对这个得分矩阵应用softmax函数，得到每个键相对于查询的权重分布。最后，将这个权重分布应用于值向量$V$，通过加权求和的方式生成最终的输出，这个输出综合了输入序列中各部分的信息，但更侧重于与查询最相关的部分。
+
+#### Multi-head Self-Attention
+
+![ModalNet-20](media/Swin-Transformer/ModalNet-20.png)
+
+
+
+#### Transformer Architecture
 
 ![ModalNet-21](media/Swin-Transformer/ModalNet-21.png)
 
