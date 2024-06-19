@@ -10,7 +10,7 @@
     "build": "mkdocs build",
     "deploy": "bash upload.sh",
     "go": "npm run build && npm run deploy",
-    "prepare": "husky install"
+    "prepare": "node ./.husky/install.mjs"
   },
   "repository": {
     "type": "git",
