@@ -96,7 +96,7 @@ plugins:
   # - obsidian-support
 
 extra_css:
-  - https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css
+  # - https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css
   - https://npm.elemecdn.com/@highlightjs/cdn-assets@11.8.0/styles/default.min.css
   - assets/stylesheets/extra.css
 extra_javascript:
