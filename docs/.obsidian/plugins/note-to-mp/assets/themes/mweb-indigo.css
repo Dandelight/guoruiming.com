@@ -1,0 +1,378 @@
+/*
+ * Default theme，适用于 core/mweb-base.scss。
+ * 取值参考 chrome 默认样式：
+ * https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/core/css/html.css
+ * 所有 import "core/mweb-base.scss" 的文件都应该同时导入此变量文件。
+ */
+/* color */
+/* font & line */
+/* boxing */
+/* elememts */
+/*
+ * 基准样式，相当于 reset.css，使主题在不同平台下有统一的表现。
+ * 各个属性的默认值为 chrome 的默认样式，见 variables/default.scss。
+ */
+/**
+ * MWeb 包裹 markdown 的容器是 .mweb-indigo
+ * Typora 中是 #write
+ */
+.mweb-indigo {
+  line-height: 1.6em;
+  -webkit-text-size-adjust: 100%;
+  margin: 0px 0px;
+  padding: 1rem 1rem;
+  font-family: PingFang SC, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  font-size: 16px;
+  color: black;
+  background-color: white;
+  /* spacing */
+  /* block */
+  /* list */
+  /* inline */
+  /* table */
+  /* svg */
+}
+.mweb-indigo * {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.mweb-indigo > *:first-child {
+  margin-top: 0 !important;
+}
+.mweb-indigo > *:last-child {
+  margin-top: 0 !important;
+}
+.mweb-indigo p, .mweb-indigo details, .mweb-indigo dl, .mweb-indigo ol, .mweb-indigo ul, .mweb-indigo pre, .mweb-indigo xmp, .mweb-indigo plaintext, .mweb-indigo listing, .mweb-indigo blockquote, .mweb-indigo table, .mweb-indigo figure, .mweb-indigo hr {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+.mweb-indigo h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-indigo h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-indigo h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-indigo h4 {
+  font-size: 1em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-indigo h5 {
+  font-size: 0.83em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-indigo h6 {
+  font-size: 0.67em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-indigo p {
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-indigo pre, .mweb-indigo xmp, .mweb-indigo plaintext, .mweb-indigo listing {
+  font-family: monospace, Menlo-Regular, Menlo, Monaco, Consolas, "Courier New";
+}
+.mweb-indigo blockquote > :first-child {
+  margin-top: 0;
+}
+.mweb-indigo blockquote > :last-child {
+  margin-bottom: 0;
+}
+.mweb-indigo hr {
+  border-style: inset;
+  border-width: 1px;
+}
+.mweb-indigo img {
+  max-width: 100%;
+  height: auto;
+}
+.mweb-indigo li {
+  word-wrap: break-all;
+}
+.mweb-indigo li + li {
+  margin-top: 0.25em;
+}
+.mweb-indigo ul ul, .mweb-indigo ol ul, .mweb-indigo ul ol, .mweb-indigo ol ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.mweb-indigo .task-list-item {
+  list-style-type: none;
+}
+.mweb-indigo a {
+  color: -webkit-link;
+  text-decoration: underline;
+}
+.mweb-indigo a img {
+  border: none;
+}
+.mweb-indigo b, .mweb-indigo strong {
+  font-weight: bold;
+}
+.mweb-indigo i, .mweb-indigo cite, .mweb-indigo em, .mweb-indigo var, .mweb-indigo address, .mweb-indigo dfn {
+  font-style: italic;
+}
+.mweb-indigo code, .mweb-indigo kbd, .mweb-indigo tt, .mweb-indigo samp {
+  font-family: monospace, Menlo-Regular, Menlo, Monaco, Consolas, "Courier New";
+}
+.mweb-indigo mark {
+  padding: 0.2em 0;
+  background-color: yellow;
+}
+.mweb-indigo del, .mweb-indigo s {
+  color: inherit;
+}
+.mweb-indigo table {
+  color: black;
+  border-collapse: collapse;
+  background-color: white;
+  border-spacing: 2px;
+  font-size: 1em;
+}
+.mweb-indigo th, .mweb-indigo td {
+  border-color: gray;
+  border-width: 1px;
+  border-style: solid;
+}
+.mweb-indigo th {
+  padding: 4px 8px;
+  font-size: 1em;
+  font-weight: bold;
+}
+.mweb-indigo td {
+  padding: 4px 8px;
+  font-size: 1em;
+  font-weight: normal;
+}
+.mweb-indigo div[id^=mweb-chart-ele] svg {
+  background-color: white;
+}
+
+.mweb-indigo {
+  padding: 1em;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  color: #595959;
+  font-size: 16px;
+  line-height: 1.8em;
+  background-image: linear-gradient(90deg, rgba(60, 10, 30, 0.05) 3%, transparent 0), linear-gradient(1turn, rgba(60, 10, 30, 0.05) 3%, transparent 0);
+  background-size: 20px 20px;
+  background-position: 50%;
+  word-break: break-all;
+  /* 主题自定义 */
+  /* 主题自定义 end */
+  /* 布局，一般不需要改动 */
+  /* 代码块特殊处理 */
+  /* 布局 end */
+}
+.mweb-indigo blockquote {
+  margin-left: 0;
+  background-color: #ebf4ff;
+  border-color: #7f9cf5;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: #667eea;
+}
+.mweb-indigo strong {
+  color: #5a67d8;
+}
+.mweb-indigo a {
+  border-color: #667eea;
+}
+.mweb-indigo blockquote,
+.mweb-indigo details,
+.mweb-indigo dl,
+.mweb-indigo ol,
+.mweb-indigo p,
+.mweb-indigo pre,
+.mweb-indigo table,
+.mweb-indigo ul {
+  margin-bottom: 1rem;
+}
+.mweb-indigo ol {
+  list-style: decimal;
+}
+.mweb-indigo ul {
+  list-style: disc;
+}
+.mweb-indigo ol,
+.mweb-indigo ul {
+  padding-left: 2em;
+}
+.mweb-indigo h1,
+.mweb-indigo h2 {
+  border-color: #5a67d8;
+  border-style: solid;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  font-weight: 600;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0.75rem;
+}
+.mweb-indigo h1,
+.mweb-indigo h2 {
+  border-bottom: 1px solid #eaecef !important;
+  border-left-width: 6px;
+}
+.mweb-indigo h1,
+.mweb-indigo h2,
+.mweb-indigo h3,
+.mweb-indigo h4,
+.mweb-indigo h5,
+.mweb-indigo h6 {
+  margin-bottom: 16px;
+  line-height: 1.25;
+}
+.mweb-indigo blockquote {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-left: 0.25em solid;
+}
+.mweb-indigo blockquote > :last-child {
+  margin-bottom: 0;
+}
+.mweb-indigo blockquote > :first-child {
+  margin-top: 0;
+}
+.mweb-indigo strong {
+  font-weight: bold;
+}
+.mweb-indigo strong::before {
+  content: "「";
+}
+.mweb-indigo strong::after {
+  content: "」";
+}
+.mweb-indigo a {
+  text-decoration: none;
+  border-bottom: 1px solid;
+}
+.mweb-indigo .footnote-ref {
+  border-width: 0px;
+}
+.mweb-indigo picture img {
+  border-radius: 6px;
+  display: block;
+  margin: 10px auto;
+  -o-object-fit: contain;
+  object-fit: contain;
+  box-shadow: 2px 4px 7px #999;
+}
+.mweb-indigo img {
+  max-width: 100%;
+  display: block;
+  margin: 10px auto;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 2px 4px 7px #999;
+}
+.mweb-indigo picture {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+.mweb-indigo .svg-markmap-box {
+  min-height: 20rem;
+  width: 100%;
+}
+.mweb-indigo .footnotes {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.mweb-indigo .footnotes hr {
+  margin-top: 4em;
+  margin-bottom: 0.5em;
+}
+.mweb-indigo code,
+.mweb-indigo a {
+  color: #5a67d8;
+}
+.mweb-indigo a {
+  border-color: #667eea;
+}
+.mweb-indigo code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  background-color: #ebf4ff;
+}
+.mweb-indigo .code-section {
+  display: flex;
+  border: solid 1px #5a67d8;
+  background-color: #ebf4ff;
+}
+.mweb-indigo section pre {
+  display: block;
+  overflow-x: auto;
+  padding: 0.9em;
+  line-height: 1.5em;
+  font-size: 1em;
+  margin: 0;
+}
+.mweb-indigo section code {
+  font-size: 1em;
+  line-height: 1.6em;
+  text-wrap: nowrap;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: block;
+}
+.mweb-indigo section ul {
+  flex-shrink: 0;
+  counter-reset: line;
+  margin: 0;
+  padding: 0.9em 0 0.9em 0.9em;
+  white-space: normal;
+  width: fit-content;
+}
+.mweb-indigo section ul > li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  display: list-item;
+  text-align: right;
+  text-wrap: nowrap;
+  line-height: 1.6em;
+  font-size: 1em;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  padding: 0;
+  list-style-type: none;
+  color: rgba(0, 0, 0, 0.25);
+  text-wrap: nowrap;
+}
+.mweb-indigo section ul > li::marker {
+  content: none;
+}

@@ -1,0 +1,402 @@
+/*
+ * Default theme，适用于 core/mweb-base.scss。
+ * 取值参考 chrome 默认样式：
+ * https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/core/css/html.css
+ * 所有 import "core/mweb-base.scss" 的文件都应该同时导入此变量文件。
+ */
+/* color */
+/* font & line */
+/* boxing */
+/* elememts */
+/*
+ * 基准样式，相当于 reset.css，使主题在不同平台下有统一的表现。
+ * 各个属性的默认值为 chrome 的默认样式，见 variables/default.scss。
+ */
+/**
+ * MWeb 包裹 markdown 的容器是 .mweb-jzman
+ * Typora 中是 #write
+ */
+.mweb-jzman {
+  line-height: 1.6em;
+  -webkit-text-size-adjust: 100%;
+  margin: 0px 0px;
+  padding: 1rem 1rem;
+  font-family: PingFang SC, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  font-size: 16px;
+  color: black;
+  background-color: white;
+  /* spacing */
+  /* block */
+  /* list */
+  /* inline */
+  /* table */
+  /* svg */
+}
+.mweb-jzman * {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.mweb-jzman > *:first-child {
+  margin-top: 0 !important;
+}
+.mweb-jzman > *:last-child {
+  margin-top: 0 !important;
+}
+.mweb-jzman p, .mweb-jzman details, .mweb-jzman dl, .mweb-jzman ol, .mweb-jzman ul, .mweb-jzman pre, .mweb-jzman xmp, .mweb-jzman plaintext, .mweb-jzman listing, .mweb-jzman blockquote, .mweb-jzman table, .mweb-jzman figure, .mweb-jzman hr {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+.mweb-jzman h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-jzman h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-jzman h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-jzman h4 {
+  font-size: 1em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-jzman h5 {
+  font-size: 0.83em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-jzman h6 {
+  font-size: 0.67em;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-jzman p {
+  margin-left: 0;
+  margin-right: 0;
+}
+.mweb-jzman pre, .mweb-jzman xmp, .mweb-jzman plaintext, .mweb-jzman listing {
+  font-family: monospace, Menlo-Regular, Menlo, Monaco, Consolas, "Courier New";
+}
+.mweb-jzman blockquote > :first-child {
+  margin-top: 0;
+}
+.mweb-jzman blockquote > :last-child {
+  margin-bottom: 0;
+}
+.mweb-jzman hr {
+  border-style: inset;
+  border-width: 1px;
+}
+.mweb-jzman img {
+  max-width: 100%;
+  height: auto;
+}
+.mweb-jzman li {
+  word-wrap: break-all;
+}
+.mweb-jzman li + li {
+  margin-top: 0.25em;
+}
+.mweb-jzman ul ul, .mweb-jzman ol ul, .mweb-jzman ul ol, .mweb-jzman ol ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.mweb-jzman .task-list-item {
+  list-style-type: none;
+}
+.mweb-jzman a {
+  color: -webkit-link;
+  text-decoration: underline;
+}
+.mweb-jzman a img {
+  border: none;
+}
+.mweb-jzman b, .mweb-jzman strong {
+  font-weight: bold;
+}
+.mweb-jzman i, .mweb-jzman cite, .mweb-jzman em, .mweb-jzman var, .mweb-jzman address, .mweb-jzman dfn {
+  font-style: italic;
+}
+.mweb-jzman code, .mweb-jzman kbd, .mweb-jzman tt, .mweb-jzman samp {
+  font-family: monospace, Menlo-Regular, Menlo, Monaco, Consolas, "Courier New";
+}
+.mweb-jzman mark {
+  padding: 0.2em 0;
+  background-color: yellow;
+}
+.mweb-jzman del, .mweb-jzman s {
+  color: inherit;
+}
+.mweb-jzman table {
+  color: black;
+  border-collapse: collapse;
+  background-color: white;
+  border-spacing: 2px;
+  font-size: 1em;
+}
+.mweb-jzman th, .mweb-jzman td {
+  border-color: gray;
+  border-width: 1px;
+  border-style: solid;
+}
+.mweb-jzman th {
+  padding: 4px 8px;
+  font-size: 1em;
+  font-weight: bold;
+}
+.mweb-jzman td {
+  padding: 4px 8px;
+  font-size: 1em;
+  font-weight: normal;
+}
+.mweb-jzman div[id^=mweb-chart-ele] svg {
+  background-color: white;
+}
+
+.mweb-jzman {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  padding: 2em;
+  word-break: break-word;
+  line-height: 1.8;
+  font-weight: 400;
+  font-size: 16px;
+  word-spacing: 2px;
+  letter-spacing: 2px;
+  overflow-x: hidden;
+  color: #3e3e3e;
+  background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%);
+  background-size: 20px 20px;
+  background-position: center center;
+  /* 代码块特殊处理 */
+}
+.mweb-jzman h1,
+.mweb-jzman h2,
+.mweb-jzman h3,
+.mweb-jzman h4,
+.mweb-jzman h5,
+.mweb-jzman h6 {
+  line-height: 1.5;
+  margin-top: 35px;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  font-weight: 600;
+}
+.mweb-jzman h1 {
+  font-size: 30px;
+  margin-bottom: 5px;
+}
+.mweb-jzman h2 {
+  padding-bottom: 12px;
+  font-size: 24px;
+  border-bottom: 1px solid #ececec;
+}
+.mweb-jzman h3 {
+  font-size: 18px;
+  padding-bottom: 0;
+}
+.mweb-jzman h4 {
+  font-size: 1.2em;
+  border-bottom: 2px solid rgb(239, 112, 96);
+  word-spacing: 0px !important;
+  letter-spacing: 0px !important;
+  font-size: inherit;
+  line-height: inherit;
+  display: block;
+  font-weight: normal;
+  background: rgb(239, 112, 96);
+  color: rgb(255, 255, 255);
+  padding: 10px 10px 10px;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  margin-right: 3px;
+}
+.mweb-jzman h5 {
+  font-size: 15px;
+}
+.mweb-jzman h6 {
+  margin-top: 5px;
+}
+.mweb-jzman p {
+  line-height: inherit;
+  margin-top: 22px;
+  margin-bottom: 22px;
+}
+.mweb-jzman img {
+  max-width: 100%;
+}
+.mweb-jzman hr {
+  border-top: 1px solid #ddd;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+.mweb-jzman a {
+  text-decoration: none;
+  color: #0269c8;
+  border-bottom: 1px solid #d1e9ff;
+}
+.mweb-jzman a:hover,
+.mweb-jzman a:active {
+  color: #275b8c;
+}
+.mweb-jzman table {
+  display: inline-block !important;
+  font-size: 12px;
+  width: auto;
+  max-width: 100%;
+  overflow: auto;
+  border: solid 1px #f6f6f6;
+}
+.mweb-jzman thead {
+  background: #f6f6f6;
+  color: #000;
+  text-align: left;
+}
+.mweb-jzman tr:nth-child(2n) {
+  background-color: #fcfcfc;
+}
+.mweb-jzman th,
+.mweb-jzman td {
+  padding: 12px 7px;
+  line-height: 24px;
+}
+.mweb-jzman td {
+  min-width: 120px;
+}
+.mweb-jzman blockquote {
+  color: #666;
+  padding: 1px 23px;
+  margin: 22px 0;
+  border-left: 4px solid #cbcbcb;
+  background-color: #f8f8f8;
+}
+.mweb-jzman blockquote::after {
+  display: block;
+  content: "";
+}
+.mweb-jzman blockquote > p {
+  margin: 10px 0;
+}
+.mweb-jzman ol,
+.mweb-jzman ul {
+  padding-left: 28px;
+}
+.mweb-jzman ol li,
+.mweb-jzman ul li {
+  margin-bottom: 0;
+  list-style: inherit;
+}
+.mweb-jzman ol li .task-list-item,
+.mweb-jzman ul li .task-list-item {
+  list-style: none;
+}
+.mweb-jzman .task-list-item ul,
+.mweb-jzman .task-list-item ol {
+  margin-top: 0;
+}
+.mweb-jzman ol ul,
+.mweb-jzman ol ol,
+.mweb-jzman ul ul,
+.mweb-jzman ul ol {
+  margin-top: 3px;
+}
+.mweb-jzman ol li {
+  padding-left: 6px;
+}
+@media (max-width: 720px) {
+  .mweb-jzman h1 {
+    font-size: 24px;
+  }
+  .mweb-jzman h2 {
+    font-size: 20px;
+  }
+  .mweb-jzman h3 {
+    font-size: 18px;
+  }
+}
+.mweb-jzman .footnotes hr {
+  margin-top: 4em;
+  margin-bottom: 0.5em;
+}
+.mweb-jzman code {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  word-break: break-word;
+  border-radius: 2px;
+  overflow-x: auto;
+  background-color: #fff5f5;
+  color: #ff502c;
+  font-size: 0.87em;
+  padding: 0.065em 0.4em;
+}
+.mweb-jzman .code-section {
+  display: flex;
+  overflow: auto;
+  background-color: #fff5f5;
+}
+.mweb-jzman section code {
+  font-size: 1em;
+  line-height: 1.75em;
+  color: #ff502c;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-wrap: nowrap;
+  display: block;
+}
+.mweb-jzman section pre {
+  display: block;
+  overflow: auto;
+  padding: 1em;
+  margin: 0;
+}
+.mweb-jzman section ul {
+  flex-shrink: 0;
+  counter-reset: line;
+  margin: 0;
+  padding: 1em 0 1em 1em;
+  white-space: normal;
+  width: fit-content;
+}
+.mweb-jzman section ul > li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  display: list-item;
+  text-align: right;
+  line-height: 1.75em;
+  font-size: 1em;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  padding: 0;
+  list-style-type: none;
+  color: #ff502c;
+  text-wrap: nowrap;
+}
+.mweb-jzman section ul > li::marker {
+  content: none;
+}

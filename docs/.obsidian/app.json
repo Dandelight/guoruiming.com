@@ -2,7 +2,7 @@
   "strictLineBreaks": true,
   "showFrontmatter": true,
   "spellcheck": true,
-  "spellcheckLanguages": ["zh-CN", "en-US"],
+  "spellcheckLanguages": null,
   "newFileLocation": "current",
   "attachmentFolderPath": "./media",
   "pdfExportSettings": {
