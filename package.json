@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "mkdocs build",
-    "deploy": "bash upload.sh",
+    "deploy": "cd site && coscmd upload -rs . /",
     "go": "npm run build && npm run deploy",
     "prepare": "node ./.husky/install.mjs"
   },
@@ -17,9 +17,10 @@
     "url": "https://gitee.com/dandelight/blog"
   },
   "author": "Ruiming Guo",
-  "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License",
+  "license": "CC-BY-NC-SA-4.0",
   "devDependencies": {
-    "husky": "^8.0.3",
-    "prettier": "latest"
-  }
+    "husky": "^9.1.4",
+    "prettier": "^3.3.3"
+  },
+  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
 }

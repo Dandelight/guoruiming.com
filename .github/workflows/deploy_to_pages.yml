@@ -17,7 +17,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: 3.11
@@ -26,9 +26,9 @@ jobs:
       - run: pip install -r requirements.txt
       - run: mkdocs build
       - run: python scripts/add_meta.py
-      - uses: actions/upload-pages-artifact@v2.0.0
+      - uses: actions/upload-pages-artifact@v3
         with:
           # Artifact name
           # Path of the directory containing the static assets.
           path: site/
-      - uses: actions/deploy-pages@v2.0.4
+      - uses: actions/deploy-pages@v4
