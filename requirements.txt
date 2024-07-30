@@ -28,7 +28,7 @@ pathspec==0.12.1
 platformdirs==4.2.2
 pycryptodome==3.20.0
 Pygments==2.18.0
-pymdown-extensions==10.8.1
+pymdown-extensions==10.9
 python-dateutil==2.8.2
 PyYAML==6.0.1
 pyyaml_env_tag==0.1
