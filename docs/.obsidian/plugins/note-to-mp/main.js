@@ -52,6 +52,3846 @@ var __privateMethod = (obj, member, method) => {
   return method;
 };
 
+// node_modules/picocolors/picocolors.browser.js
+var require_picocolors_browser = __commonJS({
+  "node_modules/picocolors/picocolors.browser.js"(exports, module2) {
+    var x = String;
+    var create = function() {
+      return { isColorSupported: false, reset: x, bold: x, dim: x, italic: x, underline: x, inverse: x, hidden: x, strikethrough: x, black: x, red: x, green: x, yellow: x, blue: x, magenta: x, cyan: x, white: x, gray: x, bgBlack: x, bgRed: x, bgGreen: x, bgYellow: x, bgBlue: x, bgMagenta: x, bgCyan: x, bgWhite: x };
+    };
+    module2.exports = create();
+    module2.exports.createColors = create;
+  }
+});
+
+// (disabled):node_modules/postcss/lib/terminal-highlight
+var require_terminal_highlight = __commonJS({
+  "(disabled):node_modules/postcss/lib/terminal-highlight"() {
+  }
+});
+
+// node_modules/postcss/lib/css-syntax-error.js
+var require_css_syntax_error = __commonJS({
+  "node_modules/postcss/lib/css-syntax-error.js"(exports, module2) {
+    "use strict";
+    var pico = require_picocolors_browser();
+    var terminalHighlight = require_terminal_highlight();
+    var CssSyntaxError2 = class extends Error {
+      constructor(message, line, column, source, file, plugin2) {
+        super(message);
+        this.name = "CssSyntaxError";
+        this.reason = message;
+        if (file) {
+          this.file = file;
+        }
+        if (source) {
+          this.source = source;
+        }
+        if (plugin2) {
+          this.plugin = plugin2;
+        }
+        if (typeof line !== "undefined" && typeof column !== "undefined") {
+          if (typeof line === "number") {
+            this.line = line;
+            this.column = column;
+          } else {
+            this.line = line.line;
+            this.column = line.column;
+            this.endLine = column.line;
+            this.endColumn = column.column;
+          }
+        }
+        this.setMessage();
+        if (Error.captureStackTrace) {
+          Error.captureStackTrace(this, CssSyntaxError2);
+        }
+      }
+      setMessage() {
+        this.message = this.plugin ? this.plugin + ": " : "";
+        this.message += this.file ? this.file : "<css input>";
+        if (typeof this.line !== "undefined") {
+          this.message += ":" + this.line + ":" + this.column;
+        }
+        this.message += ": " + this.reason;
+      }
+      showSourceCode(color) {
+        if (!this.source)
+          return "";
+        let css2 = this.source;
+        if (color == null)
+          color = pico.isColorSupported;
+        if (terminalHighlight) {
+          if (color)
+            css2 = terminalHighlight(css2);
+        }
+        let lines = css2.split(/\r?\n/);
+        let start = Math.max(this.line - 3, 0);
+        let end = Math.min(this.line + 2, lines.length);
+        let maxWidth = String(end).length;
+        let mark2, aside;
+        if (color) {
+          let { bold, gray, red } = pico.createColors(true);
+          mark2 = (text) => bold(red(text));
+          aside = (text) => gray(text);
+        } else {
+          mark2 = aside = (str) => str;
+        }
+        return lines.slice(start, end).map((line, index) => {
+          let number = start + 1 + index;
+          let gutter = " " + (" " + number).slice(-maxWidth) + " | ";
+          if (number === this.line) {
+            let spacing = aside(gutter.replace(/\d/g, " ")) + line.slice(0, this.column - 1).replace(/[^\t]/g, " ");
+            return mark2(">") + aside(gutter) + line + "\n " + spacing + mark2("^");
+          }
+          return " " + aside(gutter) + line;
+        }).join("\n");
+      }
+      toString() {
+        let code = this.showSourceCode();
+        if (code) {
+          code = "\n\n" + code + "\n";
+        }
+        return this.name + ": " + this.message + code;
+      }
+    };
+    module2.exports = CssSyntaxError2;
+    CssSyntaxError2.default = CssSyntaxError2;
+  }
+});
+
+// node_modules/postcss/lib/symbols.js
+var require_symbols = __commonJS({
+  "node_modules/postcss/lib/symbols.js"(exports, module2) {
+    "use strict";
+    module2.exports.isClean = Symbol("isClean");
+    module2.exports.my = Symbol("my");
+  }
+});
+
+// node_modules/postcss/lib/stringifier.js
+var require_stringifier = __commonJS({
+  "node_modules/postcss/lib/stringifier.js"(exports, module2) {
+    "use strict";
+    var DEFAULT_RAW = {
+      after: "\n",
+      beforeClose: "\n",
+      beforeComment: "\n",
+      beforeDecl: "\n",
+      beforeOpen: " ",
+      beforeRule: "\n",
+      colon: ": ",
+      commentLeft: " ",
+      commentRight: " ",
+      emptyBody: "",
+      indent: "    ",
+      semicolon: false
+    };
+    function capitalize(str) {
+      return str[0].toUpperCase() + str.slice(1);
+    }
+    var Stringifier = class {
+      constructor(builder) {
+        this.builder = builder;
+      }
+      atrule(node, semicolon) {
+        let name = "@" + node.name;
+        let params = node.params ? this.rawValue(node, "params") : "";
+        if (typeof node.raws.afterName !== "undefined") {
+          name += node.raws.afterName;
+        } else if (params) {
+          name += " ";
+        }
+        if (node.nodes) {
+          this.block(node, name + params);
+        } else {
+          let end = (node.raws.between || "") + (semicolon ? ";" : "");
+          this.builder(name + params + end, node);
+        }
+      }
+      beforeAfter(node, detect) {
+        let value;
+        if (node.type === "decl") {
+          value = this.raw(node, null, "beforeDecl");
+        } else if (node.type === "comment") {
+          value = this.raw(node, null, "beforeComment");
+        } else if (detect === "before") {
+          value = this.raw(node, null, "beforeRule");
+        } else {
+          value = this.raw(node, null, "beforeClose");
+        }
+        let buf = node.parent;
+        let depth = 0;
+        while (buf && buf.type !== "root") {
+          depth += 1;
+          buf = buf.parent;
+        }
+        if (value.includes("\n")) {
+          let indent = this.raw(node, null, "indent");
+          if (indent.length) {
+            for (let step = 0; step < depth; step++)
+              value += indent;
+          }
+        }
+        return value;
+      }
+      block(node, start) {
+        let between = this.raw(node, "between", "beforeOpen");
+        this.builder(start + between + "{", node, "start");
+        let after;
+        if (node.nodes && node.nodes.length) {
+          this.body(node);
+          after = this.raw(node, "after");
+        } else {
+          after = this.raw(node, "after", "emptyBody");
+        }
+        if (after)
+          this.builder(after);
+        this.builder("}", node, "end");
+      }
+      body(node) {
+        let last = node.nodes.length - 1;
+        while (last > 0) {
+          if (node.nodes[last].type !== "comment")
+            break;
+          last -= 1;
+        }
+        let semicolon = this.raw(node, "semicolon");
+        for (let i = 0; i < node.nodes.length; i++) {
+          let child = node.nodes[i];
+          let before = this.raw(child, "before");
+          if (before)
+            this.builder(before);
+          this.stringify(child, last !== i || semicolon);
+        }
+      }
+      comment(node) {
+        let left = this.raw(node, "left", "commentLeft");
+        let right = this.raw(node, "right", "commentRight");
+        this.builder("/*" + left + node.text + right + "*/", node);
+      }
+      decl(node, semicolon) {
+        let between = this.raw(node, "between", "colon");
+        let string = node.prop + between + this.rawValue(node, "value");
+        if (node.important) {
+          string += node.raws.important || " !important";
+        }
+        if (semicolon)
+          string += ";";
+        this.builder(string, node);
+      }
+      document(node) {
+        this.body(node);
+      }
+      raw(node, own, detect) {
+        let value;
+        if (!detect)
+          detect = own;
+        if (own) {
+          value = node.raws[own];
+          if (typeof value !== "undefined")
+            return value;
+        }
+        let parent = node.parent;
+        if (detect === "before") {
+          if (!parent || parent.type === "root" && parent.first === node) {
+            return "";
+          }
+          if (parent && parent.type === "document") {
+            return "";
+          }
+        }
+        if (!parent)
+          return DEFAULT_RAW[detect];
+        let root2 = node.root();
+        if (!root2.rawCache)
+          root2.rawCache = {};
+        if (typeof root2.rawCache[detect] !== "undefined") {
+          return root2.rawCache[detect];
+        }
+        if (detect === "before" || detect === "after") {
+          return this.beforeAfter(node, detect);
+        } else {
+          let method = "raw" + capitalize(detect);
+          if (this[method]) {
+            value = this[method](root2, node);
+          } else {
+            root2.walk((i) => {
+              value = i.raws[own];
+              if (typeof value !== "undefined")
+                return false;
+            });
+          }
+        }
+        if (typeof value === "undefined")
+          value = DEFAULT_RAW[detect];
+        root2.rawCache[detect] = value;
+        return value;
+      }
+      rawBeforeClose(root2) {
+        let value;
+        root2.walk((i) => {
+          if (i.nodes && i.nodes.length > 0) {
+            if (typeof i.raws.after !== "undefined") {
+              value = i.raws.after;
+              if (value.includes("\n")) {
+                value = value.replace(/[^\n]+$/, "");
+              }
+              return false;
+            }
+          }
+        });
+        if (value)
+          value = value.replace(/\S/g, "");
+        return value;
+      }
+      rawBeforeComment(root2, node) {
+        let value;
+        root2.walkComments((i) => {
+          if (typeof i.raws.before !== "undefined") {
+            value = i.raws.before;
+            if (value.includes("\n")) {
+              value = value.replace(/[^\n]+$/, "");
+            }
+            return false;
+          }
+        });
+        if (typeof value === "undefined") {
+          value = this.raw(node, null, "beforeDecl");
+        } else if (value) {
+          value = value.replace(/\S/g, "");
+        }
+        return value;
+      }
+      rawBeforeDecl(root2, node) {
+        let value;
+        root2.walkDecls((i) => {
+          if (typeof i.raws.before !== "undefined") {
+            value = i.raws.before;
+            if (value.includes("\n")) {
+              value = value.replace(/[^\n]+$/, "");
+            }
+            return false;
+          }
+        });
+        if (typeof value === "undefined") {
+          value = this.raw(node, null, "beforeRule");
+        } else if (value) {
+          value = value.replace(/\S/g, "");
+        }
+        return value;
+      }
+      rawBeforeOpen(root2) {
+        let value;
+        root2.walk((i) => {
+          if (i.type !== "decl") {
+            value = i.raws.between;
+            if (typeof value !== "undefined")
+              return false;
+          }
+        });
+        return value;
+      }
+      rawBeforeRule(root2) {
+        let value;
+        root2.walk((i) => {
+          if (i.nodes && (i.parent !== root2 || root2.first !== i)) {
+            if (typeof i.raws.before !== "undefined") {
+              value = i.raws.before;
+              if (value.includes("\n")) {
+                value = value.replace(/[^\n]+$/, "");
+              }
+              return false;
+            }
+          }
+        });
+        if (value)
+          value = value.replace(/\S/g, "");
+        return value;
+      }
+      rawColon(root2) {
+        let value;
+        root2.walkDecls((i) => {
+          if (typeof i.raws.between !== "undefined") {
+            value = i.raws.between.replace(/[^\s:]/g, "");
+            return false;
+          }
+        });
+        return value;
+      }
+      rawEmptyBody(root2) {
+        let value;
+        root2.walk((i) => {
+          if (i.nodes && i.nodes.length === 0) {
+            value = i.raws.after;
+            if (typeof value !== "undefined")
+              return false;
+          }
+        });
+        return value;
+      }
+      rawIndent(root2) {
+        if (root2.raws.indent)
+          return root2.raws.indent;
+        let value;
+        root2.walk((i) => {
+          let p = i.parent;
+          if (p && p !== root2 && p.parent && p.parent === root2) {
+            if (typeof i.raws.before !== "undefined") {
+              let parts = i.raws.before.split("\n");
+              value = parts[parts.length - 1];
+              value = value.replace(/\S/g, "");
+              return false;
+            }
+          }
+        });
+        return value;
+      }
+      rawSemicolon(root2) {
+        let value;
+        root2.walk((i) => {
+          if (i.nodes && i.nodes.length && i.last.type === "decl") {
+            value = i.raws.semicolon;
+            if (typeof value !== "undefined")
+              return false;
+          }
+        });
+        return value;
+      }
+      rawValue(node, prop) {
+        let value = node[prop];
+        let raw = node.raws[prop];
+        if (raw && raw.value === value) {
+          return raw.raw;
+        }
+        return value;
+      }
+      root(node) {
+        this.body(node);
+        if (node.raws.after)
+          this.builder(node.raws.after);
+      }
+      rule(node) {
+        this.block(node, this.rawValue(node, "selector"));
+        if (node.raws.ownSemicolon) {
+          this.builder(node.raws.ownSemicolon, node, "end");
+        }
+      }
+      stringify(node, semicolon) {
+        if (!this[node.type]) {
+          throw new Error(
+            "Unknown AST node type " + node.type + ". Maybe you need to change PostCSS stringifier."
+          );
+        }
+        this[node.type](node, semicolon);
+      }
+    };
+    module2.exports = Stringifier;
+    Stringifier.default = Stringifier;
+  }
+});
+
+// node_modules/postcss/lib/stringify.js
+var require_stringify = __commonJS({
+  "node_modules/postcss/lib/stringify.js"(exports, module2) {
+    "use strict";
+    var Stringifier = require_stringifier();
+    function stringify2(node, builder) {
+      let str = new Stringifier(builder);
+      str.stringify(node);
+    }
+    module2.exports = stringify2;
+    stringify2.default = stringify2;
+  }
+});
+
+// node_modules/postcss/lib/node.js
+var require_node = __commonJS({
+  "node_modules/postcss/lib/node.js"(exports, module2) {
+    "use strict";
+    var { isClean, my } = require_symbols();
+    var CssSyntaxError2 = require_css_syntax_error();
+    var Stringifier = require_stringifier();
+    var stringify2 = require_stringify();
+    function cloneNode(obj, parent) {
+      let cloned = new obj.constructor();
+      for (let i in obj) {
+        if (!Object.prototype.hasOwnProperty.call(obj, i)) {
+          continue;
+        }
+        if (i === "proxyCache")
+          continue;
+        let value = obj[i];
+        let type = typeof value;
+        if (i === "parent" && type === "object") {
+          if (parent)
+            cloned[i] = parent;
+        } else if (i === "source") {
+          cloned[i] = value;
+        } else if (Array.isArray(value)) {
+          cloned[i] = value.map((j) => cloneNode(j, cloned));
+        } else {
+          if (type === "object" && value !== null)
+            value = cloneNode(value);
+          cloned[i] = value;
+        }
+      }
+      return cloned;
+    }
+    var Node2 = class {
+      constructor(defaults = {}) {
+        this.raws = {};
+        this[isClean] = false;
+        this[my] = true;
+        for (let name in defaults) {
+          if (name === "nodes") {
+            this.nodes = [];
+            for (let node of defaults[name]) {
+              if (typeof node.clone === "function") {
+                this.append(node.clone());
+              } else {
+                this.append(node);
+              }
+            }
+          } else {
+            this[name] = defaults[name];
+          }
+        }
+      }
+      addToError(error) {
+        error.postcssNode = this;
+        if (error.stack && this.source && /\n\s{4}at /.test(error.stack)) {
+          let s = this.source;
+          error.stack = error.stack.replace(
+            /\n\s{4}at /,
+            `$&${s.input.from}:${s.start.line}:${s.start.column}$&`
+          );
+        }
+        return error;
+      }
+      after(add) {
+        this.parent.insertAfter(this, add);
+        return this;
+      }
+      assign(overrides = {}) {
+        for (let name in overrides) {
+          this[name] = overrides[name];
+        }
+        return this;
+      }
+      before(add) {
+        this.parent.insertBefore(this, add);
+        return this;
+      }
+      cleanRaws(keepBetween) {
+        delete this.raws.before;
+        delete this.raws.after;
+        if (!keepBetween)
+          delete this.raws.between;
+      }
+      clone(overrides = {}) {
+        let cloned = cloneNode(this);
+        for (let name in overrides) {
+          cloned[name] = overrides[name];
+        }
+        return cloned;
+      }
+      cloneAfter(overrides = {}) {
+        let cloned = this.clone(overrides);
+        this.parent.insertAfter(this, cloned);
+        return cloned;
+      }
+      cloneBefore(overrides = {}) {
+        let cloned = this.clone(overrides);
+        this.parent.insertBefore(this, cloned);
+        return cloned;
+      }
+      error(message, opts = {}) {
+        if (this.source) {
+          let { end, start } = this.rangeBy(opts);
+          return this.source.input.error(
+            message,
+            { column: start.column, line: start.line },
+            { column: end.column, line: end.line },
+            opts
+          );
+        }
+        return new CssSyntaxError2(message);
+      }
+      getProxyProcessor() {
+        return {
+          get(node, prop) {
+            if (prop === "proxyOf") {
+              return node;
+            } else if (prop === "root") {
+              return () => node.root().toProxy();
+            } else {
+              return node[prop];
+            }
+          },
+          set(node, prop, value) {
+            if (node[prop] === value)
+              return true;
+            node[prop] = value;
+            if (prop === "prop" || prop === "value" || prop === "name" || prop === "params" || prop === "important" || /* c8 ignore next */
+            prop === "text") {
+              node.markDirty();
+            }
+            return true;
+          }
+        };
+      }
+      markDirty() {
+        if (this[isClean]) {
+          this[isClean] = false;
+          let next = this;
+          while (next = next.parent) {
+            next[isClean] = false;
+          }
+        }
+      }
+      next() {
+        if (!this.parent)
+          return void 0;
+        let index = this.parent.index(this);
+        return this.parent.nodes[index + 1];
+      }
+      positionBy(opts, stringRepresentation) {
+        let pos = this.source.start;
+        if (opts.index) {
+          pos = this.positionInside(opts.index, stringRepresentation);
+        } else if (opts.word) {
+          stringRepresentation = this.toString();
+          let index = stringRepresentation.indexOf(opts.word);
+          if (index !== -1)
+            pos = this.positionInside(index, stringRepresentation);
+        }
+        return pos;
+      }
+      positionInside(index, stringRepresentation) {
+        let string = stringRepresentation || this.toString();
+        let column = this.source.start.column;
+        let line = this.source.start.line;
+        for (let i = 0; i < index; i++) {
+          if (string[i] === "\n") {
+            column = 1;
+            line += 1;
+          } else {
+            column += 1;
+          }
+        }
+        return { column, line };
+      }
+      prev() {
+        if (!this.parent)
+          return void 0;
+        let index = this.parent.index(this);
+        return this.parent.nodes[index - 1];
+      }
+      rangeBy(opts) {
+        let start = {
+          column: this.source.start.column,
+          line: this.source.start.line
+        };
+        let end = this.source.end ? {
+          column: this.source.end.column + 1,
+          line: this.source.end.line
+        } : {
+          column: start.column + 1,
+          line: start.line
+        };
+        if (opts.word) {
+          let stringRepresentation = this.toString();
+          let index = stringRepresentation.indexOf(opts.word);
+          if (index !== -1) {
+            start = this.positionInside(index, stringRepresentation);
+            end = this.positionInside(index + opts.word.length, stringRepresentation);
+          }
+        } else {
+          if (opts.start) {
+            start = {
+              column: opts.start.column,
+              line: opts.start.line
+            };
+          } else if (opts.index) {
+            start = this.positionInside(opts.index);
+          }
+          if (opts.end) {
+            end = {
+              column: opts.end.column,
+              line: opts.end.line
+            };
+          } else if (typeof opts.endIndex === "number") {
+            end = this.positionInside(opts.endIndex);
+          } else if (opts.index) {
+            end = this.positionInside(opts.index + 1);
+          }
+        }
+        if (end.line < start.line || end.line === start.line && end.column <= start.column) {
+          end = { column: start.column + 1, line: start.line };
+        }
+        return { end, start };
+      }
+      raw(prop, defaultType) {
+        let str = new Stringifier();
+        return str.raw(this, prop, defaultType);
+      }
+      remove() {
+        if (this.parent) {
+          this.parent.removeChild(this);
+        }
+        this.parent = void 0;
+        return this;
+      }
+      replaceWith(...nodes) {
+        if (this.parent) {
+          let bookmark = this;
+          let foundSelf = false;
+          for (let node of nodes) {
+            if (node === this) {
+              foundSelf = true;
+            } else if (foundSelf) {
+              this.parent.insertAfter(bookmark, node);
+              bookmark = node;
+            } else {
+              this.parent.insertBefore(bookmark, node);
+            }
+          }
+          if (!foundSelf) {
+            this.remove();
+          }
+        }
+        return this;
+      }
+      root() {
+        let result = this;
+        while (result.parent && result.parent.type !== "document") {
+          result = result.parent;
+        }
+        return result;
+      }
+      toJSON(_, inputs) {
+        let fixed = {};
+        let emitInputs = inputs == null;
+        inputs = inputs || /* @__PURE__ */ new Map();
+        let inputsNextIndex = 0;
+        for (let name in this) {
+          if (!Object.prototype.hasOwnProperty.call(this, name)) {
+            continue;
+          }
+          if (name === "parent" || name === "proxyCache")
+            continue;
+          let value = this[name];
+          if (Array.isArray(value)) {
+            fixed[name] = value.map((i) => {
+              if (typeof i === "object" && i.toJSON) {
+                return i.toJSON(null, inputs);
+              } else {
+                return i;
+              }
+            });
+          } else if (typeof value === "object" && value.toJSON) {
+            fixed[name] = value.toJSON(null, inputs);
+          } else if (name === "source") {
+            let inputId = inputs.get(value.input);
+            if (inputId == null) {
+              inputId = inputsNextIndex;
+              inputs.set(value.input, inputsNextIndex);
+              inputsNextIndex++;
+            }
+            fixed[name] = {
+              end: value.end,
+              inputId,
+              start: value.start
+            };
+          } else {
+            fixed[name] = value;
+          }
+        }
+        if (emitInputs) {
+          fixed.inputs = [...inputs.keys()].map((input) => input.toJSON());
+        }
+        return fixed;
+      }
+      toProxy() {
+        if (!this.proxyCache) {
+          this.proxyCache = new Proxy(this, this.getProxyProcessor());
+        }
+        return this.proxyCache;
+      }
+      toString(stringifier = stringify2) {
+        if (stringifier.stringify)
+          stringifier = stringifier.stringify;
+        let result = "";
+        stringifier(this, (i) => {
+          result += i;
+        });
+        return result;
+      }
+      warn(result, text, opts) {
+        let data = { node: this };
+        for (let i in opts)
+          data[i] = opts[i];
+        return result.warn(text, data);
+      }
+      get proxyOf() {
+        return this;
+      }
+    };
+    module2.exports = Node2;
+    Node2.default = Node2;
+  }
+});
+
+// node_modules/postcss/lib/declaration.js
+var require_declaration = __commonJS({
+  "node_modules/postcss/lib/declaration.js"(exports, module2) {
+    "use strict";
+    var Node2 = require_node();
+    var Declaration2 = class extends Node2 {
+      constructor(defaults) {
+        if (defaults && typeof defaults.value !== "undefined" && typeof defaults.value !== "string") {
+          defaults = { ...defaults, value: String(defaults.value) };
+        }
+        super(defaults);
+        this.type = "decl";
+      }
+      get variable() {
+        return this.prop.startsWith("--") || this.prop[0] === "$";
+      }
+    };
+    module2.exports = Declaration2;
+    Declaration2.default = Declaration2;
+  }
+});
+
+// (disabled):node_modules/source-map-js/source-map.js
+var require_source_map = __commonJS({
+  "(disabled):node_modules/source-map-js/source-map.js"() {
+  }
+});
+
+// node_modules/nanoid/non-secure/index.cjs
+var require_non_secure = __commonJS({
+  "node_modules/nanoid/non-secure/index.cjs"(exports, module2) {
+    var urlAlphabet = "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";
+    var customAlphabet = (alphabet, defaultSize = 21) => {
+      return (size = defaultSize) => {
+        let id = "";
+        let i = size;
+        while (i--) {
+          id += alphabet[Math.random() * alphabet.length | 0];
+        }
+        return id;
+      };
+    };
+    var nanoid = (size = 21) => {
+      let id = "";
+      let i = size;
+      while (i--) {
+        id += urlAlphabet[Math.random() * 64 | 0];
+      }
+      return id;
+    };
+    module2.exports = { nanoid, customAlphabet };
+  }
+});
+
+// node_modules/postcss/lib/previous-map.js
+var require_previous_map = __commonJS({
+  "node_modules/postcss/lib/previous-map.js"(exports, module2) {
+    "use strict";
+    var { SourceMapConsumer, SourceMapGenerator } = require_source_map();
+    var { existsSync, readFileSync } = require("fs");
+    var { dirname, join } = require("path");
+    function fromBase64(str) {
+      if (Buffer) {
+        return Buffer.from(str, "base64").toString();
+      } else {
+        return window.atob(str);
+      }
+    }
+    var PreviousMap = class {
+      constructor(css2, opts) {
+        if (opts.map === false)
+          return;
+        this.loadAnnotation(css2);
+        this.inline = this.startWith(this.annotation, "data:");
+        let prev = opts.map ? opts.map.prev : void 0;
+        let text = this.loadMap(opts.from, prev);
+        if (!this.mapFile && opts.from) {
+          this.mapFile = opts.from;
+        }
+        if (this.mapFile)
+          this.root = dirname(this.mapFile);
+        if (text)
+          this.text = text;
+      }
+      consumer() {
+        if (!this.consumerCache) {
+          this.consumerCache = new SourceMapConsumer(this.text);
+        }
+        return this.consumerCache;
+      }
+      decodeInline(text) {
+        let baseCharsetUri = /^data:application\/json;charset=utf-?8;base64,/;
+        let baseUri = /^data:application\/json;base64,/;
+        let charsetUri = /^data:application\/json;charset=utf-?8,/;
+        let uri = /^data:application\/json,/;
+        if (charsetUri.test(text) || uri.test(text)) {
+          return decodeURIComponent(text.substr(RegExp.lastMatch.length));
+        }
+        if (baseCharsetUri.test(text) || baseUri.test(text)) {
+          return fromBase64(text.substr(RegExp.lastMatch.length));
+        }
+        let encoding = text.match(/data:application\/json;([^,]+),/)[1];
+        throw new Error("Unsupported source map encoding " + encoding);
+      }
+      getAnnotationURL(sourceMapString) {
+        return sourceMapString.replace(/^\/\*\s*# sourceMappingURL=/, "").trim();
+      }
+      isMap(map) {
+        if (typeof map !== "object")
+          return false;
+        return typeof map.mappings === "string" || typeof map._mappings === "string" || Array.isArray(map.sections);
+      }
+      loadAnnotation(css2) {
+        let comments = css2.match(/\/\*\s*# sourceMappingURL=/gm);
+        if (!comments)
+          return;
+        let start = css2.lastIndexOf(comments.pop());
+        let end = css2.indexOf("*/", start);
+        if (start > -1 && end > -1) {
+          this.annotation = this.getAnnotationURL(css2.substring(start, end));
+        }
+      }
+      loadFile(path) {
+        this.root = dirname(path);
+        if (existsSync(path)) {
+          this.mapFile = path;
+          return readFileSync(path, "utf-8").toString().trim();
+        }
+      }
+      loadMap(file, prev) {
+        if (prev === false)
+          return false;
+        if (prev) {
+          if (typeof prev === "string") {
+            return prev;
+          } else if (typeof prev === "function") {
+            let prevPath = prev(file);
+            if (prevPath) {
+              let map = this.loadFile(prevPath);
+              if (!map) {
+                throw new Error(
+                  "Unable to load previous source map: " + prevPath.toString()
+                );
+              }
+              return map;
+            }
+          } else if (prev instanceof SourceMapConsumer) {
+            return SourceMapGenerator.fromSourceMap(prev).toString();
+          } else if (prev instanceof SourceMapGenerator) {
+            return prev.toString();
+          } else if (this.isMap(prev)) {
+            return JSON.stringify(prev);
+          } else {
+            throw new Error(
+              "Unsupported previous source map format: " + prev.toString()
+            );
+          }
+        } else if (this.inline) {
+          return this.decodeInline(this.annotation);
+        } else if (this.annotation) {
+          let map = this.annotation;
+          if (file)
+            map = join(dirname(file), map);
+          return this.loadFile(map);
+        }
+      }
+      startWith(string, start) {
+        if (!string)
+          return false;
+        return string.substr(0, start.length) === start;
+      }
+      withContent() {
+        return !!(this.consumer().sourcesContent && this.consumer().sourcesContent.length > 0);
+      }
+    };
+    module2.exports = PreviousMap;
+    PreviousMap.default = PreviousMap;
+  }
+});
+
+// node_modules/postcss/lib/input.js
+var require_input = __commonJS({
+  "node_modules/postcss/lib/input.js"(exports, module2) {
+    "use strict";
+    var { SourceMapConsumer, SourceMapGenerator } = require_source_map();
+    var { fileURLToPath, pathToFileURL } = require("url");
+    var { isAbsolute, resolve } = require("path");
+    var { nanoid } = require_non_secure();
+    var terminalHighlight = require_terminal_highlight();
+    var CssSyntaxError2 = require_css_syntax_error();
+    var PreviousMap = require_previous_map();
+    var fromOffsetCache = Symbol("fromOffsetCache");
+    var sourceMapAvailable = Boolean(SourceMapConsumer && SourceMapGenerator);
+    var pathAvailable = Boolean(resolve && isAbsolute);
+    var Input2 = class {
+      constructor(css2, opts = {}) {
+        if (css2 === null || typeof css2 === "undefined" || typeof css2 === "object" && !css2.toString) {
+          throw new Error(`PostCSS received ${css2} instead of CSS string`);
+        }
+        this.css = css2.toString();
+        if (this.css[0] === "\uFEFF" || this.css[0] === "\uFFFE") {
+          this.hasBOM = true;
+          this.css = this.css.slice(1);
+        } else {
+          this.hasBOM = false;
+        }
+        if (opts.from) {
+          if (!pathAvailable || /^\w+:\/\//.test(opts.from) || isAbsolute(opts.from)) {
+            this.file = opts.from;
+          } else {
+            this.file = resolve(opts.from);
+          }
+        }
+        if (pathAvailable && sourceMapAvailable) {
+          let map = new PreviousMap(this.css, opts);
+          if (map.text) {
+            this.map = map;
+            let file = map.consumer().file;
+            if (!this.file && file)
+              this.file = this.mapResolve(file);
+          }
+        }
+        if (!this.file) {
+          this.id = "<input css " + nanoid(6) + ">";
+        }
+        if (this.map)
+          this.map.file = this.from;
+      }
+      error(message, line, column, opts = {}) {
+        let result, endLine, endColumn;
+        if (line && typeof line === "object") {
+          let start = line;
+          let end = column;
+          if (typeof start.offset === "number") {
+            let pos = this.fromOffset(start.offset);
+            line = pos.line;
+            column = pos.col;
+          } else {
+            line = start.line;
+            column = start.column;
+          }
+          if (typeof end.offset === "number") {
+            let pos = this.fromOffset(end.offset);
+            endLine = pos.line;
+            endColumn = pos.col;
+          } else {
+            endLine = end.line;
+            endColumn = end.column;
+          }
+        } else if (!column) {
+          let pos = this.fromOffset(line);
+          line = pos.line;
+          column = pos.col;
+        }
+        let origin = this.origin(line, column, endLine, endColumn);
+        if (origin) {
+          result = new CssSyntaxError2(
+            message,
+            origin.endLine === void 0 ? origin.line : { column: origin.column, line: origin.line },
+            origin.endLine === void 0 ? origin.column : { column: origin.endColumn, line: origin.endLine },
+            origin.source,
+            origin.file,
+            opts.plugin
+          );
+        } else {
+          result = new CssSyntaxError2(
+            message,
+            endLine === void 0 ? line : { column, line },
+            endLine === void 0 ? column : { column: endColumn, line: endLine },
+            this.css,
+            this.file,
+            opts.plugin
+          );
+        }
+        result.input = { column, endColumn, endLine, line, source: this.css };
+        if (this.file) {
+          if (pathToFileURL) {
+            result.input.url = pathToFileURL(this.file).toString();
+          }
+          result.input.file = this.file;
+        }
+        return result;
+      }
+      fromOffset(offset) {
+        let lastLine, lineToIndex;
+        if (!this[fromOffsetCache]) {
+          let lines = this.css.split("\n");
+          lineToIndex = new Array(lines.length);
+          let prevIndex = 0;
+          for (let i = 0, l = lines.length; i < l; i++) {
+            lineToIndex[i] = prevIndex;
+            prevIndex += lines[i].length + 1;
+          }
+          this[fromOffsetCache] = lineToIndex;
+        } else {
+          lineToIndex = this[fromOffsetCache];
+        }
+        lastLine = lineToIndex[lineToIndex.length - 1];
+        let min = 0;
+        if (offset >= lastLine) {
+          min = lineToIndex.length - 1;
+        } else {
+          let max = lineToIndex.length - 2;
+          let mid;
+          while (min < max) {
+            mid = min + (max - min >> 1);
+            if (offset < lineToIndex[mid]) {
+              max = mid - 1;
+            } else if (offset >= lineToIndex[mid + 1]) {
+              min = mid + 1;
+            } else {
+              min = mid;
+              break;
+            }
+          }
+        }
+        return {
+          col: offset - lineToIndex[min] + 1,
+          line: min + 1
+        };
+      }
+      mapResolve(file) {
+        if (/^\w+:\/\//.test(file)) {
+          return file;
+        }
+        return resolve(this.map.consumer().sourceRoot || this.map.root || ".", file);
+      }
+      origin(line, column, endLine, endColumn) {
+        if (!this.map)
+          return false;
+        let consumer = this.map.consumer();
+        let from = consumer.originalPositionFor({ column, line });
+        if (!from.source)
+          return false;
+        let to;
+        if (typeof endLine === "number") {
+          to = consumer.originalPositionFor({ column: endColumn, line: endLine });
+        }
+        let fromUrl;
+        if (isAbsolute(from.source)) {
+          fromUrl = pathToFileURL(from.source);
+        } else {
+          fromUrl = new URL(
+            from.source,
+            this.map.consumer().sourceRoot || pathToFileURL(this.map.mapFile)
+          );
+        }
+        let result = {
+          column: from.column,
+          endColumn: to && to.column,
+          endLine: to && to.line,
+          line: from.line,
+          url: fromUrl.toString()
+        };
+        if (fromUrl.protocol === "file:") {
+          if (fileURLToPath) {
+            result.file = fileURLToPath(fromUrl);
+          } else {
+            throw new Error(`file: protocol is not available in this PostCSS build`);
+          }
+        }
+        let source = consumer.sourceContentFor(from.source);
+        if (source)
+          result.source = source;
+        return result;
+      }
+      toJSON() {
+        let json = {};
+        for (let name of ["hasBOM", "css", "file", "id"]) {
+          if (this[name] != null) {
+            json[name] = this[name];
+          }
+        }
+        if (this.map) {
+          json.map = { ...this.map };
+          if (json.map.consumerCache) {
+            json.map.consumerCache = void 0;
+          }
+        }
+        return json;
+      }
+      get from() {
+        return this.file || this.id;
+      }
+    };
+    module2.exports = Input2;
+    Input2.default = Input2;
+    if (terminalHighlight && terminalHighlight.registerInput) {
+      terminalHighlight.registerInput(Input2);
+    }
+  }
+});
+
+// node_modules/postcss/lib/map-generator.js
+var require_map_generator = __commonJS({
+  "node_modules/postcss/lib/map-generator.js"(exports, module2) {
+    "use strict";
+    var { SourceMapConsumer, SourceMapGenerator } = require_source_map();
+    var { dirname, relative, resolve, sep } = require("path");
+    var { pathToFileURL } = require("url");
+    var Input2 = require_input();
+    var sourceMapAvailable = Boolean(SourceMapConsumer && SourceMapGenerator);
+    var pathAvailable = Boolean(dirname && resolve && relative && sep);
+    var MapGenerator = class {
+      constructor(stringify2, root2, opts, cssString) {
+        this.stringify = stringify2;
+        this.mapOpts = opts.map || {};
+        this.root = root2;
+        this.opts = opts;
+        this.css = cssString;
+        this.originalCSS = cssString;
+        this.usesFileUrls = !this.mapOpts.from && this.mapOpts.absolute;
+        this.memoizedFileURLs = /* @__PURE__ */ new Map();
+        this.memoizedPaths = /* @__PURE__ */ new Map();
+        this.memoizedURLs = /* @__PURE__ */ new Map();
+      }
+      addAnnotation() {
+        let content;
+        if (this.isInline()) {
+          content = "data:application/json;base64," + this.toBase64(this.map.toString());
+        } else if (typeof this.mapOpts.annotation === "string") {
+          content = this.mapOpts.annotation;
+        } else if (typeof this.mapOpts.annotation === "function") {
+          content = this.mapOpts.annotation(this.opts.to, this.root);
+        } else {
+          content = this.outputFile() + ".map";
+        }
+        let eol = "\n";
+        if (this.css.includes("\r\n"))
+          eol = "\r\n";
+        this.css += eol + "/*# sourceMappingURL=" + content + " */";
+      }
+      applyPrevMaps() {
+        for (let prev of this.previous()) {
+          let from = this.toUrl(this.path(prev.file));
+          let root2 = prev.root || dirname(prev.file);
+          let map;
+          if (this.mapOpts.sourcesContent === false) {
+            map = new SourceMapConsumer(prev.text);
+            if (map.sourcesContent) {
+              map.sourcesContent = null;
+            }
+          } else {
+            map = prev.consumer();
+          }
+          this.map.applySourceMap(map, from, this.toUrl(this.path(root2)));
+        }
+      }
+      clearAnnotation() {
+        if (this.mapOpts.annotation === false)
+          return;
+        if (this.root) {
+          let node;
+          for (let i = this.root.nodes.length - 1; i >= 0; i--) {
+            node = this.root.nodes[i];
+            if (node.type !== "comment")
+              continue;
+            if (node.text.indexOf("# sourceMappingURL=") === 0) {
+              this.root.removeChild(i);
+            }
+          }
+        } else if (this.css) {
+          this.css = this.css.replace(/\n*?\/\*#[\S\s]*?\*\/$/gm, "");
+        }
+      }
+      generate() {
+        this.clearAnnotation();
+        if (pathAvailable && sourceMapAvailable && this.isMap()) {
+          return this.generateMap();
+        } else {
+          let result = "";
+          this.stringify(this.root, (i) => {
+            result += i;
+          });
+          return [result];
+        }
+      }
+      generateMap() {
+        if (this.root) {
+          this.generateString();
+        } else if (this.previous().length === 1) {
+          let prev = this.previous()[0].consumer();
+          prev.file = this.outputFile();
+          this.map = SourceMapGenerator.fromSourceMap(prev, {
+            ignoreInvalidMapping: true
+          });
+        } else {
+          this.map = new SourceMapGenerator({
+            file: this.outputFile(),
+            ignoreInvalidMapping: true
+          });
+          this.map.addMapping({
+            generated: { column: 0, line: 1 },
+            original: { column: 0, line: 1 },
+            source: this.opts.from ? this.toUrl(this.path(this.opts.from)) : "<no source>"
+          });
+        }
+        if (this.isSourcesContent())
+          this.setSourcesContent();
+        if (this.root && this.previous().length > 0)
+          this.applyPrevMaps();
+        if (this.isAnnotation())
+          this.addAnnotation();
+        if (this.isInline()) {
+          return [this.css];
+        } else {
+          return [this.css, this.map];
+        }
+      }
+      generateString() {
+        this.css = "";
+        this.map = new SourceMapGenerator({
+          file: this.outputFile(),
+          ignoreInvalidMapping: true
+        });
+        let line = 1;
+        let column = 1;
+        let noSource = "<no source>";
+        let mapping = {
+          generated: { column: 0, line: 0 },
+          original: { column: 0, line: 0 },
+          source: ""
+        };
+        let lines, last;
+        this.stringify(this.root, (str, node, type) => {
+          this.css += str;
+          if (node && type !== "end") {
+            mapping.generated.line = line;
+            mapping.generated.column = column - 1;
+            if (node.source && node.source.start) {
+              mapping.source = this.sourcePath(node);
+              mapping.original.line = node.source.start.line;
+              mapping.original.column = node.source.start.column - 1;
+              this.map.addMapping(mapping);
+            } else {
+              mapping.source = noSource;
+              mapping.original.line = 1;
+              mapping.original.column = 0;
+              this.map.addMapping(mapping);
+            }
+          }
+          lines = str.match(/\n/g);
+          if (lines) {
+            line += lines.length;
+            last = str.lastIndexOf("\n");
+            column = str.length - last;
+          } else {
+            column += str.length;
+          }
+          if (node && type !== "start") {
+            let p = node.parent || { raws: {} };
+            let childless = node.type === "decl" || node.type === "atrule" && !node.nodes;
+            if (!childless || node !== p.last || p.raws.semicolon) {
+              if (node.source && node.source.end) {
+                mapping.source = this.sourcePath(node);
+                mapping.original.line = node.source.end.line;
+                mapping.original.column = node.source.end.column - 1;
+                mapping.generated.line = line;
+                mapping.generated.column = column - 2;
+                this.map.addMapping(mapping);
+              } else {
+                mapping.source = noSource;
+                mapping.original.line = 1;
+                mapping.original.column = 0;
+                mapping.generated.line = line;
+                mapping.generated.column = column - 1;
+                this.map.addMapping(mapping);
+              }
+            }
+          }
+        });
+      }
+      isAnnotation() {
+        if (this.isInline()) {
+          return true;
+        }
+        if (typeof this.mapOpts.annotation !== "undefined") {
+          return this.mapOpts.annotation;
+        }
+        if (this.previous().length) {
+          return this.previous().some((i) => i.annotation);
+        }
+        return true;
+      }
+      isInline() {
+        if (typeof this.mapOpts.inline !== "undefined") {
+          return this.mapOpts.inline;
+        }
+        let annotation = this.mapOpts.annotation;
+        if (typeof annotation !== "undefined" && annotation !== true) {
+          return false;
+        }
+        if (this.previous().length) {
+          return this.previous().some((i) => i.inline);
+        }
+        return true;
+      }
+      isMap() {
+        if (typeof this.opts.map !== "undefined") {
+          return !!this.opts.map;
+        }
+        return this.previous().length > 0;
+      }
+      isSourcesContent() {
+        if (typeof this.mapOpts.sourcesContent !== "undefined") {
+          return this.mapOpts.sourcesContent;
+        }
+        if (this.previous().length) {
+          return this.previous().some((i) => i.withContent());
+        }
+        return true;
+      }
+      outputFile() {
+        if (this.opts.to) {
+          return this.path(this.opts.to);
+        } else if (this.opts.from) {
+          return this.path(this.opts.from);
+        } else {
+          return "to.css";
+        }
+      }
+      path(file) {
+        if (this.mapOpts.absolute)
+          return file;
+        if (file.charCodeAt(0) === 60)
+          return file;
+        if (/^\w+:\/\//.test(file))
+          return file;
+        let cached = this.memoizedPaths.get(file);
+        if (cached)
+          return cached;
+        let from = this.opts.to ? dirname(this.opts.to) : ".";
+        if (typeof this.mapOpts.annotation === "string") {
+          from = dirname(resolve(from, this.mapOpts.annotation));
+        }
+        let path = relative(from, file);
+        this.memoizedPaths.set(file, path);
+        return path;
+      }
+      previous() {
+        if (!this.previousMaps) {
+          this.previousMaps = [];
+          if (this.root) {
+            this.root.walk((node) => {
+              if (node.source && node.source.input.map) {
+                let map = node.source.input.map;
+                if (!this.previousMaps.includes(map)) {
+                  this.previousMaps.push(map);
+                }
+              }
+            });
+          } else {
+            let input = new Input2(this.originalCSS, this.opts);
+            if (input.map)
+              this.previousMaps.push(input.map);
+          }
+        }
+        return this.previousMaps;
+      }
+      setSourcesContent() {
+        let already = {};
+        if (this.root) {
+          this.root.walk((node) => {
+            if (node.source) {
+              let from = node.source.input.from;
+              if (from && !already[from]) {
+                already[from] = true;
+                let fromUrl = this.usesFileUrls ? this.toFileUrl(from) : this.toUrl(this.path(from));
+                this.map.setSourceContent(fromUrl, node.source.input.css);
+              }
+            }
+          });
+        } else if (this.css) {
+          let from = this.opts.from ? this.toUrl(this.path(this.opts.from)) : "<no source>";
+          this.map.setSourceContent(from, this.css);
+        }
+      }
+      sourcePath(node) {
+        if (this.mapOpts.from) {
+          return this.toUrl(this.mapOpts.from);
+        } else if (this.usesFileUrls) {
+          return this.toFileUrl(node.source.input.from);
+        } else {
+          return this.toUrl(this.path(node.source.input.from));
+        }
+      }
+      toBase64(str) {
+        if (Buffer) {
+          return Buffer.from(str).toString("base64");
+        } else {
+          return window.btoa(unescape(encodeURIComponent(str)));
+        }
+      }
+      toFileUrl(path) {
+        let cached = this.memoizedFileURLs.get(path);
+        if (cached)
+          return cached;
+        if (pathToFileURL) {
+          let fileURL = pathToFileURL(path).toString();
+          this.memoizedFileURLs.set(path, fileURL);
+          return fileURL;
+        } else {
+          throw new Error(
+            "`map.absolute` option is not available in this PostCSS build"
+          );
+        }
+      }
+      toUrl(path) {
+        let cached = this.memoizedURLs.get(path);
+        if (cached)
+          return cached;
+        if (sep === "\\") {
+          path = path.replace(/\\/g, "/");
+        }
+        let url = encodeURI(path).replace(/[#?]/g, encodeURIComponent);
+        this.memoizedURLs.set(path, url);
+        return url;
+      }
+    };
+    module2.exports = MapGenerator;
+  }
+});
+
+// node_modules/postcss/lib/comment.js
+var require_comment = __commonJS({
+  "node_modules/postcss/lib/comment.js"(exports, module2) {
+    "use strict";
+    var Node2 = require_node();
+    var Comment2 = class extends Node2 {
+      constructor(defaults) {
+        super(defaults);
+        this.type = "comment";
+      }
+    };
+    module2.exports = Comment2;
+    Comment2.default = Comment2;
+  }
+});
+
+// node_modules/postcss/lib/container.js
+var require_container = __commonJS({
+  "node_modules/postcss/lib/container.js"(exports, module2) {
+    "use strict";
+    var { isClean, my } = require_symbols();
+    var Declaration2 = require_declaration();
+    var Comment2 = require_comment();
+    var Node2 = require_node();
+    var parse2;
+    var Rule2;
+    var AtRule2;
+    var Root2;
+    function cleanSource(nodes) {
+      return nodes.map((i) => {
+        if (i.nodes)
+          i.nodes = cleanSource(i.nodes);
+        delete i.source;
+        return i;
+      });
+    }
+    function markDirtyUp(node) {
+      node[isClean] = false;
+      if (node.proxyOf.nodes) {
+        for (let i of node.proxyOf.nodes) {
+          markDirtyUp(i);
+        }
+      }
+    }
+    var Container2 = class extends Node2 {
+      append(...children) {
+        for (let child of children) {
+          let nodes = this.normalize(child, this.last);
+          for (let node of nodes)
+            this.proxyOf.nodes.push(node);
+        }
+        this.markDirty();
+        return this;
+      }
+      cleanRaws(keepBetween) {
+        super.cleanRaws(keepBetween);
+        if (this.nodes) {
+          for (let node of this.nodes)
+            node.cleanRaws(keepBetween);
+        }
+      }
+      each(callback) {
+        if (!this.proxyOf.nodes)
+          return void 0;
+        let iterator = this.getIterator();
+        let index, result;
+        while (this.indexes[iterator] < this.proxyOf.nodes.length) {
+          index = this.indexes[iterator];
+          result = callback(this.proxyOf.nodes[index], index);
+          if (result === false)
+            break;
+          this.indexes[iterator] += 1;
+        }
+        delete this.indexes[iterator];
+        return result;
+      }
+      every(condition) {
+        return this.nodes.every(condition);
+      }
+      getIterator() {
+        if (!this.lastEach)
+          this.lastEach = 0;
+        if (!this.indexes)
+          this.indexes = {};
+        this.lastEach += 1;
+        let iterator = this.lastEach;
+        this.indexes[iterator] = 0;
+        return iterator;
+      }
+      getProxyProcessor() {
+        return {
+          get(node, prop) {
+            if (prop === "proxyOf") {
+              return node;
+            } else if (!node[prop]) {
+              return node[prop];
+            } else if (prop === "each" || typeof prop === "string" && prop.startsWith("walk")) {
+              return (...args) => {
+                return node[prop](
+                  ...args.map((i) => {
+                    if (typeof i === "function") {
+                      return (child, index) => i(child.toProxy(), index);
+                    } else {
+                      return i;
+                    }
+                  })
+                );
+              };
+            } else if (prop === "every" || prop === "some") {
+              return (cb) => {
+                return node[prop](
+                  (child, ...other) => cb(child.toProxy(), ...other)
+                );
+              };
+            } else if (prop === "root") {
+              return () => node.root().toProxy();
+            } else if (prop === "nodes") {
+              return node.nodes.map((i) => i.toProxy());
+            } else if (prop === "first" || prop === "last") {
+              return node[prop].toProxy();
+            } else {
+              return node[prop];
+            }
+          },
+          set(node, prop, value) {
+            if (node[prop] === value)
+              return true;
+            node[prop] = value;
+            if (prop === "name" || prop === "params" || prop === "selector") {
+              node.markDirty();
+            }
+            return true;
+          }
+        };
+      }
+      index(child) {
+        if (typeof child === "number")
+          return child;
+        if (child.proxyOf)
+          child = child.proxyOf;
+        return this.proxyOf.nodes.indexOf(child);
+      }
+      insertAfter(exist, add) {
+        let existIndex = this.index(exist);
+        let nodes = this.normalize(add, this.proxyOf.nodes[existIndex]).reverse();
+        existIndex = this.index(exist);
+        for (let node of nodes)
+          this.proxyOf.nodes.splice(existIndex + 1, 0, node);
+        let index;
+        for (let id in this.indexes) {
+          index = this.indexes[id];
+          if (existIndex < index) {
+            this.indexes[id] = index + nodes.length;
+          }
+        }
+        this.markDirty();
+        return this;
+      }
+      insertBefore(exist, add) {
+        let existIndex = this.index(exist);
+        let type = existIndex === 0 ? "prepend" : false;
+        let nodes = this.normalize(add, this.proxyOf.nodes[existIndex], type).reverse();
+        existIndex = this.index(exist);
+        for (let node of nodes)
+          this.proxyOf.nodes.splice(existIndex, 0, node);
+        let index;
+        for (let id in this.indexes) {
+          index = this.indexes[id];
+          if (existIndex <= index) {
+            this.indexes[id] = index + nodes.length;
+          }
+        }
+        this.markDirty();
+        return this;
+      }
+      normalize(nodes, sample) {
+        if (typeof nodes === "string") {
+          nodes = cleanSource(parse2(nodes).nodes);
+        } else if (typeof nodes === "undefined") {
+          nodes = [];
+        } else if (Array.isArray(nodes)) {
+          nodes = nodes.slice(0);
+          for (let i of nodes) {
+            if (i.parent)
+              i.parent.removeChild(i, "ignore");
+          }
+        } else if (nodes.type === "root" && this.type !== "document") {
+          nodes = nodes.nodes.slice(0);
+          for (let i of nodes) {
+            if (i.parent)
+              i.parent.removeChild(i, "ignore");
+          }
+        } else if (nodes.type) {
+          nodes = [nodes];
+        } else if (nodes.prop) {
+          if (typeof nodes.value === "undefined") {
+            throw new Error("Value field is missed in node creation");
+          } else if (typeof nodes.value !== "string") {
+            nodes.value = String(nodes.value);
+          }
+          nodes = [new Declaration2(nodes)];
+        } else if (nodes.selector) {
+          nodes = [new Rule2(nodes)];
+        } else if (nodes.name) {
+          nodes = [new AtRule2(nodes)];
+        } else if (nodes.text) {
+          nodes = [new Comment2(nodes)];
+        } else {
+          throw new Error("Unknown node type in node creation");
+        }
+        let processed = nodes.map((i) => {
+          if (!i[my])
+            Container2.rebuild(i);
+          i = i.proxyOf;
+          if (i.parent)
+            i.parent.removeChild(i);
+          if (i[isClean])
+            markDirtyUp(i);
+          if (typeof i.raws.before === "undefined") {
+            if (sample && typeof sample.raws.before !== "undefined") {
+              i.raws.before = sample.raws.before.replace(/\S/g, "");
+            }
+          }
+          i.parent = this.proxyOf;
+          return i;
+        });
+        return processed;
+      }
+      prepend(...children) {
+        children = children.reverse();
+        for (let child of children) {
+          let nodes = this.normalize(child, this.first, "prepend").reverse();
+          for (let node of nodes)
+            this.proxyOf.nodes.unshift(node);
+          for (let id in this.indexes) {
+            this.indexes[id] = this.indexes[id] + nodes.length;
+          }
+        }
+        this.markDirty();
+        return this;
+      }
+      push(child) {
+        child.parent = this;
+        this.proxyOf.nodes.push(child);
+        return this;
+      }
+      removeAll() {
+        for (let node of this.proxyOf.nodes)
+          node.parent = void 0;
+        this.proxyOf.nodes = [];
+        this.markDirty();
+        return this;
+      }
+      removeChild(child) {
+        child = this.index(child);
+        this.proxyOf.nodes[child].parent = void 0;
+        this.proxyOf.nodes.splice(child, 1);
+        let index;
+        for (let id in this.indexes) {
+          index = this.indexes[id];
+          if (index >= child) {
+            this.indexes[id] = index - 1;
+          }
+        }
+        this.markDirty();
+        return this;
+      }
+      replaceValues(pattern, opts, callback) {
+        if (!callback) {
+          callback = opts;
+          opts = {};
+        }
+        this.walkDecls((decl2) => {
+          if (opts.props && !opts.props.includes(decl2.prop))
+            return;
+          if (opts.fast && !decl2.value.includes(opts.fast))
+            return;
+          decl2.value = decl2.value.replace(pattern, callback);
+        });
+        this.markDirty();
+        return this;
+      }
+      some(condition) {
+        return this.nodes.some(condition);
+      }
+      walk(callback) {
+        return this.each((child, i) => {
+          let result;
+          try {
+            result = callback(child, i);
+          } catch (e2) {
+            throw child.addToError(e2);
+          }
+          if (result !== false && child.walk) {
+            result = child.walk(callback);
+          }
+          return result;
+        });
+      }
+      walkAtRules(name, callback) {
+        if (!callback) {
+          callback = name;
+          return this.walk((child, i) => {
+            if (child.type === "atrule") {
+              return callback(child, i);
+            }
+          });
+        }
+        if (name instanceof RegExp) {
+          return this.walk((child, i) => {
+            if (child.type === "atrule" && name.test(child.name)) {
+              return callback(child, i);
+            }
+          });
+        }
+        return this.walk((child, i) => {
+          if (child.type === "atrule" && child.name === name) {
+            return callback(child, i);
+          }
+        });
+      }
+      walkComments(callback) {
+        return this.walk((child, i) => {
+          if (child.type === "comment") {
+            return callback(child, i);
+          }
+        });
+      }
+      walkDecls(prop, callback) {
+        if (!callback) {
+          callback = prop;
+          return this.walk((child, i) => {
+            if (child.type === "decl") {
+              return callback(child, i);
+            }
+          });
+        }
+        if (prop instanceof RegExp) {
+          return this.walk((child, i) => {
+            if (child.type === "decl" && prop.test(child.prop)) {
+              return callback(child, i);
+            }
+          });
+        }
+        return this.walk((child, i) => {
+          if (child.type === "decl" && child.prop === prop) {
+            return callback(child, i);
+          }
+        });
+      }
+      walkRules(selector, callback) {
+        if (!callback) {
+          callback = selector;
+          return this.walk((child, i) => {
+            if (child.type === "rule") {
+              return callback(child, i);
+            }
+          });
+        }
+        if (selector instanceof RegExp) {
+          return this.walk((child, i) => {
+            if (child.type === "rule" && selector.test(child.selector)) {
+              return callback(child, i);
+            }
+          });
+        }
+        return this.walk((child, i) => {
+          if (child.type === "rule" && child.selector === selector) {
+            return callback(child, i);
+          }
+        });
+      }
+      get first() {
+        if (!this.proxyOf.nodes)
+          return void 0;
+        return this.proxyOf.nodes[0];
+      }
+      get last() {
+        if (!this.proxyOf.nodes)
+          return void 0;
+        return this.proxyOf.nodes[this.proxyOf.nodes.length - 1];
+      }
+    };
+    Container2.registerParse = (dependant) => {
+      parse2 = dependant;
+    };
+    Container2.registerRule = (dependant) => {
+      Rule2 = dependant;
+    };
+    Container2.registerAtRule = (dependant) => {
+      AtRule2 = dependant;
+    };
+    Container2.registerRoot = (dependant) => {
+      Root2 = dependant;
+    };
+    module2.exports = Container2;
+    Container2.default = Container2;
+    Container2.rebuild = (node) => {
+      if (node.type === "atrule") {
+        Object.setPrototypeOf(node, AtRule2.prototype);
+      } else if (node.type === "rule") {
+        Object.setPrototypeOf(node, Rule2.prototype);
+      } else if (node.type === "decl") {
+        Object.setPrototypeOf(node, Declaration2.prototype);
+      } else if (node.type === "comment") {
+        Object.setPrototypeOf(node, Comment2.prototype);
+      } else if (node.type === "root") {
+        Object.setPrototypeOf(node, Root2.prototype);
+      }
+      node[my] = true;
+      if (node.nodes) {
+        node.nodes.forEach((child) => {
+          Container2.rebuild(child);
+        });
+      }
+    };
+  }
+});
+
+// node_modules/postcss/lib/document.js
+var require_document = __commonJS({
+  "node_modules/postcss/lib/document.js"(exports, module2) {
+    "use strict";
+    var Container2 = require_container();
+    var LazyResult;
+    var Processor2;
+    var Document2 = class extends Container2 {
+      constructor(defaults) {
+        super({ type: "document", ...defaults });
+        if (!this.nodes) {
+          this.nodes = [];
+        }
+      }
+      toResult(opts = {}) {
+        let lazy = new LazyResult(new Processor2(), this, opts);
+        return lazy.stringify();
+      }
+    };
+    Document2.registerLazyResult = (dependant) => {
+      LazyResult = dependant;
+    };
+    Document2.registerProcessor = (dependant) => {
+      Processor2 = dependant;
+    };
+    module2.exports = Document2;
+    Document2.default = Document2;
+  }
+});
+
+// node_modules/postcss/lib/warn-once.js
+var require_warn_once = __commonJS({
+  "node_modules/postcss/lib/warn-once.js"(exports, module2) {
+    "use strict";
+    var printed = {};
+    module2.exports = function warnOnce(message) {
+      if (printed[message])
+        return;
+      printed[message] = true;
+      if (typeof console !== "undefined" && console.warn) {
+        console.warn(message);
+      }
+    };
+  }
+});
+
+// node_modules/postcss/lib/warning.js
+var require_warning = __commonJS({
+  "node_modules/postcss/lib/warning.js"(exports, module2) {
+    "use strict";
+    var Warning2 = class {
+      constructor(text, opts = {}) {
+        this.type = "warning";
+        this.text = text;
+        if (opts.node && opts.node.source) {
+          let range = opts.node.rangeBy(opts);
+          this.line = range.start.line;
+          this.column = range.start.column;
+          this.endLine = range.end.line;
+          this.endColumn = range.end.column;
+        }
+        for (let opt in opts)
+          this[opt] = opts[opt];
+      }
+      toString() {
+        if (this.node) {
+          return this.node.error(this.text, {
+            index: this.index,
+            plugin: this.plugin,
+            word: this.word
+          }).message;
+        }
+        if (this.plugin) {
+          return this.plugin + ": " + this.text;
+        }
+        return this.text;
+      }
+    };
+    module2.exports = Warning2;
+    Warning2.default = Warning2;
+  }
+});
+
+// node_modules/postcss/lib/result.js
+var require_result = __commonJS({
+  "node_modules/postcss/lib/result.js"(exports, module2) {
+    "use strict";
+    var Warning2 = require_warning();
+    var Result2 = class {
+      constructor(processor, root2, opts) {
+        this.processor = processor;
+        this.messages = [];
+        this.root = root2;
+        this.opts = opts;
+        this.css = void 0;
+        this.map = void 0;
+      }
+      toString() {
+        return this.css;
+      }
+      warn(text, opts = {}) {
+        if (!opts.plugin) {
+          if (this.lastPlugin && this.lastPlugin.postcssPlugin) {
+            opts.plugin = this.lastPlugin.postcssPlugin;
+          }
+        }
+        let warning = new Warning2(text, opts);
+        this.messages.push(warning);
+        return warning;
+      }
+      warnings() {
+        return this.messages.filter((i) => i.type === "warning");
+      }
+      get content() {
+        return this.css;
+      }
+    };
+    module2.exports = Result2;
+    Result2.default = Result2;
+  }
+});
+
+// node_modules/postcss/lib/tokenize.js
+var require_tokenize = __commonJS({
+  "node_modules/postcss/lib/tokenize.js"(exports, module2) {
+    "use strict";
+    var SINGLE_QUOTE = "'".charCodeAt(0);
+    var DOUBLE_QUOTE = '"'.charCodeAt(0);
+    var BACKSLASH = "\\".charCodeAt(0);
+    var SLASH = "/".charCodeAt(0);
+    var NEWLINE = "\n".charCodeAt(0);
+    var SPACE = " ".charCodeAt(0);
+    var FEED = "\f".charCodeAt(0);
+    var TAB = "	".charCodeAt(0);
+    var CR = "\r".charCodeAt(0);
+    var OPEN_SQUARE = "[".charCodeAt(0);
+    var CLOSE_SQUARE = "]".charCodeAt(0);
+    var OPEN_PARENTHESES = "(".charCodeAt(0);
+    var CLOSE_PARENTHESES = ")".charCodeAt(0);
+    var OPEN_CURLY = "{".charCodeAt(0);
+    var CLOSE_CURLY = "}".charCodeAt(0);
+    var SEMICOLON = ";".charCodeAt(0);
+    var ASTERISK = "*".charCodeAt(0);
+    var COLON = ":".charCodeAt(0);
+    var AT = "@".charCodeAt(0);
+    var RE_AT_END = /[\t\n\f\r "#'()/;[\\\]{}]/g;
+    var RE_WORD_END = /[\t\n\f\r !"#'():;@[\\\]{}]|\/(?=\*)/g;
+    var RE_BAD_BRACKET = /.[\r\n"'(/\\]/;
+    var RE_HEX_ESCAPE = /[\da-f]/i;
+    module2.exports = function tokenizer(input, options4 = {}) {
+      let css2 = input.css.valueOf();
+      let ignore = options4.ignoreErrors;
+      let code, next, quote, content, escape3;
+      let escaped, escapePos, prev, n, currentToken;
+      let length = css2.length;
+      let pos = 0;
+      let buffer = [];
+      let returned = [];
+      function position() {
+        return pos;
+      }
+      function unclosed(what) {
+        throw input.error("Unclosed " + what, pos);
+      }
+      function endOfFile() {
+        return returned.length === 0 && pos >= length;
+      }
+      function nextToken(opts) {
+        if (returned.length)
+          return returned.pop();
+        if (pos >= length)
+          return;
+        let ignoreUnclosed = opts ? opts.ignoreUnclosed : false;
+        code = css2.charCodeAt(pos);
+        switch (code) {
+          case NEWLINE:
+          case SPACE:
+          case TAB:
+          case CR:
+          case FEED: {
+            next = pos;
+            do {
+              next += 1;
+              code = css2.charCodeAt(next);
+            } while (code === SPACE || code === NEWLINE || code === TAB || code === CR || code === FEED);
+            currentToken = ["space", css2.slice(pos, next)];
+            pos = next - 1;
+            break;
+          }
+          case OPEN_SQUARE:
+          case CLOSE_SQUARE:
+          case OPEN_CURLY:
+          case CLOSE_CURLY:
+          case COLON:
+          case SEMICOLON:
+          case CLOSE_PARENTHESES: {
+            let controlChar = String.fromCharCode(code);
+            currentToken = [controlChar, controlChar, pos];
+            break;
+          }
+          case OPEN_PARENTHESES: {
+            prev = buffer.length ? buffer.pop()[1] : "";
+            n = css2.charCodeAt(pos + 1);
+            if (prev === "url" && n !== SINGLE_QUOTE && n !== DOUBLE_QUOTE && n !== SPACE && n !== NEWLINE && n !== TAB && n !== FEED && n !== CR) {
+              next = pos;
+              do {
+                escaped = false;
+                next = css2.indexOf(")", next + 1);
+                if (next === -1) {
+                  if (ignore || ignoreUnclosed) {
+                    next = pos;
+                    break;
+                  } else {
+                    unclosed("bracket");
+                  }
+                }
+                escapePos = next;
+                while (css2.charCodeAt(escapePos - 1) === BACKSLASH) {
+                  escapePos -= 1;
+                  escaped = !escaped;
+                }
+              } while (escaped);
+              currentToken = ["brackets", css2.slice(pos, next + 1), pos, next];
+              pos = next;
+            } else {
+              next = css2.indexOf(")", pos + 1);
+              content = css2.slice(pos, next + 1);
+              if (next === -1 || RE_BAD_BRACKET.test(content)) {
+                currentToken = ["(", "(", pos];
+              } else {
+                currentToken = ["brackets", content, pos, next];
+                pos = next;
+              }
+            }
+            break;
+          }
+          case SINGLE_QUOTE:
+          case DOUBLE_QUOTE: {
+            quote = code === SINGLE_QUOTE ? "'" : '"';
+            next = pos;
+            do {
+              escaped = false;
+              next = css2.indexOf(quote, next + 1);
+              if (next === -1) {
+                if (ignore || ignoreUnclosed) {
+                  next = pos + 1;
+                  break;
+                } else {
+                  unclosed("string");
+                }
+              }
+              escapePos = next;
+              while (css2.charCodeAt(escapePos - 1) === BACKSLASH) {
+                escapePos -= 1;
+                escaped = !escaped;
+              }
+            } while (escaped);
+            currentToken = ["string", css2.slice(pos, next + 1), pos, next];
+            pos = next;
+            break;
+          }
+          case AT: {
+            RE_AT_END.lastIndex = pos + 1;
+            RE_AT_END.test(css2);
+            if (RE_AT_END.lastIndex === 0) {
+              next = css2.length - 1;
+            } else {
+              next = RE_AT_END.lastIndex - 2;
+            }
+            currentToken = ["at-word", css2.slice(pos, next + 1), pos, next];
+            pos = next;
+            break;
+          }
+          case BACKSLASH: {
+            next = pos;
+            escape3 = true;
+            while (css2.charCodeAt(next + 1) === BACKSLASH) {
+              next += 1;
+              escape3 = !escape3;
+            }
+            code = css2.charCodeAt(next + 1);
+            if (escape3 && code !== SLASH && code !== SPACE && code !== NEWLINE && code !== TAB && code !== CR && code !== FEED) {
+              next += 1;
+              if (RE_HEX_ESCAPE.test(css2.charAt(next))) {
+                while (RE_HEX_ESCAPE.test(css2.charAt(next + 1))) {
+                  next += 1;
+                }
+                if (css2.charCodeAt(next + 1) === SPACE) {
+                  next += 1;
+                }
+              }
+            }
+            currentToken = ["word", css2.slice(pos, next + 1), pos, next];
+            pos = next;
+            break;
+          }
+          default: {
+            if (code === SLASH && css2.charCodeAt(pos + 1) === ASTERISK) {
+              next = css2.indexOf("*/", pos + 2) + 1;
+              if (next === 0) {
+                if (ignore || ignoreUnclosed) {
+                  next = css2.length;
+                } else {
+                  unclosed("comment");
+                }
+              }
+              currentToken = ["comment", css2.slice(pos, next + 1), pos, next];
+              pos = next;
+            } else {
+              RE_WORD_END.lastIndex = pos + 1;
+              RE_WORD_END.test(css2);
+              if (RE_WORD_END.lastIndex === 0) {
+                next = css2.length - 1;
+              } else {
+                next = RE_WORD_END.lastIndex - 2;
+              }
+              currentToken = ["word", css2.slice(pos, next + 1), pos, next];
+              buffer.push(currentToken);
+              pos = next;
+            }
+            break;
+          }
+        }
+        pos++;
+        return currentToken;
+      }
+      function back(token) {
+        returned.push(token);
+      }
+      return {
+        back,
+        endOfFile,
+        nextToken,
+        position
+      };
+    };
+  }
+});
+
+// node_modules/postcss/lib/at-rule.js
+var require_at_rule = __commonJS({
+  "node_modules/postcss/lib/at-rule.js"(exports, module2) {
+    "use strict";
+    var Container2 = require_container();
+    var AtRule2 = class extends Container2 {
+      constructor(defaults) {
+        super(defaults);
+        this.type = "atrule";
+      }
+      append(...children) {
+        if (!this.proxyOf.nodes)
+          this.nodes = [];
+        return super.append(...children);
+      }
+      prepend(...children) {
+        if (!this.proxyOf.nodes)
+          this.nodes = [];
+        return super.prepend(...children);
+      }
+    };
+    module2.exports = AtRule2;
+    AtRule2.default = AtRule2;
+    Container2.registerAtRule(AtRule2);
+  }
+});
+
+// node_modules/postcss/lib/root.js
+var require_root = __commonJS({
+  "node_modules/postcss/lib/root.js"(exports, module2) {
+    "use strict";
+    var Container2 = require_container();
+    var LazyResult;
+    var Processor2;
+    var Root2 = class extends Container2 {
+      constructor(defaults) {
+        super(defaults);
+        this.type = "root";
+        if (!this.nodes)
+          this.nodes = [];
+      }
+      normalize(child, sample, type) {
+        let nodes = super.normalize(child);
+        if (sample) {
+          if (type === "prepend") {
+            if (this.nodes.length > 1) {
+              sample.raws.before = this.nodes[1].raws.before;
+            } else {
+              delete sample.raws.before;
+            }
+          } else if (this.first !== sample) {
+            for (let node of nodes) {
+              node.raws.before = sample.raws.before;
+            }
+          }
+        }
+        return nodes;
+      }
+      removeChild(child, ignore) {
+        let index = this.index(child);
+        if (!ignore && index === 0 && this.nodes.length > 1) {
+          this.nodes[1].raws.before = this.nodes[index].raws.before;
+        }
+        return super.removeChild(child);
+      }
+      toResult(opts = {}) {
+        let lazy = new LazyResult(new Processor2(), this, opts);
+        return lazy.stringify();
+      }
+    };
+    Root2.registerLazyResult = (dependant) => {
+      LazyResult = dependant;
+    };
+    Root2.registerProcessor = (dependant) => {
+      Processor2 = dependant;
+    };
+    module2.exports = Root2;
+    Root2.default = Root2;
+    Container2.registerRoot(Root2);
+  }
+});
+
+// node_modules/postcss/lib/list.js
+var require_list = __commonJS({
+  "node_modules/postcss/lib/list.js"(exports, module2) {
+    "use strict";
+    var list3 = {
+      comma(string) {
+        return list3.split(string, [","], true);
+      },
+      space(string) {
+        let spaces = [" ", "\n", "	"];
+        return list3.split(string, spaces);
+      },
+      split(string, separators, last) {
+        let array = [];
+        let current = "";
+        let split = false;
+        let func = 0;
+        let inQuote = false;
+        let prevQuote = "";
+        let escape3 = false;
+        for (let letter of string) {
+          if (escape3) {
+            escape3 = false;
+          } else if (letter === "\\") {
+            escape3 = true;
+          } else if (inQuote) {
+            if (letter === prevQuote) {
+              inQuote = false;
+            }
+          } else if (letter === '"' || letter === "'") {
+            inQuote = true;
+            prevQuote = letter;
+          } else if (letter === "(") {
+            func += 1;
+          } else if (letter === ")") {
+            if (func > 0)
+              func -= 1;
+          } else if (func === 0) {
+            if (separators.includes(letter))
+              split = true;
+          }
+          if (split) {
+            if (current !== "")
+              array.push(current.trim());
+            current = "";
+            split = false;
+          } else {
+            current += letter;
+          }
+        }
+        if (last || current !== "")
+          array.push(current.trim());
+        return array;
+      }
+    };
+    module2.exports = list3;
+    list3.default = list3;
+  }
+});
+
+// node_modules/postcss/lib/rule.js
+var require_rule = __commonJS({
+  "node_modules/postcss/lib/rule.js"(exports, module2) {
+    "use strict";
+    var Container2 = require_container();
+    var list3 = require_list();
+    var Rule2 = class extends Container2 {
+      constructor(defaults) {
+        super(defaults);
+        this.type = "rule";
+        if (!this.nodes)
+          this.nodes = [];
+      }
+      get selectors() {
+        return list3.comma(this.selector);
+      }
+      set selectors(values) {
+        let match = this.selector ? this.selector.match(/,\s*/) : null;
+        let sep = match ? match[0] : "," + this.raw("between", "beforeOpen");
+        this.selector = values.join(sep);
+      }
+    };
+    module2.exports = Rule2;
+    Rule2.default = Rule2;
+    Container2.registerRule(Rule2);
+  }
+});
+
+// node_modules/postcss/lib/parser.js
+var require_parser = __commonJS({
+  "node_modules/postcss/lib/parser.js"(exports, module2) {
+    "use strict";
+    var Declaration2 = require_declaration();
+    var tokenizer = require_tokenize();
+    var Comment2 = require_comment();
+    var AtRule2 = require_at_rule();
+    var Root2 = require_root();
+    var Rule2 = require_rule();
+    var SAFE_COMMENT_NEIGHBOR = {
+      empty: true,
+      space: true
+    };
+    function findLastWithPosition(tokens) {
+      for (let i = tokens.length - 1; i >= 0; i--) {
+        let token = tokens[i];
+        let pos = token[3] || token[2];
+        if (pos)
+          return pos;
+      }
+    }
+    var Parser = class {
+      constructor(input) {
+        this.input = input;
+        this.root = new Root2();
+        this.current = this.root;
+        this.spaces = "";
+        this.semicolon = false;
+        this.createTokenizer();
+        this.root.source = { input, start: { column: 1, line: 1, offset: 0 } };
+      }
+      atrule(token) {
+        let node = new AtRule2();
+        node.name = token[1].slice(1);
+        if (node.name === "") {
+          this.unnamedAtrule(node, token);
+        }
+        this.init(node, token[2]);
+        let type;
+        let prev;
+        let shift;
+        let last = false;
+        let open = false;
+        let params = [];
+        let brackets = [];
+        while (!this.tokenizer.endOfFile()) {
+          token = this.tokenizer.nextToken();
+          type = token[0];
+          if (type === "(" || type === "[") {
+            brackets.push(type === "(" ? ")" : "]");
+          } else if (type === "{" && brackets.length > 0) {
+            brackets.push("}");
+          } else if (type === brackets[brackets.length - 1]) {
+            brackets.pop();
+          }
+          if (brackets.length === 0) {
+            if (type === ";") {
+              node.source.end = this.getPosition(token[2]);
+              node.source.end.offset++;
+              this.semicolon = true;
+              break;
+            } else if (type === "{") {
+              open = true;
+              break;
+            } else if (type === "}") {
+              if (params.length > 0) {
+                shift = params.length - 1;
+                prev = params[shift];
+                while (prev && prev[0] === "space") {
+                  prev = params[--shift];
+                }
+                if (prev) {
+                  node.source.end = this.getPosition(prev[3] || prev[2]);
+                  node.source.end.offset++;
+                }
+              }
+              this.end(token);
+              break;
+            } else {
+              params.push(token);
+            }
+          } else {
+            params.push(token);
+          }
+          if (this.tokenizer.endOfFile()) {
+            last = true;
+            break;
+          }
+        }
+        node.raws.between = this.spacesAndCommentsFromEnd(params);
+        if (params.length) {
+          node.raws.afterName = this.spacesAndCommentsFromStart(params);
+          this.raw(node, "params", params);
+          if (last) {
+            token = params[params.length - 1];
+            node.source.end = this.getPosition(token[3] || token[2]);
+            node.source.end.offset++;
+            this.spaces = node.raws.between;
+            node.raws.between = "";
+          }
+        } else {
+          node.raws.afterName = "";
+          node.params = "";
+        }
+        if (open) {
+          node.nodes = [];
+          this.current = node;
+        }
+      }
+      checkMissedSemicolon(tokens) {
+        let colon = this.colon(tokens);
+        if (colon === false)
+          return;
+        let founded = 0;
+        let token;
+        for (let j = colon - 1; j >= 0; j--) {
+          token = tokens[j];
+          if (token[0] !== "space") {
+            founded += 1;
+            if (founded === 2)
+              break;
+          }
+        }
+        throw this.input.error(
+          "Missed semicolon",
+          token[0] === "word" ? token[3] + 1 : token[2]
+        );
+      }
+      colon(tokens) {
+        let brackets = 0;
+        let token, type, prev;
+        for (let [i, element] of tokens.entries()) {
+          token = element;
+          type = token[0];
+          if (type === "(") {
+            brackets += 1;
+          }
+          if (type === ")") {
+            brackets -= 1;
+          }
+          if (brackets === 0 && type === ":") {
+            if (!prev) {
+              this.doubleColon(token);
+            } else if (prev[0] === "word" && prev[1] === "progid") {
+              continue;
+            } else {
+              return i;
+            }
+          }
+          prev = token;
+        }
+        return false;
+      }
+      comment(token) {
+        let node = new Comment2();
+        this.init(node, token[2]);
+        node.source.end = this.getPosition(token[3] || token[2]);
+        node.source.end.offset++;
+        let text = token[1].slice(2, -2);
+        if (/^\s*$/.test(text)) {
+          node.text = "";
+          node.raws.left = text;
+          node.raws.right = "";
+        } else {
+          let match = text.match(/^(\s*)([^]*\S)(\s*)$/);
+          node.text = match[2];
+          node.raws.left = match[1];
+          node.raws.right = match[3];
+        }
+      }
+      createTokenizer() {
+        this.tokenizer = tokenizer(this.input);
+      }
+      decl(tokens, customProperty) {
+        let node = new Declaration2();
+        this.init(node, tokens[0][2]);
+        let last = tokens[tokens.length - 1];
+        if (last[0] === ";") {
+          this.semicolon = true;
+          tokens.pop();
+        }
+        node.source.end = this.getPosition(
+          last[3] || last[2] || findLastWithPosition(tokens)
+        );
+        node.source.end.offset++;
+        while (tokens[0][0] !== "word") {
+          if (tokens.length === 1)
+            this.unknownWord(tokens);
+          node.raws.before += tokens.shift()[1];
+        }
+        node.source.start = this.getPosition(tokens[0][2]);
+        node.prop = "";
+        while (tokens.length) {
+          let type = tokens[0][0];
+          if (type === ":" || type === "space" || type === "comment") {
+            break;
+          }
+          node.prop += tokens.shift()[1];
+        }
+        node.raws.between = "";
+        let token;
+        while (tokens.length) {
+          token = tokens.shift();
+          if (token[0] === ":") {
+            node.raws.between += token[1];
+            break;
+          } else {
+            if (token[0] === "word" && /\w/.test(token[1])) {
+              this.unknownWord([token]);
+            }
+            node.raws.between += token[1];
+          }
+        }
+        if (node.prop[0] === "_" || node.prop[0] === "*") {
+          node.raws.before += node.prop[0];
+          node.prop = node.prop.slice(1);
+        }
+        let firstSpaces = [];
+        let next;
+        while (tokens.length) {
+          next = tokens[0][0];
+          if (next !== "space" && next !== "comment")
+            break;
+          firstSpaces.push(tokens.shift());
+        }
+        this.precheckMissedSemicolon(tokens);
+        for (let i = tokens.length - 1; i >= 0; i--) {
+          token = tokens[i];
+          if (token[1].toLowerCase() === "!important") {
+            node.important = true;
+            let string = this.stringFrom(tokens, i);
+            string = this.spacesFromEnd(tokens) + string;
+            if (string !== " !important")
+              node.raws.important = string;
+            break;
+          } else if (token[1].toLowerCase() === "important") {
+            let cache = tokens.slice(0);
+            let str = "";
+            for (let j = i; j > 0; j--) {
+              let type = cache[j][0];
+              if (str.trim().indexOf("!") === 0 && type !== "space") {
+                break;
+              }
+              str = cache.pop()[1] + str;
+            }
+            if (str.trim().indexOf("!") === 0) {
+              node.important = true;
+              node.raws.important = str;
+              tokens = cache;
+            }
+          }
+          if (token[0] !== "space" && token[0] !== "comment") {
+            break;
+          }
+        }
+        let hasWord = tokens.some((i) => i[0] !== "space" && i[0] !== "comment");
+        if (hasWord) {
+          node.raws.between += firstSpaces.map((i) => i[1]).join("");
+          firstSpaces = [];
+        }
+        this.raw(node, "value", firstSpaces.concat(tokens), customProperty);
+        if (node.value.includes(":") && !customProperty) {
+          this.checkMissedSemicolon(tokens);
+        }
+      }
+      doubleColon(token) {
+        throw this.input.error(
+          "Double colon",
+          { offset: token[2] },
+          { offset: token[2] + token[1].length }
+        );
+      }
+      emptyRule(token) {
+        let node = new Rule2();
+        this.init(node, token[2]);
+        node.selector = "";
+        node.raws.between = "";
+        this.current = node;
+      }
+      end(token) {
+        if (this.current.nodes && this.current.nodes.length) {
+          this.current.raws.semicolon = this.semicolon;
+        }
+        this.semicolon = false;
+        this.current.raws.after = (this.current.raws.after || "") + this.spaces;
+        this.spaces = "";
+        if (this.current.parent) {
+          this.current.source.end = this.getPosition(token[2]);
+          this.current.source.end.offset++;
+          this.current = this.current.parent;
+        } else {
+          this.unexpectedClose(token);
+        }
+      }
+      endFile() {
+        if (this.current.parent)
+          this.unclosedBlock();
+        if (this.current.nodes && this.current.nodes.length) {
+          this.current.raws.semicolon = this.semicolon;
+        }
+        this.current.raws.after = (this.current.raws.after || "") + this.spaces;
+        this.root.source.end = this.getPosition(this.tokenizer.position());
+      }
+      freeSemicolon(token) {
+        this.spaces += token[1];
+        if (this.current.nodes) {
+          let prev = this.current.nodes[this.current.nodes.length - 1];
+          if (prev && prev.type === "rule" && !prev.raws.ownSemicolon) {
+            prev.raws.ownSemicolon = this.spaces;
+            this.spaces = "";
+          }
+        }
+      }
+      // Helpers
+      getPosition(offset) {
+        let pos = this.input.fromOffset(offset);
+        return {
+          column: pos.col,
+          line: pos.line,
+          offset
+        };
+      }
+      init(node, offset) {
+        this.current.push(node);
+        node.source = {
+          input: this.input,
+          start: this.getPosition(offset)
+        };
+        node.raws.before = this.spaces;
+        this.spaces = "";
+        if (node.type !== "comment")
+          this.semicolon = false;
+      }
+      other(start) {
+        let end = false;
+        let type = null;
+        let colon = false;
+        let bracket = null;
+        let brackets = [];
+        let customProperty = start[1].startsWith("--");
+        let tokens = [];
+        let token = start;
+        while (token) {
+          type = token[0];
+          tokens.push(token);
+          if (type === "(" || type === "[") {
+            if (!bracket)
+              bracket = token;
+            brackets.push(type === "(" ? ")" : "]");
+          } else if (customProperty && colon && type === "{") {
+            if (!bracket)
+              bracket = token;
+            brackets.push("}");
+          } else if (brackets.length === 0) {
+            if (type === ";") {
+              if (colon) {
+                this.decl(tokens, customProperty);
+                return;
+              } else {
+                break;
+              }
+            } else if (type === "{") {
+              this.rule(tokens);
+              return;
+            } else if (type === "}") {
+              this.tokenizer.back(tokens.pop());
+              end = true;
+              break;
+            } else if (type === ":") {
+              colon = true;
+            }
+          } else if (type === brackets[brackets.length - 1]) {
+            brackets.pop();
+            if (brackets.length === 0)
+              bracket = null;
+          }
+          token = this.tokenizer.nextToken();
+        }
+        if (this.tokenizer.endOfFile())
+          end = true;
+        if (brackets.length > 0)
+          this.unclosedBracket(bracket);
+        if (end && colon) {
+          if (!customProperty) {
+            while (tokens.length) {
+              token = tokens[tokens.length - 1][0];
+              if (token !== "space" && token !== "comment")
+                break;
+              this.tokenizer.back(tokens.pop());
+            }
+          }
+          this.decl(tokens, customProperty);
+        } else {
+          this.unknownWord(tokens);
+        }
+      }
+      parse() {
+        let token;
+        while (!this.tokenizer.endOfFile()) {
+          token = this.tokenizer.nextToken();
+          switch (token[0]) {
+            case "space":
+              this.spaces += token[1];
+              break;
+            case ";":
+              this.freeSemicolon(token);
+              break;
+            case "}":
+              this.end(token);
+              break;
+            case "comment":
+              this.comment(token);
+              break;
+            case "at-word":
+              this.atrule(token);
+              break;
+            case "{":
+              this.emptyRule(token);
+              break;
+            default:
+              this.other(token);
+              break;
+          }
+        }
+        this.endFile();
+      }
+      precheckMissedSemicolon() {
+      }
+      raw(node, prop, tokens, customProperty) {
+        let token, type;
+        let length = tokens.length;
+        let value = "";
+        let clean = true;
+        let next, prev;
+        for (let i = 0; i < length; i += 1) {
+          token = tokens[i];
+          type = token[0];
+          if (type === "space" && i === length - 1 && !customProperty) {
+            clean = false;
+          } else if (type === "comment") {
+            prev = tokens[i - 1] ? tokens[i - 1][0] : "empty";
+            next = tokens[i + 1] ? tokens[i + 1][0] : "empty";
+            if (!SAFE_COMMENT_NEIGHBOR[prev] && !SAFE_COMMENT_NEIGHBOR[next]) {
+              if (value.slice(-1) === ",") {
+                clean = false;
+              } else {
+                value += token[1];
+              }
+            } else {
+              clean = false;
+            }
+          } else {
+            value += token[1];
+          }
+        }
+        if (!clean) {
+          let raw = tokens.reduce((all, i) => all + i[1], "");
+          node.raws[prop] = { raw, value };
+        }
+        node[prop] = value;
+      }
+      rule(tokens) {
+        tokens.pop();
+        let node = new Rule2();
+        this.init(node, tokens[0][2]);
+        node.raws.between = this.spacesAndCommentsFromEnd(tokens);
+        this.raw(node, "selector", tokens);
+        this.current = node;
+      }
+      spacesAndCommentsFromEnd(tokens) {
+        let lastTokenType;
+        let spaces = "";
+        while (tokens.length) {
+          lastTokenType = tokens[tokens.length - 1][0];
+          if (lastTokenType !== "space" && lastTokenType !== "comment")
+            break;
+          spaces = tokens.pop()[1] + spaces;
+        }
+        return spaces;
+      }
+      // Errors
+      spacesAndCommentsFromStart(tokens) {
+        let next;
+        let spaces = "";
+        while (tokens.length) {
+          next = tokens[0][0];
+          if (next !== "space" && next !== "comment")
+            break;
+          spaces += tokens.shift()[1];
+        }
+        return spaces;
+      }
+      spacesFromEnd(tokens) {
+        let lastTokenType;
+        let spaces = "";
+        while (tokens.length) {
+          lastTokenType = tokens[tokens.length - 1][0];
+          if (lastTokenType !== "space")
+            break;
+          spaces = tokens.pop()[1] + spaces;
+        }
+        return spaces;
+      }
+      stringFrom(tokens, from) {
+        let result = "";
+        for (let i = from; i < tokens.length; i++) {
+          result += tokens[i][1];
+        }
+        tokens.splice(from, tokens.length - from);
+        return result;
+      }
+      unclosedBlock() {
+        let pos = this.current.source.start;
+        throw this.input.error("Unclosed block", pos.line, pos.column);
+      }
+      unclosedBracket(bracket) {
+        throw this.input.error(
+          "Unclosed bracket",
+          { offset: bracket[2] },
+          { offset: bracket[2] + 1 }
+        );
+      }
+      unexpectedClose(token) {
+        throw this.input.error(
+          "Unexpected }",
+          { offset: token[2] },
+          { offset: token[2] + 1 }
+        );
+      }
+      unknownWord(tokens) {
+        throw this.input.error(
+          "Unknown word",
+          { offset: tokens[0][2] },
+          { offset: tokens[0][2] + tokens[0][1].length }
+        );
+      }
+      unnamedAtrule(node, token) {
+        throw this.input.error(
+          "At-rule without name",
+          { offset: token[2] },
+          { offset: token[2] + token[1].length }
+        );
+      }
+    };
+    module2.exports = Parser;
+  }
+});
+
+// node_modules/postcss/lib/parse.js
+var require_parse = __commonJS({
+  "node_modules/postcss/lib/parse.js"(exports, module2) {
+    "use strict";
+    var Container2 = require_container();
+    var Parser = require_parser();
+    var Input2 = require_input();
+    function parse2(css2, opts) {
+      let input = new Input2(css2, opts);
+      let parser2 = new Parser(input);
+      try {
+        parser2.parse();
+      } catch (e2) {
+        if (true) {
+          if (e2.name === "CssSyntaxError" && opts && opts.from) {
+            if (/\.scss$/i.test(opts.from)) {
+              e2.message += "\nYou tried to parse SCSS with the standard CSS parser; try again with the postcss-scss parser";
+            } else if (/\.sass/i.test(opts.from)) {
+              e2.message += "\nYou tried to parse Sass with the standard CSS parser; try again with the postcss-sass parser";
+            } else if (/\.less$/i.test(opts.from)) {
+              e2.message += "\nYou tried to parse Less with the standard CSS parser; try again with the postcss-less parser";
+            }
+          }
+        }
+        throw e2;
+      }
+      return parser2.root;
+    }
+    module2.exports = parse2;
+    parse2.default = parse2;
+    Container2.registerParse(parse2);
+  }
+});
+
+// node_modules/postcss/lib/lazy-result.js
+var require_lazy_result = __commonJS({
+  "node_modules/postcss/lib/lazy-result.js"(exports, module2) {
+    "use strict";
+    var { isClean, my } = require_symbols();
+    var MapGenerator = require_map_generator();
+    var stringify2 = require_stringify();
+    var Container2 = require_container();
+    var Document2 = require_document();
+    var warnOnce = require_warn_once();
+    var Result2 = require_result();
+    var parse2 = require_parse();
+    var Root2 = require_root();
+    var TYPE_TO_CLASS_NAME = {
+      atrule: "AtRule",
+      comment: "Comment",
+      decl: "Declaration",
+      document: "Document",
+      root: "Root",
+      rule: "Rule"
+    };
+    var PLUGIN_PROPS = {
+      AtRule: true,
+      AtRuleExit: true,
+      Comment: true,
+      CommentExit: true,
+      Declaration: true,
+      DeclarationExit: true,
+      Document: true,
+      DocumentExit: true,
+      Once: true,
+      OnceExit: true,
+      postcssPlugin: true,
+      prepare: true,
+      Root: true,
+      RootExit: true,
+      Rule: true,
+      RuleExit: true
+    };
+    var NOT_VISITORS = {
+      Once: true,
+      postcssPlugin: true,
+      prepare: true
+    };
+    var CHILDREN = 0;
+    function isPromise(obj) {
+      return typeof obj === "object" && typeof obj.then === "function";
+    }
+    function getEvents(node) {
+      let key = false;
+      let type = TYPE_TO_CLASS_NAME[node.type];
+      if (node.type === "decl") {
+        key = node.prop.toLowerCase();
+      } else if (node.type === "atrule") {
+        key = node.name.toLowerCase();
+      }
+      if (key && node.append) {
+        return [
+          type,
+          type + "-" + key,
+          CHILDREN,
+          type + "Exit",
+          type + "Exit-" + key
+        ];
+      } else if (key) {
+        return [type, type + "-" + key, type + "Exit", type + "Exit-" + key];
+      } else if (node.append) {
+        return [type, CHILDREN, type + "Exit"];
+      } else {
+        return [type, type + "Exit"];
+      }
+    }
+    function toStack(node) {
+      let events;
+      if (node.type === "document") {
+        events = ["Document", CHILDREN, "DocumentExit"];
+      } else if (node.type === "root") {
+        events = ["Root", CHILDREN, "RootExit"];
+      } else {
+        events = getEvents(node);
+      }
+      return {
+        eventIndex: 0,
+        events,
+        iterator: 0,
+        node,
+        visitorIndex: 0,
+        visitors: []
+      };
+    }
+    function cleanMarks(node) {
+      node[isClean] = false;
+      if (node.nodes)
+        node.nodes.forEach((i) => cleanMarks(i));
+      return node;
+    }
+    var postcss2 = {};
+    var LazyResult = class {
+      constructor(processor, css2, opts) {
+        this.stringified = false;
+        this.processed = false;
+        let root2;
+        if (typeof css2 === "object" && css2 !== null && (css2.type === "root" || css2.type === "document")) {
+          root2 = cleanMarks(css2);
+        } else if (css2 instanceof LazyResult || css2 instanceof Result2) {
+          root2 = cleanMarks(css2.root);
+          if (css2.map) {
+            if (typeof opts.map === "undefined")
+              opts.map = {};
+            if (!opts.map.inline)
+              opts.map.inline = false;
+            opts.map.prev = css2.map;
+          }
+        } else {
+          let parser2 = parse2;
+          if (opts.syntax)
+            parser2 = opts.syntax.parse;
+          if (opts.parser)
+            parser2 = opts.parser;
+          if (parser2.parse)
+            parser2 = parser2.parse;
+          try {
+            root2 = parser2(css2, opts);
+          } catch (error) {
+            this.processed = true;
+            this.error = error;
+          }
+          if (root2 && !root2[my]) {
+            Container2.rebuild(root2);
+          }
+        }
+        this.result = new Result2(processor, root2, opts);
+        this.helpers = { ...postcss2, postcss: postcss2, result: this.result };
+        this.plugins = this.processor.plugins.map((plugin2) => {
+          if (typeof plugin2 === "object" && plugin2.prepare) {
+            return { ...plugin2, ...plugin2.prepare(this.result) };
+          } else {
+            return plugin2;
+          }
+        });
+      }
+      async() {
+        if (this.error)
+          return Promise.reject(this.error);
+        if (this.processed)
+          return Promise.resolve(this.result);
+        if (!this.processing) {
+          this.processing = this.runAsync();
+        }
+        return this.processing;
+      }
+      catch(onRejected) {
+        return this.async().catch(onRejected);
+      }
+      finally(onFinally) {
+        return this.async().then(onFinally, onFinally);
+      }
+      getAsyncError() {
+        throw new Error("Use process(css).then(cb) to work with async plugins");
+      }
+      handleError(error, node) {
+        let plugin2 = this.result.lastPlugin;
+        try {
+          if (node)
+            node.addToError(error);
+          this.error = error;
+          if (error.name === "CssSyntaxError" && !error.plugin) {
+            error.plugin = plugin2.postcssPlugin;
+            error.setMessage();
+          } else if (plugin2.postcssVersion) {
+            if (true) {
+              let pluginName = plugin2.postcssPlugin;
+              let pluginVer = plugin2.postcssVersion;
+              let runtimeVer = this.result.processor.version;
+              let a = pluginVer.split(".");
+              let b = runtimeVer.split(".");
+              if (a[0] !== b[0] || parseInt(a[1]) > parseInt(b[1])) {
+                console.error(
+                  "Unknown error from PostCSS plugin. Your current PostCSS version is " + runtimeVer + ", but " + pluginName + " uses " + pluginVer + ". Perhaps this is the source of the error below."
+                );
+              }
+            }
+          }
+        } catch (err) {
+          if (console && console.error)
+            console.error(err);
+        }
+        return error;
+      }
+      prepareVisitors() {
+        this.listeners = {};
+        let add = (plugin2, type, cb) => {
+          if (!this.listeners[type])
+            this.listeners[type] = [];
+          this.listeners[type].push([plugin2, cb]);
+        };
+        for (let plugin2 of this.plugins) {
+          if (typeof plugin2 === "object") {
+            for (let event in plugin2) {
+              if (!PLUGIN_PROPS[event] && /^[A-Z]/.test(event)) {
+                throw new Error(
+                  `Unknown event ${event} in ${plugin2.postcssPlugin}. Try to update PostCSS (${this.processor.version} now).`
+                );
+              }
+              if (!NOT_VISITORS[event]) {
+                if (typeof plugin2[event] === "object") {
+                  for (let filter in plugin2[event]) {
+                    if (filter === "*") {
+                      add(plugin2, event, plugin2[event][filter]);
+                    } else {
+                      add(
+                        plugin2,
+                        event + "-" + filter.toLowerCase(),
+                        plugin2[event][filter]
+                      );
+                    }
+                  }
+                } else if (typeof plugin2[event] === "function") {
+                  add(plugin2, event, plugin2[event]);
+                }
+              }
+            }
+          }
+        }
+        this.hasListener = Object.keys(this.listeners).length > 0;
+      }
+      async runAsync() {
+        this.plugin = 0;
+        for (let i = 0; i < this.plugins.length; i++) {
+          let plugin2 = this.plugins[i];
+          let promise = this.runOnRoot(plugin2);
+          if (isPromise(promise)) {
+            try {
+              await promise;
+            } catch (error) {
+              throw this.handleError(error);
+            }
+          }
+        }
+        this.prepareVisitors();
+        if (this.hasListener) {
+          let root2 = this.result.root;
+          while (!root2[isClean]) {
+            root2[isClean] = true;
+            let stack = [toStack(root2)];
+            while (stack.length > 0) {
+              let promise = this.visitTick(stack);
+              if (isPromise(promise)) {
+                try {
+                  await promise;
+                } catch (e2) {
+                  let node = stack[stack.length - 1].node;
+                  throw this.handleError(e2, node);
+                }
+              }
+            }
+          }
+          if (this.listeners.OnceExit) {
+            for (let [plugin2, visitor] of this.listeners.OnceExit) {
+              this.result.lastPlugin = plugin2;
+              try {
+                if (root2.type === "document") {
+                  let roots = root2.nodes.map(
+                    (subRoot) => visitor(subRoot, this.helpers)
+                  );
+                  await Promise.all(roots);
+                } else {
+                  await visitor(root2, this.helpers);
+                }
+              } catch (e2) {
+                throw this.handleError(e2);
+              }
+            }
+          }
+        }
+        this.processed = true;
+        return this.stringify();
+      }
+      runOnRoot(plugin2) {
+        this.result.lastPlugin = plugin2;
+        try {
+          if (typeof plugin2 === "object" && plugin2.Once) {
+            if (this.result.root.type === "document") {
+              let roots = this.result.root.nodes.map(
+                (root2) => plugin2.Once(root2, this.helpers)
+              );
+              if (isPromise(roots[0])) {
+                return Promise.all(roots);
+              }
+              return roots;
+            }
+            return plugin2.Once(this.result.root, this.helpers);
+          } else if (typeof plugin2 === "function") {
+            return plugin2(this.result.root, this.result);
+          }
+        } catch (error) {
+          throw this.handleError(error);
+        }
+      }
+      stringify() {
+        if (this.error)
+          throw this.error;
+        if (this.stringified)
+          return this.result;
+        this.stringified = true;
+        this.sync();
+        let opts = this.result.opts;
+        let str = stringify2;
+        if (opts.syntax)
+          str = opts.syntax.stringify;
+        if (opts.stringifier)
+          str = opts.stringifier;
+        if (str.stringify)
+          str = str.stringify;
+        let map = new MapGenerator(str, this.result.root, this.result.opts);
+        let data = map.generate();
+        this.result.css = data[0];
+        this.result.map = data[1];
+        return this.result;
+      }
+      sync() {
+        if (this.error)
+          throw this.error;
+        if (this.processed)
+          return this.result;
+        this.processed = true;
+        if (this.processing) {
+          throw this.getAsyncError();
+        }
+        for (let plugin2 of this.plugins) {
+          let promise = this.runOnRoot(plugin2);
+          if (isPromise(promise)) {
+            throw this.getAsyncError();
+          }
+        }
+        this.prepareVisitors();
+        if (this.hasListener) {
+          let root2 = this.result.root;
+          while (!root2[isClean]) {
+            root2[isClean] = true;
+            this.walkSync(root2);
+          }
+          if (this.listeners.OnceExit) {
+            if (root2.type === "document") {
+              for (let subRoot of root2.nodes) {
+                this.visitSync(this.listeners.OnceExit, subRoot);
+              }
+            } else {
+              this.visitSync(this.listeners.OnceExit, root2);
+            }
+          }
+        }
+        return this.result;
+      }
+      then(onFulfilled, onRejected) {
+        if (true) {
+          if (!("from" in this.opts)) {
+            warnOnce(
+              "Without `from` option PostCSS could generate wrong source map and will not find Browserslist config. Set it to CSS file path or to `undefined` to prevent this warning."
+            );
+          }
+        }
+        return this.async().then(onFulfilled, onRejected);
+      }
+      toString() {
+        return this.css;
+      }
+      visitSync(visitors, node) {
+        for (let [plugin2, visitor] of visitors) {
+          this.result.lastPlugin = plugin2;
+          let promise;
+          try {
+            promise = visitor(node, this.helpers);
+          } catch (e2) {
+            throw this.handleError(e2, node.proxyOf);
+          }
+          if (node.type !== "root" && node.type !== "document" && !node.parent) {
+            return true;
+          }
+          if (isPromise(promise)) {
+            throw this.getAsyncError();
+          }
+        }
+      }
+      visitTick(stack) {
+        let visit = stack[stack.length - 1];
+        let { node, visitors } = visit;
+        if (node.type !== "root" && node.type !== "document" && !node.parent) {
+          stack.pop();
+          return;
+        }
+        if (visitors.length > 0 && visit.visitorIndex < visitors.length) {
+          let [plugin2, visitor] = visitors[visit.visitorIndex];
+          visit.visitorIndex += 1;
+          if (visit.visitorIndex === visitors.length) {
+            visit.visitors = [];
+            visit.visitorIndex = 0;
+          }
+          this.result.lastPlugin = plugin2;
+          try {
+            return visitor(node.toProxy(), this.helpers);
+          } catch (e2) {
+            throw this.handleError(e2, node);
+          }
+        }
+        if (visit.iterator !== 0) {
+          let iterator = visit.iterator;
+          let child;
+          while (child = node.nodes[node.indexes[iterator]]) {
+            node.indexes[iterator] += 1;
+            if (!child[isClean]) {
+              child[isClean] = true;
+              stack.push(toStack(child));
+              return;
+            }
+          }
+          visit.iterator = 0;
+          delete node.indexes[iterator];
+        }
+        let events = visit.events;
+        while (visit.eventIndex < events.length) {
+          let event = events[visit.eventIndex];
+          visit.eventIndex += 1;
+          if (event === CHILDREN) {
+            if (node.nodes && node.nodes.length) {
+              node[isClean] = true;
+              visit.iterator = node.getIterator();
+            }
+            return;
+          } else if (this.listeners[event]) {
+            visit.visitors = this.listeners[event];
+            return;
+          }
+        }
+        stack.pop();
+      }
+      walkSync(node) {
+        node[isClean] = true;
+        let events = getEvents(node);
+        for (let event of events) {
+          if (event === CHILDREN) {
+            if (node.nodes) {
+              node.each((child) => {
+                if (!child[isClean])
+                  this.walkSync(child);
+              });
+            }
+          } else {
+            let visitors = this.listeners[event];
+            if (visitors) {
+              if (this.visitSync(visitors, node.toProxy()))
+                return;
+            }
+          }
+        }
+      }
+      warnings() {
+        return this.sync().warnings();
+      }
+      get content() {
+        return this.stringify().content;
+      }
+      get css() {
+        return this.stringify().css;
+      }
+      get map() {
+        return this.stringify().map;
+      }
+      get messages() {
+        return this.sync().messages;
+      }
+      get opts() {
+        return this.result.opts;
+      }
+      get processor() {
+        return this.result.processor;
+      }
+      get root() {
+        return this.sync().root;
+      }
+      get [Symbol.toStringTag]() {
+        return "LazyResult";
+      }
+    };
+    LazyResult.registerPostcss = (dependant) => {
+      postcss2 = dependant;
+    };
+    module2.exports = LazyResult;
+    LazyResult.default = LazyResult;
+    Root2.registerLazyResult(LazyResult);
+    Document2.registerLazyResult(LazyResult);
+  }
+});
+
+// node_modules/postcss/lib/no-work-result.js
+var require_no_work_result = __commonJS({
+  "node_modules/postcss/lib/no-work-result.js"(exports, module2) {
+    "use strict";
+    var MapGenerator = require_map_generator();
+    var stringify2 = require_stringify();
+    var warnOnce = require_warn_once();
+    var parse2 = require_parse();
+    var Result2 = require_result();
+    var NoWorkResult = class {
+      constructor(processor, css2, opts) {
+        css2 = css2.toString();
+        this.stringified = false;
+        this._processor = processor;
+        this._css = css2;
+        this._opts = opts;
+        this._map = void 0;
+        let root2;
+        let str = stringify2;
+        this.result = new Result2(this._processor, root2, this._opts);
+        this.result.css = css2;
+        let self = this;
+        Object.defineProperty(this.result, "root", {
+          get() {
+            return self.root;
+          }
+        });
+        let map = new MapGenerator(str, root2, this._opts, css2);
+        if (map.isMap()) {
+          let [generatedCSS, generatedMap] = map.generate();
+          if (generatedCSS) {
+            this.result.css = generatedCSS;
+          }
+          if (generatedMap) {
+            this.result.map = generatedMap;
+          }
+        } else {
+          map.clearAnnotation();
+          this.result.css = map.css;
+        }
+      }
+      async() {
+        if (this.error)
+          return Promise.reject(this.error);
+        return Promise.resolve(this.result);
+      }
+      catch(onRejected) {
+        return this.async().catch(onRejected);
+      }
+      finally(onFinally) {
+        return this.async().then(onFinally, onFinally);
+      }
+      sync() {
+        if (this.error)
+          throw this.error;
+        return this.result;
+      }
+      then(onFulfilled, onRejected) {
+        if (true) {
+          if (!("from" in this._opts)) {
+            warnOnce(
+              "Without `from` option PostCSS could generate wrong source map and will not find Browserslist config. Set it to CSS file path or to `undefined` to prevent this warning."
+            );
+          }
+        }
+        return this.async().then(onFulfilled, onRejected);
+      }
+      toString() {
+        return this._css;
+      }
+      warnings() {
+        return [];
+      }
+      get content() {
+        return this.result.css;
+      }
+      get css() {
+        return this.result.css;
+      }
+      get map() {
+        return this.result.map;
+      }
+      get messages() {
+        return [];
+      }
+      get opts() {
+        return this.result.opts;
+      }
+      get processor() {
+        return this.result.processor;
+      }
+      get root() {
+        if (this._root) {
+          return this._root;
+        }
+        let root2;
+        let parser2 = parse2;
+        try {
+          root2 = parser2(this._css, this._opts);
+        } catch (error) {
+          this.error = error;
+        }
+        if (this.error) {
+          throw this.error;
+        } else {
+          this._root = root2;
+          return root2;
+        }
+      }
+      get [Symbol.toStringTag]() {
+        return "NoWorkResult";
+      }
+    };
+    module2.exports = NoWorkResult;
+    NoWorkResult.default = NoWorkResult;
+  }
+});
+
+// node_modules/postcss/lib/processor.js
+var require_processor = __commonJS({
+  "node_modules/postcss/lib/processor.js"(exports, module2) {
+    "use strict";
+    var NoWorkResult = require_no_work_result();
+    var LazyResult = require_lazy_result();
+    var Document2 = require_document();
+    var Root2 = require_root();
+    var Processor2 = class {
+      constructor(plugins = []) {
+        this.version = "8.4.39";
+        this.plugins = this.normalize(plugins);
+      }
+      normalize(plugins) {
+        let normalized = [];
+        for (let i of plugins) {
+          if (i.postcss === true) {
+            i = i();
+          } else if (i.postcss) {
+            i = i.postcss;
+          }
+          if (typeof i === "object" && Array.isArray(i.plugins)) {
+            normalized = normalized.concat(i.plugins);
+          } else if (typeof i === "object" && i.postcssPlugin) {
+            normalized.push(i);
+          } else if (typeof i === "function") {
+            normalized.push(i);
+          } else if (typeof i === "object" && (i.parse || i.stringify)) {
+            if (true) {
+              throw new Error(
+                "PostCSS syntaxes cannot be used as plugins. Instead, please use one of the syntax/parser/stringifier options as outlined in your PostCSS runner documentation."
+              );
+            }
+          } else {
+            throw new Error(i + " is not a PostCSS plugin");
+          }
+        }
+        return normalized;
+      }
+      process(css2, opts = {}) {
+        if (!this.plugins.length && !opts.parser && !opts.stringifier && !opts.syntax) {
+          return new NoWorkResult(this, css2, opts);
+        } else {
+          return new LazyResult(this, css2, opts);
+        }
+      }
+      use(plugin2) {
+        this.plugins = this.plugins.concat(this.normalize([plugin2]));
+        return this;
+      }
+    };
+    module2.exports = Processor2;
+    Processor2.default = Processor2;
+    Root2.registerProcessor(Processor2);
+    Document2.registerProcessor(Processor2);
+  }
+});
+
+// node_modules/postcss/lib/fromJSON.js
+var require_fromJSON = __commonJS({
+  "node_modules/postcss/lib/fromJSON.js"(exports, module2) {
+    "use strict";
+    var Declaration2 = require_declaration();
+    var PreviousMap = require_previous_map();
+    var Comment2 = require_comment();
+    var AtRule2 = require_at_rule();
+    var Input2 = require_input();
+    var Root2 = require_root();
+    var Rule2 = require_rule();
+    function fromJSON2(json, inputs) {
+      if (Array.isArray(json))
+        return json.map((n) => fromJSON2(n));
+      let { inputs: ownInputs, ...defaults } = json;
+      if (ownInputs) {
+        inputs = [];
+        for (let input of ownInputs) {
+          let inputHydrated = { ...input, __proto__: Input2.prototype };
+          if (inputHydrated.map) {
+            inputHydrated.map = {
+              ...inputHydrated.map,
+              __proto__: PreviousMap.prototype
+            };
+          }
+          inputs.push(inputHydrated);
+        }
+      }
+      if (defaults.nodes) {
+        defaults.nodes = json.nodes.map((n) => fromJSON2(n, inputs));
+      }
+      if (defaults.source) {
+        let { inputId, ...source } = defaults.source;
+        defaults.source = source;
+        if (inputId != null) {
+          defaults.source.input = inputs[inputId];
+        }
+      }
+      if (defaults.type === "root") {
+        return new Root2(defaults);
+      } else if (defaults.type === "decl") {
+        return new Declaration2(defaults);
+      } else if (defaults.type === "rule") {
+        return new Rule2(defaults);
+      } else if (defaults.type === "comment") {
+        return new Comment2(defaults);
+      } else if (defaults.type === "atrule") {
+        return new AtRule2(defaults);
+      } else {
+        throw new Error("Unknown node type: " + json.type);
+      }
+    }
+    module2.exports = fromJSON2;
+    fromJSON2.default = fromJSON2;
+  }
+});
+
+// node_modules/postcss/lib/postcss.js
+var require_postcss = __commonJS({
+  "node_modules/postcss/lib/postcss.js"(exports, module2) {
+    "use strict";
+    var CssSyntaxError2 = require_css_syntax_error();
+    var Declaration2 = require_declaration();
+    var LazyResult = require_lazy_result();
+    var Container2 = require_container();
+    var Processor2 = require_processor();
+    var stringify2 = require_stringify();
+    var fromJSON2 = require_fromJSON();
+    var Document2 = require_document();
+    var Warning2 = require_warning();
+    var Comment2 = require_comment();
+    var AtRule2 = require_at_rule();
+    var Result2 = require_result();
+    var Input2 = require_input();
+    var parse2 = require_parse();
+    var list3 = require_list();
+    var Rule2 = require_rule();
+    var Root2 = require_root();
+    var Node2 = require_node();
+    function postcss2(...plugins) {
+      if (plugins.length === 1 && Array.isArray(plugins[0])) {
+        plugins = plugins[0];
+      }
+      return new Processor2(plugins);
+    }
+    postcss2.plugin = function plugin2(name, initializer) {
+      let warningPrinted = false;
+      function creator(...args) {
+        if (console && console.warn && !warningPrinted) {
+          warningPrinted = true;
+          console.warn(
+            name + ": postcss.plugin was deprecated. Migration guide:\nhttps://evilmartians.com/chronicles/postcss-8-plugin-migration"
+          );
+          if (process.env.LANG && process.env.LANG.startsWith("cn")) {
+            console.warn(
+              name + ": \u91CC\u9762 postcss.plugin \u88AB\u5F03\u7528. \u8FC1\u79FB\u6307\u5357:\nhttps://www.w3ctech.com/topic/2226"
+            );
+          }
+        }
+        let transformer = initializer(...args);
+        transformer.postcssPlugin = name;
+        transformer.postcssVersion = new Processor2().version;
+        return transformer;
+      }
+      let cache;
+      Object.defineProperty(creator, "postcss", {
+        get() {
+          if (!cache)
+            cache = creator();
+          return cache;
+        }
+      });
+      creator.process = function(css2, processOpts, pluginOpts) {
+        return postcss2([creator(pluginOpts)]).process(css2, processOpts);
+      };
+      return creator;
+    };
+    postcss2.stringify = stringify2;
+    postcss2.parse = parse2;
+    postcss2.fromJSON = fromJSON2;
+    postcss2.list = list3;
+    postcss2.comment = (defaults) => new Comment2(defaults);
+    postcss2.atRule = (defaults) => new AtRule2(defaults);
+    postcss2.decl = (defaults) => new Declaration2(defaults);
+    postcss2.rule = (defaults) => new Rule2(defaults);
+    postcss2.root = (defaults) => new Root2(defaults);
+    postcss2.document = (defaults) => new Document2(defaults);
+    postcss2.CssSyntaxError = CssSyntaxError2;
+    postcss2.Declaration = Declaration2;
+    postcss2.Container = Container2;
+    postcss2.Processor = Processor2;
+    postcss2.Document = Document2;
+    postcss2.Comment = Comment2;
+    postcss2.Warning = Warning2;
+    postcss2.AtRule = AtRule2;
+    postcss2.Result = Result2;
+    postcss2.Input = Input2;
+    postcss2.Rule = Rule2;
+    postcss2.Root = Root2;
+    postcss2.Node = Node2;
+    LazyResult.registerPostcss(postcss2);
+    module2.exports = postcss2;
+    postcss2.default = postcss2;
+  }
+});
+
 // node_modules/highlight.js/lib/core.js
 var require_core = __commonJS({
   "node_modules/highlight.js/lib/core.js"(exports, module2) {
@@ -131,9 +3971,9 @@ var require_core = __commonJS({
        * @param {Tree} parseTree - the parse tree (must support `walk` API)
        * @param {{classPrefix: string}} options
        */
-      constructor(parseTree, options3) {
+      constructor(parseTree, options4) {
         this.buffer = "";
-        this.classPrefix = options3.classPrefix;
+        this.classPrefix = options4.classPrefix;
         parseTree.walk(this);
       }
       /**
@@ -261,9 +4101,9 @@ var require_core = __commonJS({
       /**
        * @param {*} options
        */
-      constructor(options3) {
+      constructor(options4) {
         super();
-        this.options = options3;
+        this.options = options4;
       }
       /**
        * @param {string} text
@@ -993,7 +4833,7 @@ var require_core = __commonJS({
       let SAFE_MODE = true;
       const LANGUAGE_NOT_FOUND = "Could not find the language '{}', did you forget to load/include a language module?";
       const PLAINTEXT_LANGUAGE = { disableAutodetect: true, name: "Plain text", contains: [] };
-      let options3 = {
+      let options4 = {
         ignoreUnescapedHTML: false,
         throwUnescapedHTML: false,
         noHighlightRe: /^(no-?highlight)$/i,
@@ -1006,12 +4846,12 @@ var require_core = __commonJS({
         __emitter: TokenTreeEmitter
       };
       function shouldNotHighlight(languageName) {
-        return options3.noHighlightRe.test(languageName);
+        return options4.noHighlightRe.test(languageName);
       }
       function blockLanguage(block2) {
         let classes = block2.className + " ";
         classes += block2.parentNode ? block2.parentNode.className : "";
-        const match = options3.languageDetectRe.exec(classes);
+        const match = options4.languageDetectRe.exec(classes);
         if (match) {
           const language = getLanguage(match[1]);
           if (!language) {
@@ -1023,23 +4863,23 @@ var require_core = __commonJS({
         return classes.split(/\s+/).find((_class) => shouldNotHighlight(_class) || getLanguage(_class));
       }
       function highlight2(codeOrLanguageName, optionsOrCode, ignoreIllegals) {
-        let code2 = "";
+        let code = "";
         let languageName = "";
         if (typeof optionsOrCode === "object") {
-          code2 = codeOrLanguageName;
+          code = codeOrLanguageName;
           ignoreIllegals = optionsOrCode.ignoreIllegals;
           languageName = optionsOrCode.language;
         } else {
           deprecated("10.7.0", "highlight(lang, code, ...args) has been deprecated.");
           deprecated("10.7.0", "Please use highlight(code, options) instead.\nhttps://github.com/highlightjs/highlight.js/issues/2277");
           languageName = codeOrLanguageName;
-          code2 = optionsOrCode;
+          code = optionsOrCode;
         }
         if (ignoreIllegals === void 0) {
           ignoreIllegals = true;
         }
         const context = {
-          code: code2,
+          code,
           language: languageName
         };
         fire("before:highlight", context);
@@ -1254,13 +5094,13 @@ var require_core = __commonJS({
           return origin.returnEnd ? 0 : lexeme.length;
         }
         function processContinuations() {
-          const list2 = [];
+          const list3 = [];
           for (let current = top; current !== language; current = current.parent) {
             if (current.scope) {
-              list2.unshift(current.scope);
+              list3.unshift(current.scope);
             }
           }
-          list2.forEach((item) => emitter.openNode(item));
+          list3.forEach((item) => emitter.openNode(item));
         }
         let lastMatch = {};
         function processLexeme(textBeforeMatch, match) {
@@ -1312,7 +5152,7 @@ var require_core = __commonJS({
         let result = "";
         let top = continuation || md;
         const continuations = {};
-        const emitter = new options3.__emitter(options3);
+        const emitter = new options4.__emitter(options4);
         processContinuations();
         let modeBuffer = "";
         let relevance = 0;
@@ -1382,22 +5222,22 @@ var require_core = __commonJS({
           }
         }
       }
-      function justTextHighlightResult(code2) {
+      function justTextHighlightResult(code) {
         const result = {
-          value: escape3(code2),
+          value: escape3(code),
           illegal: false,
           relevance: 0,
           _top: PLAINTEXT_LANGUAGE,
-          _emitter: new options3.__emitter(options3)
+          _emitter: new options4.__emitter(options4)
         };
-        result._emitter.addText(code2);
+        result._emitter.addText(code);
         return result;
       }
-      function highlightAuto(code2, languageSubset) {
-        languageSubset = languageSubset || options3.languages || Object.keys(languages);
-        const plaintext = justTextHighlightResult(code2);
+      function highlightAuto(code, languageSubset) {
+        languageSubset = languageSubset || options4.languages || Object.keys(languages);
+        const plaintext = justTextHighlightResult(code);
         const results = languageSubset.filter(getLanguage).filter(autoDetection).map(
-          (name) => _highlight(name, code2, false)
+          (name) => _highlight(name, code, false)
         );
         results.unshift(plaintext);
         const sorted = results.sort((a, b) => {
@@ -1436,13 +5276,13 @@ var require_core = __commonJS({
           return;
         }
         if (element.children.length > 0) {
-          if (!options3.ignoreUnescapedHTML) {
+          if (!options4.ignoreUnescapedHTML) {
             console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk.");
             console.warn("https://github.com/highlightjs/highlight.js/wiki/security");
             console.warn("The element with unescaped HTML:");
             console.warn(element);
           }
-          if (options3.throwUnescapedHTML) {
+          if (options4.throwUnescapedHTML) {
             const err = new HTMLInjectionError(
               "One of your code blocks includes unescaped HTML.",
               element.innerHTML
@@ -1471,7 +5311,7 @@ var require_core = __commonJS({
         fire("after:highlightElement", { el: element, result, text });
       }
       function configure2(userOptions) {
-        options3 = inherit(options3, userOptions);
+        options4 = inherit(options4, userOptions);
       }
       const initHighlighting = () => {
         highlightAll();
@@ -1487,7 +5327,7 @@ var require_core = __commonJS({
           wantsHighlight = true;
           return;
         }
-        const blocks = document.querySelectorAll(options3.cssSelector);
+        const blocks = document.querySelectorAll(options4.cssSelector);
         blocks.forEach(highlightElement);
       }
       function boot() {
@@ -1545,37 +5385,37 @@ var require_core = __commonJS({
         const lang = getLanguage(name);
         return lang && !lang.disableAutodetect;
       }
-      function upgradePluginAPI(plugin) {
-        if (plugin["before:highlightBlock"] && !plugin["before:highlightElement"]) {
-          plugin["before:highlightElement"] = (data) => {
-            plugin["before:highlightBlock"](
+      function upgradePluginAPI(plugin2) {
+        if (plugin2["before:highlightBlock"] && !plugin2["before:highlightElement"]) {
+          plugin2["before:highlightElement"] = (data) => {
+            plugin2["before:highlightBlock"](
               Object.assign({ block: data.el }, data)
             );
           };
         }
-        if (plugin["after:highlightBlock"] && !plugin["after:highlightElement"]) {
-          plugin["after:highlightElement"] = (data) => {
-            plugin["after:highlightBlock"](
+        if (plugin2["after:highlightBlock"] && !plugin2["after:highlightElement"]) {
+          plugin2["after:highlightElement"] = (data) => {
+            plugin2["after:highlightBlock"](
               Object.assign({ block: data.el }, data)
             );
           };
         }
       }
-      function addPlugin(plugin) {
-        upgradePluginAPI(plugin);
-        plugins.push(plugin);
+      function addPlugin(plugin2) {
+        upgradePluginAPI(plugin2);
+        plugins.push(plugin2);
       }
-      function removePlugin(plugin) {
-        const index = plugins.indexOf(plugin);
+      function removePlugin(plugin2) {
+        const index = plugins.indexOf(plugin2);
         if (index !== -1) {
           plugins.splice(index, 1);
         }
       }
       function fire(event, args) {
         const cb = event;
-        plugins.forEach(function(plugin) {
-          if (plugin[cb]) {
-            plugin[cb](args);
+        plugins.forEach(function(plugin2) {
+          if (plugin2[cb]) {
+            plugin2[cb](args);
           }
         });
       }
@@ -7135,7 +10975,7 @@ var require_coffeescript = __commonJS({
         "function",
         "static"
       ];
-      const excluding = (list2) => (kw) => !list2.includes(kw);
+      const excluding = (list3) => (kw) => !list3.includes(kw);
       const KEYWORDS$1 = {
         keyword: KEYWORDS.concat(COFFEE_KEYWORDS).filter(excluding(NOT_VALID_KEYWORDS)),
         literal: LITERALS2.concat(COFFEE_LITERALS),
@@ -20525,8 +24365,8 @@ var require_javascript = __commonJS({
         match: /\b[A-Z][A-Z_0-9]+\b/,
         className: "variable.constant"
       };
-      function noneOf(list2) {
-        return regex.concat("(?!", list2.join("|"), ")");
+      function noneOf(list3) {
+        return regex.concat("(?!", list3.join("|"), ")");
       }
       const FUNCTION_CALL = {
         match: regex.concat(
@@ -43276,13 +47116,13 @@ var require_sql = __commonJS({
         relevance: 0,
         keywords: { built_in: FUNCTIONS }
       };
-      function reduceRelevancy(list2, {
+      function reduceRelevancy(list3, {
         exceptions,
         when
       } = {}) {
         const qualifyFn = when;
         exceptions = exceptions || [];
-        return list2.map((item) => {
+        return list3.map((item) => {
           if (item.match(/\|\d+$/) || exceptions.includes(item)) {
             return item;
           } else if (qualifyFn(item)) {
@@ -47024,8 +50864,8 @@ var require_typescript = __commonJS({
         match: /\b[A-Z][A-Z_0-9]+\b/,
         className: "variable.constant"
       };
-      function noneOf(list2) {
-        return regex.concat("(?!", list2.join("|"), ")");
+      function noneOf(list3) {
+        return regex.concat("(?!", list3.join("|"), ")");
       }
       const FUNCTION_CALL = {
         match: regex.concat(
@@ -49930,10 +53770,63 @@ __export(main_exports, {
   default: () => NoteToMpPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian6 = require("obsidian");
+var import_obsidian8 = require("obsidian");
 
 // src/note-preview.ts
-var import_obsidian3 = require("obsidian");
+var import_obsidian5 = require("obsidian");
+
+// node_modules/postcss/lib/postcss.mjs
+var import_postcss = __toESM(require_postcss(), 1);
+var stringify = import_postcss.default.stringify;
+var fromJSON = import_postcss.default.fromJSON;
+var plugin = import_postcss.default.plugin;
+var parse = import_postcss.default.parse;
+var list = import_postcss.default.list;
+var document2 = import_postcss.default.document;
+var comment = import_postcss.default.comment;
+var atRule = import_postcss.default.atRule;
+var rule = import_postcss.default.rule;
+var decl = import_postcss.default.decl;
+var root = import_postcss.default.root;
+var CssSyntaxError = import_postcss.default.CssSyntaxError;
+var Declaration = import_postcss.default.Declaration;
+var Container = import_postcss.default.Container;
+var Processor = import_postcss.default.Processor;
+var Document = import_postcss.default.Document;
+var Comment = import_postcss.default.Comment;
+var Warning = import_postcss.default.Warning;
+var AtRule = import_postcss.default.AtRule;
+var Result = import_postcss.default.Result;
+var Input = import_postcss.default.Input;
+var Rule = import_postcss.default.Rule;
+var Root = import_postcss.default.Root;
+var Node = import_postcss.default.Node;
+
+// src/utils.ts
+var import_obsidian = require("obsidian");
+function applyStyle(root2, cssRoot) {
+  cssRoot.walkRules((rule2) => {
+    if (root2.matches(rule2.selector)) {
+      rule2.walkDecls((decl2) => {
+        root2.style.setProperty(decl2.prop, decl2.value);
+      });
+    }
+  });
+  let element = root2.firstElementChild;
+  while (element) {
+    if (element.tagName === "svg") {
+    } else {
+      applyStyle(element, cssRoot);
+    }
+    element = element.nextElementSibling;
+  }
+}
+function applyCSS(html2, css2) {
+  const doc = (0, import_obsidian.sanitizeHTMLToDom)(html2);
+  const root2 = parse(css2);
+  applyStyle(doc.firstChild, root2);
+  return doc.firstChild;
+}
 
 // node_modules/marked/lib/marked.esm.js
 function _getDefaults() {
@@ -50130,12 +54023,12 @@ function indentCodeCompensation(raw, text) {
 }
 var _Tokenizer = class {
   // set by the lexer
-  constructor(options3) {
+  constructor(options4) {
     __publicField(this, "options");
     __publicField(this, "rules");
     // set by the lexer
     __publicField(this, "lexer");
-    this.options = options3 || _defaults;
+    this.options = options4 || _defaults;
   }
   space(src) {
     const cap = this.rules.block.newline.exec(src);
@@ -50222,7 +54115,7 @@ var _Tokenizer = class {
     if (cap) {
       let bull = cap[1].trim();
       const isordered = bull.length > 1;
-      const list2 = {
+      const list3 = {
         type: "list",
         raw: "",
         ordered: isordered,
@@ -50317,9 +54210,9 @@ var _Tokenizer = class {
             line = nextLine.slice(indent);
           }
         }
-        if (!list2.loose) {
+        if (!list3.loose) {
           if (endsWithBlankLine) {
-            list2.loose = true;
+            list3.loose = true;
           } else if (/\n *\n *$/.test(raw)) {
             endsWithBlankLine = true;
           }
@@ -50333,7 +54226,7 @@ var _Tokenizer = class {
             itemContents = itemContents.replace(/^\[[ xX]\] +/, "");
           }
         }
-        list2.items.push({
+        list3.items.push({
           type: "list_item",
           raw,
           task: !!istask,
@@ -50342,26 +54235,26 @@ var _Tokenizer = class {
           text: itemContents,
           tokens: []
         });
-        list2.raw += raw;
+        list3.raw += raw;
       }
-      list2.items[list2.items.length - 1].raw = raw.trimEnd();
-      list2.items[list2.items.length - 1].text = itemContents.trimEnd();
-      list2.raw = list2.raw.trimEnd();
-      for (let i = 0; i < list2.items.length; i++) {
+      list3.items[list3.items.length - 1].raw = raw.trimEnd();
+      list3.items[list3.items.length - 1].text = itemContents.trimEnd();
+      list3.raw = list3.raw.trimEnd();
+      for (let i = 0; i < list3.items.length; i++) {
         this.lexer.state.top = false;
-        list2.items[i].tokens = this.lexer.blockTokens(list2.items[i].text, []);
-        if (!list2.loose) {
-          const spacers = list2.items[i].tokens.filter((t) => t.type === "space");
+        list3.items[i].tokens = this.lexer.blockTokens(list3.items[i].text, []);
+        if (!list3.loose) {
+          const spacers = list3.items[i].tokens.filter((t) => t.type === "space");
           const hasMultipleLineBreaks = spacers.length > 0 && spacers.some((t) => /\n.*\n/.test(t.raw));
-          list2.loose = hasMultipleLineBreaks;
+          list3.loose = hasMultipleLineBreaks;
         }
       }
-      if (list2.loose) {
-        for (let i = 0; i < list2.items.length; i++) {
-          list2.items[i].loose = true;
+      if (list3.loose) {
+        for (let i = 0; i < list3.items.length; i++) {
+          list3.items[i].loose = true;
         }
       }
-      return list2;
+      return list3;
     }
   }
   html(src) {
@@ -50750,7 +54643,7 @@ var _paragraph = /^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|htm
 var blockText = /^[^\n]+/;
 var _blockLabel = /(?!\s*\])(?:\\.|[^\[\]\\])+/;
 var def = edit(/^ {0,3}\[(label)\]: *(?:\n *)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n *)?| *\n *)(title))? *(?:\n+|$)/).replace("label", _blockLabel).replace("title", /(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/).getRegex();
-var list = edit(/^( {0,3}bull)([ \t][^\n]+?)?(?:\n|$)/).replace(/bull/g, bullet).getRegex();
+var list2 = edit(/^( {0,3}bull)([ \t][^\n]+?)?(?:\n|$)/).replace(/bull/g, bullet).getRegex();
 var _tag = "address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul";
 var _comment = /<!--(?:-?>|[\s\S]*?(?:-->|$))/;
 var html = edit("^ {0,3}(?:<(script|pre|style|textarea)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)|comment[^\\n]*(\\n+|$)|<\\?[\\s\\S]*?(?:\\?>\\n*|$)|<![A-Z][\\s\\S]*?(?:>\\n*|$)|<!\\[CDATA\\[[\\s\\S]*?(?:\\]\\]>\\n*|$)|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:(?:\\n *)+\\n|$)|<(?!script|pre|style|textarea)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n *)+\\n|$)|</(?!script|pre|style|textarea)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n *)+\\n|$))", "i").replace("comment", _comment).replace("tag", _tag).replace("attribute", / +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/).getRegex();
@@ -50765,7 +54658,7 @@ var blockNormal = {
   hr,
   html,
   lheading,
-  list,
+  list: list2,
   newline,
   paragraph,
   table: noopTest,
@@ -50858,7 +54751,7 @@ var inline = {
   pedantic: inlinePedantic
 };
 var _Lexer = class {
-  constructor(options3) {
+  constructor(options4) {
     __publicField(this, "tokens");
     __publicField(this, "options");
     __publicField(this, "state");
@@ -50866,7 +54759,7 @@ var _Lexer = class {
     __publicField(this, "inlineQueue");
     this.tokens = [];
     this.tokens.links = /* @__PURE__ */ Object.create(null);
-    this.options = options3 || _defaults;
+    this.options = options4 || _defaults;
     this.options.tokenizer = this.options.tokenizer || new _Tokenizer();
     this.tokenizer = this.options.tokenizer;
     this.tokenizer.options = this.options;
@@ -50906,15 +54799,15 @@ var _Lexer = class {
   /**
    * Static Lex Method
    */
-  static lex(src, options3) {
-    const lexer2 = new _Lexer(options3);
+  static lex(src, options4) {
+    const lexer2 = new _Lexer(options4);
     return lexer2.lex(src);
   }
   /**
    * Static Lex Inline Method
    */
-  static lexInline(src, options3) {
-    const lexer2 = new _Lexer(options3);
+  static lexInline(src, options4) {
+    const lexer2 = new _Lexer(options4);
     return lexer2.inlineTokens(src);
   }
   /**
@@ -51233,18 +55126,18 @@ var _Lexer = class {
   }
 };
 var _Renderer = class {
-  constructor(options3) {
+  constructor(options4) {
     __publicField(this, "options");
-    this.options = options3 || _defaults;
+    this.options = options4 || _defaults;
   }
-  code(code2, infostring, escaped) {
+  code(code, infostring, escaped) {
     var _a;
     const lang = (_a = (infostring || "").match(/^\S*/)) == null ? void 0 : _a[0];
-    code2 = code2.replace(/\n$/, "") + "\n";
+    code = code.replace(/\n$/, "") + "\n";
     if (!lang) {
-      return "<pre><code>" + (escaped ? code2 : escape$1(code2, true)) + "</code></pre>\n";
+      return "<pre><code>" + (escaped ? code : escape$1(code, true)) + "</code></pre>\n";
     }
-    return '<pre><code class="language-' + escape$1(lang) + '">' + (escaped ? code2 : escape$1(code2, true)) + "</code></pre>\n";
+    return '<pre><code class="language-' + escape$1(lang) + '">' + (escaped ? code : escape$1(code, true)) + "</code></pre>\n";
   }
   blockquote(quote) {
     return `<blockquote>
@@ -51372,11 +55265,11 @@ var _TextRenderer = class {
   }
 };
 var _Parser = class {
-  constructor(options3) {
+  constructor(options4) {
     __publicField(this, "options");
     __publicField(this, "renderer");
     __publicField(this, "textRenderer");
-    this.options = options3 || _defaults;
+    this.options = options4 || _defaults;
     this.options.renderer = this.options.renderer || new _Renderer();
     this.renderer = this.options.renderer;
     this.renderer.options = this.options;
@@ -51385,15 +55278,15 @@ var _Parser = class {
   /**
    * Static Parse Method
    */
-  static parse(tokens, options3) {
-    const parser2 = new _Parser(options3);
+  static parse(tokens, options4) {
+    const parser2 = new _Parser(options4);
     return parser2.parse(tokens);
   }
   /**
    * Static Parse Inline Method
    */
-  static parseInline(tokens, options3) {
-    const parser2 = new _Parser(options3);
+  static parseInline(tokens, options4) {
+    const parser2 = new _Parser(options4);
     return parser2.parseInline(tokens);
   }
   /**
@@ -51603,9 +55496,9 @@ var _Parser = class {
   }
 };
 var _Hooks = class {
-  constructor(options3) {
+  constructor(options4) {
     __publicField(this, "options");
-    this.options = options3 || _defaults;
+    this.options = options4 || _defaults;
   }
   /**
    * Process markdown before marked
@@ -51843,17 +55736,17 @@ var Marked = class {
     this.defaults = { ...this.defaults, ...opt };
     return this;
   }
-  lexer(src, options3) {
-    return _Lexer.lex(src, options3 != null ? options3 : this.defaults);
+  lexer(src, options4) {
+    return _Lexer.lex(src, options4 != null ? options4 : this.defaults);
   }
-  parser(tokens, options3) {
-    return _Parser.parse(tokens, options3 != null ? options3 : this.defaults);
+  parser(tokens, options4) {
+    return _Parser.parse(tokens, options4 != null ? options4 : this.defaults);
   }
 };
 _parseMarkdown = new WeakSet();
 parseMarkdown_fn = function(lexer2, parser2) {
-  return (src, options3) => {
-    const origOpt = { ...options3 };
+  return (src, options4) => {
+    const origOpt = { ...options4 };
     const opt = { ...this.defaults, ...origOpt };
     if (this.defaults.async === true && origOpt.async === false) {
       if (!opt.silent) {
@@ -51916,8 +55809,8 @@ var markedInstance = new Marked();
 function marked(src, opt) {
   return markedInstance.parse(src, opt);
 }
-marked.options = marked.setOptions = function(options3) {
-  markedInstance.setOptions(options3);
+marked.options = marked.setOptions = function(options4) {
+  markedInstance.setOptions(options4);
   marked.defaults = markedInstance.defaults;
   changeDefaults(marked.defaults);
   return marked;
@@ -51952,40 +55845,46 @@ var parser = _Parser.parse;
 var lexer = _Lexer.lex;
 
 // node_modules/marked-highlight/src/index.js
-function markedHighlight(options3) {
-  if (typeof options3 === "function") {
-    options3 = {
-      highlight: options3
+function markedHighlight(options4) {
+  if (typeof options4 === "function") {
+    options4 = {
+      highlight: options4
     };
   }
-  if (!options3 || typeof options3.highlight !== "function") {
+  if (!options4 || typeof options4.highlight !== "function") {
     throw new Error("Must provide highlight function");
   }
-  if (typeof options3.langPrefix !== "string") {
-    options3.langPrefix = "language-";
+  if (typeof options4.langPrefix !== "string") {
+    options4.langPrefix = "language-";
   }
   return {
-    async: !!options3.async,
+    async: !!options4.async,
     walkTokens(token) {
       if (token.type !== "code") {
         return;
       }
       const lang = getLang(token.lang);
-      if (options3.async) {
-        return Promise.resolve(options3.highlight(token.text, lang, token.lang || "")).then(updateToken(token));
+      if (options4.async) {
+        return Promise.resolve(options4.highlight(token.text, lang, token.lang || "")).then(updateToken(token));
       }
-      const code2 = options3.highlight(token.text, lang, token.lang || "");
-      if (code2 instanceof Promise) {
+      const code = options4.highlight(token.text, lang, token.lang || "");
+      if (code instanceof Promise) {
         throw new Error("markedHighlight is not set to async but the highlight function is async. Set the async option to true on markedHighlight to await the async highlight function.");
       }
-      updateToken(token)(code2);
+      updateToken(token)(code);
     },
+    useNewRenderer: true,
     renderer: {
-      code(code2, infoString, escaped) {
+      code(code, infoString, escaped) {
+        if (typeof code === "object") {
+          escaped = code.escaped;
+          infoString = code.lang;
+          code = code.text;
+        }
         const lang = getLang(infoString);
-        const classAttr = lang ? ` class="${options3.langPrefix}${escape2(lang)}"` : "";
-        code2 = code2.replace(/\n$/, "");
-        return `<pre><code${classAttr}>${escaped ? code2 : escape2(code2, true)}
+        const classAttr = lang ? ` class="${options4.langPrefix}${escape2(lang)}"` : "";
+        code = code.replace(/\n$/, "");
+        return `<pre><code${classAttr}>${escaped ? code : escape2(code, true)}
 </code></pre>`;
       }
     }
@@ -51995,10 +55894,10 @@ function getLang(lang) {
   return (lang || "").match(/\S*/)[0];
 }
 function updateToken(token) {
-  return (code2) => {
-    if (typeof code2 === "string" && code2 !== token.text) {
+  return (code) => {
+    if (typeof code === "string" && code !== token.text) {
       token.escaped = true;
-      token.text = code2;
+      token.text = code;
     }
   };
 }
@@ -52031,7 +55930,7 @@ function escape2(html2, encode) {
 var import_lib = __toESM(require_lib(), 1);
 var es_default = import_lib.default;
 
-// src/callouts.ts
+// src/markdown/callouts.ts
 var icon_note = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-pencil"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path><path d="m15 5 4 4"></path></svg>`;
 var icon_abstract = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-clipboard-list"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path></svg>`;
 var icon_info = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-info"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>`;
@@ -52158,285 +56057,6 @@ var CalloutTypes = new Map(Object.entries({
 function GetCallout(type) {
   return CalloutTypes.get(type);
 }
-
-// src/img-extension.ts
-var import_obsidian2 = require("obsidian");
-
-// src/weixin-api.ts
-var import_obsidian = require("obsidian");
-async function wxGetToken(authkey, appid, secret) {
-  const url = "https://obplugin.sunboshi.tech/wx/token";
-  const body = {
-    authkey,
-    appid,
-    secret
-  };
-  const res = await (0, import_obsidian.requestUrl)({
-    url,
-    method: "POST",
-    throw: false,
-    contentType: "application/json",
-    body: JSON.stringify(body)
-  });
-  return res;
-}
-async function wxEncrypt(authkey, wechat) {
-  const url = "https://obplugin.sunboshi.tech/wx/encrypt";
-  const body = JSON.stringify({
-    authkey,
-    wechat
-  });
-  const res = await (0, import_obsidian.requestUrl)({
-    url,
-    method: "POST",
-    throw: false,
-    contentType: "application/json",
-    body
-  });
-  return res;
-}
-async function wxUploadImage(data, filename, token, type) {
-  let url = "";
-  if (type == null || type === "") {
-    url = "https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=" + token;
-  } else {
-    url = `https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=${token}&type=${type}`;
-  }
-  const N = 16;
-  const randomBoundryString = "djmangoBoundry" + Array(N + 1).join((Math.random().toString(36) + "00000000000000000").slice(2, 18)).slice(0, N);
-  const pre_string = `------${randomBoundryString}\r
-Content-Disposition: form-data; name="media"; filename="${filename}"\r
-Content-Type: "application/octet-stream"\r
-\r
-`;
-  const post_string = `\r
-------${randomBoundryString}--`;
-  const pre_string_encoded = new TextEncoder().encode(pre_string);
-  const post_string_encoded = new TextEncoder().encode(post_string);
-  const concatenated = await new Blob([pre_string_encoded, await (0, import_obsidian.getBlobArrayBuffer)(data), post_string_encoded]).arrayBuffer();
-  const options3 = {
-    method: "POST",
-    url,
-    contentType: `multipart/form-data; boundary=----${randomBoundryString}`,
-    body: concatenated
-  };
-  const res = await (0, import_obsidian.requestUrl)(options3);
-  const resData = await res.json;
-  return {
-    url: resData.url || "",
-    media_id: resData.media_id || "",
-    errcode: resData.errcode || 0,
-    errmsg: resData.errmsg || ""
-  };
-}
-async function wxAddDraft(token, data) {
-  const url = "https://api.weixin.qq.com/cgi-bin/draft/add?access_token=" + token;
-  const body = { articles: [{
-    title: data.title,
-    content: data.content,
-    thumb_media_id: data.thumb_media_id
-  }] };
-  const res = await (0, import_obsidian.requestUrl)({
-    method: "POST",
-    url,
-    body: JSON.stringify(body)
-  });
-  return await res.json;
-}
-async function wxBatchGetMaterial(token, type, offset = 0, count = 10) {
-  const url = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=" + token;
-  const body = {
-    type,
-    offset,
-    count
-  };
-  const res = await (0, import_obsidian.requestUrl)({
-    method: "POST",
-    url,
-    body: JSON.stringify(body)
-  });
-  return await res.json;
-}
-
-// src/img-extension.ts
-var LocalImageRegex = /!\[\[(.*?)\]\]/;
-var AllImages = /* @__PURE__ */ new Map();
-function resolvePath(basePath, relativePath) {
-  const stack = basePath.split("/");
-  const parts = relativePath.split("/");
-  stack.pop();
-  for (const part of parts) {
-    if (part === ".")
-      continue;
-    if (part === "..")
-      stack.pop();
-    else
-      stack.push(part);
-  }
-  return stack.join("/");
-}
-function getActiveFileDir(app) {
-  const af = this.app.workspace.getActiveFile();
-  if (af == null) {
-    return "";
-  }
-  const parts = af.path.split("/");
-  parts.pop();
-  if (parts.length == 0) {
-    return "";
-  }
-  return parts.join("/");
-}
-function getImgPath(path, vault) {
-  const attachmentFolderPath = vault.config.attachmentFolderPath || "";
-  let localPath = path;
-  let file = vault.getFileByPath(path);
-  if (file == null) {
-    localPath = attachmentFolderPath + "/" + path;
-    file = vault.getFileByPath(localPath);
-  }
-  if (file == null) {
-    console.error("cant read image: " + path);
-    return "";
-  }
-  const resPath = vault.getResourcePath(file);
-  if (!AllImages.has(resPath)) {
-    AllImages.set(resPath, {
-      resUrl: resPath,
-      filePath: localPath,
-      url: null
-    });
-  }
-  return resPath;
-}
-function isImage(file) {
-  file = file.toLowerCase();
-  return file.endsWith(".png") || file.endsWith(".jpg") || file.endsWith(".jpeg") || file.endsWith(".gif") || file.endsWith(".bmp") || file.endsWith(".webp");
-}
-function LocalImageExtension(app) {
-  AllImages.clear();
-  return {
-    name: "LocalImage",
-    level: "inline",
-    start(src) {
-      const index = src.indexOf("![[");
-      if (index === -1)
-        return;
-      return index;
-    },
-    tokenizer(src, tokens) {
-      const matches = src.match(LocalImageRegex);
-      if (matches == null)
-        return;
-      if (!isImage(matches[1]))
-        return;
-      const token = {
-        type: "LocalImage",
-        raw: matches[0],
-        href: matches[1],
-        text: matches[1]
-      };
-      return token;
-    },
-    renderer(img) {
-      const basePath = getActiveFileDir(app);
-      let imgPath = "";
-      if (img.href.startsWith(".")) {
-        imgPath = resolvePath(basePath, img.href);
-      } else {
-        imgPath = img.href;
-      }
-      const src = getImgPath(imgPath, app.vault);
-      return `<img src="${src}" alt="${img.text}" />`;
-    }
-  };
-}
-async function uploadLocalImage(vault, token) {
-  const keys = AllImages.keys();
-  for (let key of keys) {
-    const value = AllImages.get(key);
-    if (value == null)
-      continue;
-    if (value.url != null)
-      continue;
-    const file = vault.getFileByPath(value.filePath);
-    if (file == null)
-      continue;
-    const fileData = await vault.readBinary(file);
-    const res = await wxUploadImage(new Blob([fileData]), file.name, token);
-    if (res.errcode != 0) {
-      const msg = `\u4E0A\u4F20\u56FE\u7247\u5931\u8D25: ${res.errcode} ${res.errmsg}`;
-      new import_obsidian2.Notice(msg);
-      console.error(msg);
-    }
-    value.url = res.url;
-  }
-}
-function replaceImages(root) {
-  const images = root.getElementsByTagName("img");
-  const keys = AllImages.keys();
-  for (let key of keys) {
-    const value = AllImages.get(key);
-    if (value == null)
-      continue;
-    if (value.url == null)
-      continue;
-    for (let i = 0; i < images.length; i++) {
-      const img = images[i];
-      if (img.src.startsWith("http")) {
-        continue;
-      }
-      if (img.src === key) {
-        img.setAttribute("src", value.url);
-        break;
-      }
-    }
-  }
-}
-async function uploadCover(file, token) {
-  const res = await wxUploadImage(file, file.name, token, "image");
-  if (res.media_id) {
-    return res.media_id;
-  }
-  console.error("upload cover fail: " + res.errmsg);
-}
-
-// src/utils.ts
-var AllLinks = [];
-var parseOptions = {
-  lineNumber: true,
-  linkStyle: "footnote"
-};
-var markedOptiones = {
-  gfm: true,
-  breaks: true
-};
-function code(code2, infostring) {
-  var _a;
-  const lang = (_a = (infostring || "").match(/^\S*/)) == null ? void 0 : _a[0];
-  code2 = code2.replace(/\n$/, "") + "\n";
-  let codeSection = "";
-  if (parseOptions.lineNumber) {
-    const lines = code2.split("\n");
-    let liItems = "";
-    let count = 1;
-    while (count < lines.length) {
-      liItems = liItems + `<li>${count}</li>`;
-      count = count + 1;
-    }
-    codeSection = '<section class="code-section"><ul>' + liItems + "</ul>";
-  } else {
-    codeSection = '<section class="code-section">';
-  }
-  if (!lang) {
-    return codeSection + "<pre><code>" + code2 + "</code></pre></section>\n";
-  }
-  return codeSection + '<pre><code class="hljs language-' + lang + '">' + code2 + "</code></pre></section>\n";
-}
-function codeRender(codeToken) {
-  const result = code(codeToken.text, codeToken.lang);
-  return result;
-}
 function matchCallouts(text) {
   const regex = /\[\!(.*?)\]/g;
   let m;
@@ -52446,7 +56066,7 @@ function matchCallouts(text) {
   return "";
 }
 function GetCalloutTitle(callout, text) {
-  let title = callout.charAt(0).toUpperCase() + callout.slice(1);
+  let title = callout.charAt(0).toUpperCase() + callout.slice(1).toLowerCase();
   let start = text.indexOf("]") + 1;
   if (text.indexOf("]-") > 0 || text.indexOf("]+") > 0) {
     start = start + 1;
@@ -52468,9 +56088,16 @@ ${body2}</blockquote>
 `;
     ;
   }
+  const markedOptiones2 = {
+    gfm: true,
+    breaks: true
+  };
   const title = GetCalloutTitle(callout, token.text);
-  const info = GetCallout(callout);
-  const lexer2 = new _Lexer(markedOptiones);
+  let info = GetCallout(callout.toLowerCase());
+  if (info == null) {
+    info = GetCallout("note");
+  }
+  const lexer2 = new _Lexer(markedOptiones2);
   const index = token.text.indexOf("\n");
   let body = "";
   if (index > 0) {
@@ -52489,6 +56116,143 @@ ${body2}</blockquote>
 			</section>
 		</section>`;
 }
+
+// src/markdown/code.ts
+var CodeRenderer = class {
+  constructor(showLineNumber, mathRenderer) {
+    this.showLineNumber = showLineNumber;
+    this.mathRenderer = mathRenderer;
+  }
+  codeRenderer(code, infostring) {
+    var _a;
+    const lang = (_a = (infostring || "").match(/^\S*/)) == null ? void 0 : _a[0];
+    code = code.replace(/\n$/, "") + "\n";
+    let codeSection = "";
+    if (this.showLineNumber) {
+      const lines = code.split("\n");
+      let liItems = "";
+      let count = 1;
+      while (count < lines.length) {
+        liItems = liItems + `<li>${count}</li>`;
+        count = count + 1;
+      }
+      codeSection = '<section class="code-section"><ul>' + liItems + "</ul>";
+    } else {
+      codeSection = '<section class="code-section">';
+    }
+    if (!lang) {
+      return codeSection + "<pre><code>" + code + "</code></pre></section>\n";
+    }
+    return codeSection + '<pre><code class="hljs language-' + lang + '">' + code + "</code></pre></section>\n";
+  }
+  static getMathType(lang) {
+    if (!lang)
+      return null;
+    let l = lang.toLowerCase();
+    l = l.trim();
+    if (l === "am" || l === "asciimath")
+      return "asciimath";
+    if (l === "latex" || l === "tex")
+      return "latex";
+    return null;
+  }
+  parseCard(htmlString) {
+    const headimgRegex = /data-headimg="([^"]+)"/;
+    const nicknameRegex = /data-nickname="([^"]+)"/;
+    const signatureRegex = /data-signature="([^"]+)"/;
+    const headimgMatch = htmlString.match(headimgRegex);
+    const nicknameMatch = htmlString.match(nicknameRegex);
+    const signatureMatch = htmlString.match(signatureRegex);
+    return {
+      headimg: headimgMatch ? headimgMatch[1] : "",
+      nickname: nicknameMatch ? nicknameMatch[1] : "\u516C\u4F17\u53F7\u540D\u79F0",
+      signature: signatureMatch ? signatureMatch[1] : "\u516C\u4F17\u53F7\u4ECB\u7ECD"
+    };
+  }
+  renderCard(token) {
+    this.cardData = token.text;
+    const { headimg, nickname, signature } = this.parseCard(token.text);
+    return `<section class="note-mpcard-wrapper"><div class="note-mpcard-content"><img class="note-mpcard-headimg" width="54" height="54" src="${headimg}"></img><div class="note-mpcard-info"><div class="note-mpcard-nickname">${nickname}</div><div class="note-mpcard-signature">${signature}</div></div></div><div class="note-mpcard-foot">\u516C\u4F17\u53F7</div></section>`;
+  }
+  restoreCard(html2) {
+    if (this.cardData) {
+      const divRegex = /<section class="note-mpcard-wrapper"[\s\S]*?<\/section>/;
+      if (!divRegex.test(html2)) {
+        console.error("\u672A\u80FD\u6B63\u786E\u66FF\u6362\u516C\u4F17\u53F7\u5361\u7247");
+      }
+      return html2.replace(divRegex, this.cardData);
+    }
+    return html2;
+  }
+  codeExtension() {
+    return {
+      name: "code",
+      level: "block",
+      renderer: (token) => {
+        var _a;
+        if (this.mathRenderer) {
+          const type = CodeRenderer.getMathType((_a = token.lang) != null ? _a : "");
+          if (type) {
+            return this.mathRenderer.renderer(token, false, type);
+          }
+        }
+        if (token.lang && token.lang.trim().toLocaleLowerCase() == "mpcard") {
+          return this.renderCard(token);
+        }
+        return this.codeRenderer(token.text, token.lang);
+      }
+    };
+  }
+};
+
+// src/markdown/bghighlight.ts
+var highlightRegex = /^==(.*?)==/;
+function bgHighlight() {
+  return {
+    name: "InlineHighlight",
+    level: "inline",
+    start(src) {
+      let index;
+      let indexSrc = src;
+      while (indexSrc) {
+        index = indexSrc.indexOf("==");
+        if (index === -1)
+          return;
+        return index;
+      }
+    },
+    tokenizer(src, tokens) {
+      const match = src.match(highlightRegex);
+      if (match) {
+        return {
+          type: "InlineHighlight",
+          raw: match[0],
+          text: match[1]
+        };
+      }
+    },
+    renderer(token) {
+      const lexer2 = new _Lexer();
+      const tokens = lexer2.lex(token.text);
+      let body = this.parser.parse(tokens);
+      body = body.replace("<p>", "");
+      body = body.replace("</p>", "");
+      return `<span class="note-highlight">${body}</span>`;
+    }
+  };
+}
+
+// src/markdown/parser.ts
+var BlockMarkRegex = /^\^[0-9A-Za-z-]+$/;
+var AllLinks = [];
+var parseOptions = {
+  lineNumber: true,
+  linkStyle: "footnote"
+};
+var markedOptiones = {
+  gfm: true,
+  breaks: true
+};
 function walkTokens2(token) {
   if (token.type == "link") {
     const link2 = token;
@@ -52516,22 +56280,53 @@ function footnoteLinks() {
   });
   return `<seciton class="footnotes"><hr><ol>${links.join("")}</ol></section>`;
 }
-async function markedParse(content, op, app) {
+function EmbedBlockMark() {
+  return {
+    name: "EmbedBlockMark",
+    level: "inline",
+    start(src) {
+      let index = src.indexOf("^");
+      if (index === -1) {
+        return;
+      }
+      return index;
+    },
+    tokenizer(src, tokens) {
+      const match = src.match(BlockMarkRegex);
+      if (match) {
+        return {
+          type: "EmbedBlockMark",
+          raw: match[0],
+          text: match[0]
+        };
+      }
+    },
+    renderer: (token) => {
+      return `<span data-txt="${token.text}"></span}`;
+    }
+  };
+}
+async function markedParse(content, op, extensions) {
   parseOptions.lineNumber = op.lineNumber;
   parseOptions.linkStyle = op.linkStyle;
   const m = new Marked(
     markedHighlight({
       langPrefix: "hljs language-",
-      highlight(code2, lang, info) {
+      highlight(code, lang, info) {
+        const type = CodeRenderer.getMathType(lang);
+        if (type)
+          return code;
+        if (lang && lang.trim().toLocaleLowerCase() == "mpcard")
+          return code;
         if (lang && es_default.getLanguage(lang)) {
           try {
-            const result = es_default.highlight(lang, code2);
+            const result = es_default.highlight(code, { language: lang });
             return result.value;
           } catch (err) {
           }
         }
         try {
-          const result = es_default.highlightAuto(code2);
+          const result = es_default.highlightAuto(code);
           return result.value;
         } catch (err) {
         }
@@ -52545,25 +56340,20 @@ async function markedParse(content, op, app) {
   m.use({
     extensions: [
       {
-        name: "code",
-        level: "block",
-        renderer(token) {
-          return codeRender.call(this, token);
-        }
-      },
-      {
         name: "blockquote",
         level: "block",
         renderer(token) {
           return calloutRender.call(this, token);
         }
       },
-      LocalImageExtension(app)
+      bgHighlight(),
+      EmbedBlockMark(),
+      ...extensions
     ]
   });
   const renderer = {
     heading(text, level, raw) {
-      return `<h${level}>${text}</h${level}>`;
+      return `<h${level}><span class="h-prefix"></span><span class="h-content">${text}</span><span class="h-suffix"></span></h${level}>`;
     },
     hr() {
       return "<hr>";
@@ -52584,57 +56374,13 @@ async function markedParse(content, op, app) {
   }
   return html2;
 }
-function getStyleSheet() {
-  for (var i = 0; i < document.styleSheets.length; i++) {
-    var sheet = document.styleSheets[i];
-    if (sheet.title == "note-to-mp-style") {
-      return sheet;
-    }
-  }
-}
-function applyStyles(element, styles, computedStyle) {
-  for (let i = 0; i < styles.length; i++) {
-    const propertyName = styles[i];
-    let propertyValue = computedStyle.getPropertyValue(propertyName);
-    if (propertyName == "width" && styles.getPropertyValue(propertyName) == "fit-content") {
-      propertyValue = "fit-content";
-    }
-    if (propertyName.indexOf("margin") >= 0 && styles.getPropertyValue(propertyName).indexOf("auto") >= 0) {
-      propertyValue = styles.getPropertyValue(propertyName);
-    }
-    element.style.setProperty(propertyName, propertyValue);
-  }
-}
-function parseAndApplyStyles(element, sheet) {
-  try {
-    const computedStyle = getComputedStyle(element);
-    for (let i = 0; i < sheet.cssRules.length; i++) {
-      const rule = sheet.cssRules[i];
-      if (rule instanceof CSSStyleRule && element.matches(rule.selectorText)) {
-        applyStyles(element, rule.style, computedStyle);
-      }
-    }
-  } catch (e2) {
-    console.warn("Unable to access stylesheet: " + sheet.href, e2);
-  }
-}
-function traverse(root, sheet) {
-  let element = root.firstElementChild;
-  while (element) {
-    traverse(element, sheet);
-    element = element.nextElementSibling;
-  }
-  parseAndApplyStyles(root, sheet);
-}
-async function CSSProcess(content) {
-  const style = getStyleSheet();
-  if (style) {
-    traverse(content, style);
-  }
-}
 
-// src/callouts-css.ts
-var callouts_css_default = `section .note-callout {
+// src/inline-css.ts
+var inline_css_default = `
+/* --------------------------------------- */
+/* callout */
+/* --------------------------------------- */
+section .note-callout {
   border: none;
   padding: 1em 1em 1em 1.5em;
   display: flex;
@@ -52690,19 +56436,644 @@ section .note-callout-example {
 section .note-callout-quote {
   color: rgb(158, 158, 158);
   background-color: rgba(158, 158, 158, 0.1);
-}`;
+}
+
+/* --------------------------------------- */
+/* math */
+/* --------------------------------------- */
+.block-math-svg {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin:20px 0px;
+  max-width: 300% !important;
+}
+
+/* --------------------------------------- */
+/* \u9AD8\u4EAE */
+/* --------------------------------------- */
+.note-highlight {
+  background-color: rgba(255,208,0, 0.4);
+}
+
+/* --------------------------------------- */
+/* \u5217\u8868\u9700\u8981\u5F3A\u5236\u8BBE\u7F6E\u6837\u5F0F*/
+/* --------------------------------------- */
+ul {
+  list-style-type: disc;
+}
+`;
+
+// src/markdown/img-extension.ts
+var import_obsidian3 = require("obsidian");
+
+// src/weixin-api.ts
+var import_obsidian2 = require("obsidian");
+async function wxGetToken(authkey, appid, secret) {
+  const url = "https://obplugin.sunboshi.tech/wx/token";
+  const body = {
+    authkey,
+    appid,
+    secret
+  };
+  const res = await (0, import_obsidian2.requestUrl)({
+    url,
+    method: "POST",
+    throw: false,
+    contentType: "application/json",
+    body: JSON.stringify(body)
+  });
+  return res;
+}
+async function wxEncrypt(authkey, wechat) {
+  const url = "https://obplugin.sunboshi.tech/wx/encrypt";
+  const body = JSON.stringify({
+    authkey,
+    wechat
+  });
+  const res = await (0, import_obsidian2.requestUrl)({
+    url,
+    method: "POST",
+    throw: false,
+    contentType: "application/json",
+    body
+  });
+  return res;
+}
+async function wxKeyInfo(authkey) {
+  const url = "https://obplugin.sunboshi.tech/wx/info/" + authkey;
+  const res = await (0, import_obsidian2.requestUrl)({
+    url,
+    method: "GET",
+    throw: false,
+    contentType: "application/json"
+  });
+  return res;
+}
+async function wxUploadImage(data, filename, token, type) {
+  let url = "";
+  if (type == null || type === "") {
+    url = "https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=" + token;
+  } else {
+    url = `https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=${token}&type=${type}`;
+  }
+  const N = 16;
+  const randomBoundryString = "djmangoBoundry" + Array(N + 1).join((Math.random().toString(36) + "00000000000000000").slice(2, 18)).slice(0, N);
+  const pre_string = `------${randomBoundryString}\r
+Content-Disposition: form-data; name="media"; filename="${filename}"\r
+Content-Type: "application/octet-stream"\r
+\r
+`;
+  const post_string = `\r
+------${randomBoundryString}--`;
+  const pre_string_encoded = new TextEncoder().encode(pre_string);
+  const post_string_encoded = new TextEncoder().encode(post_string);
+  const concatenated = await new Blob([pre_string_encoded, await (0, import_obsidian2.getBlobArrayBuffer)(data), post_string_encoded]).arrayBuffer();
+  const options4 = {
+    method: "POST",
+    url,
+    contentType: `multipart/form-data; boundary=----${randomBoundryString}`,
+    body: concatenated
+  };
+  const res = await (0, import_obsidian2.requestUrl)(options4);
+  const resData = await res.json;
+  return {
+    url: resData.url || "",
+    media_id: resData.media_id || "",
+    errcode: resData.errcode || 0,
+    errmsg: resData.errmsg || ""
+  };
+}
+async function wxAddDraft(token, data) {
+  const url = "https://api.weixin.qq.com/cgi-bin/draft/add?access_token=" + token;
+  const body = { articles: [{
+    title: data.title,
+    content: data.content,
+    thumb_media_id: data.thumb_media_id
+  }] };
+  const res = await (0, import_obsidian2.requestUrl)({
+    method: "POST",
+    url,
+    body: JSON.stringify(body)
+  });
+  return await res.json;
+}
+async function wxBatchGetMaterial(token, type, offset = 0, count = 10) {
+  const url = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=" + token;
+  const body = {
+    type,
+    offset,
+    count
+  };
+  const res = await (0, import_obsidian2.requestUrl)({
+    method: "POST",
+    url,
+    body: JSON.stringify(body)
+  });
+  return await res.json;
+}
+
+// src/markdown/img-extension.ts
+var LocalImageRegex = /^!\[\[(.*?)\]\]/;
+var LocalImageRenderer = class {
+  constructor(app, callback) {
+    this.allImages = /* @__PURE__ */ new Map();
+    this.index = 0;
+    this.app = app;
+    this.callback = callback;
+  }
+  generateId() {
+    this.index += 1;
+    return `fid-${this.index}`;
+  }
+  getImagePath(path) {
+    const file = this.searchFile(path);
+    if (file == null) {
+      console.error("\u627E\u4E0D\u5230\u6587\u4EF6\uFF1A" + path);
+      return "";
+    }
+    const resPath = this.app.vault.getResourcePath(file);
+    if (!this.allImages.has(resPath)) {
+      this.allImages.set(resPath, {
+        resUrl: resPath,
+        filePath: file.path,
+        url: null
+      });
+    }
+    return resPath;
+  }
+  searchFile(originPath) {
+    const resolvedPath = this.resolvePath(originPath);
+    const vault = this.app.vault;
+    const attachmentFolderPath = vault.config.attachmentFolderPath || "";
+    let localPath = resolvedPath;
+    let file = null;
+    file = vault.getFileByPath(resolvedPath);
+    if (file) {
+      return file;
+    }
+    file = vault.getFileByPath(originPath);
+    if (file) {
+      return file;
+    }
+    if (attachmentFolderPath != "") {
+      localPath = attachmentFolderPath + "/" + originPath;
+      file = vault.getFileByPath(localPath);
+      if (file) {
+        return file;
+      }
+      localPath = attachmentFolderPath + "/" + resolvedPath;
+      file = vault.getFileByPath(localPath);
+      if (file) {
+        return file;
+      }
+    }
+    const files = vault.getAllLoadedFiles();
+    for (let f of files) {
+      if (f.path.includes(originPath)) {
+        return f;
+      }
+    }
+    return null;
+  }
+  resolvePath(relativePath) {
+    const basePath = this.getActiveFileDir();
+    if (!relativePath.includes("/")) {
+      return relativePath;
+    }
+    const stack = basePath.split("/");
+    const parts = relativePath.split("/");
+    stack.pop();
+    for (const part of parts) {
+      if (part === ".")
+        continue;
+      if (part === "..")
+        stack.pop();
+      else
+        stack.push(part);
+    }
+    return stack.join("/");
+  }
+  getActiveFileDir() {
+    const af = this.app.workspace.getActiveFile();
+    if (af == null) {
+      return "";
+    }
+    const parts = af.path.split("/");
+    parts.pop();
+    if (parts.length == 0) {
+      return "";
+    }
+    return parts.join("/");
+  }
+  isImage(file) {
+    file = file.toLowerCase();
+    return file.endsWith(".png") || file.endsWith(".jpg") || file.endsWith(".jpeg") || file.endsWith(".gif") || file.endsWith(".bmp") || file.endsWith(".webp");
+  }
+  parseImageLink(link2) {
+    if (link2.includes("|")) {
+      const parts = link2.split("|");
+      const path = parts[0];
+      if (!this.isImage(path))
+        return null;
+      let width = null;
+      let height = null;
+      if (parts.length == 2) {
+        const size = parts[1].toLowerCase().split("x");
+        width = parseInt(size[0]);
+        if (size.length == 2 && size[1] != "") {
+          height = parseInt(size[1]);
+        }
+      }
+      return { path, width, height };
+    }
+    if (this.isImage(link2)) {
+      return { path: link2, width: null, height: null };
+    }
+    return null;
+  }
+  getHeaderLevel(line) {
+    const match = line.trimStart().match(/^#{1,6}/);
+    if (match) {
+      return match[0].length;
+    }
+    return 0;
+  }
+  async getFileContent(file, header, block2) {
+    const content = await this.app.vault.adapter.read(file.path);
+    if (header == null && block2 == null) {
+      return content;
+    }
+    let result = "";
+    const lines = content.split("\n");
+    if (header) {
+      let level = 0;
+      let append2 = false;
+      for (let line of lines) {
+        if (append2) {
+          if (level == this.getHeaderLevel(line)) {
+            break;
+          }
+          result += line + "\n";
+          continue;
+        }
+        if (!line.trim().startsWith("#"))
+          continue;
+        const items = line.trim().split(" ");
+        if (items.length != 2)
+          continue;
+        if (header.trim() != items[1].trim())
+          continue;
+        if (this.getHeaderLevel(line)) {
+          result += line + "\n";
+          level = this.getHeaderLevel(line);
+          append2 = true;
+        }
+      }
+    }
+    if (block2) {
+      let preline = "";
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.indexOf(block2) >= 0) {
+          result = line.replace(block2, "");
+          if (result.trim() == "") {
+            for (let j = i - 1; j >= 0; j--) {
+              const l = lines[j];
+              if (l.trim() != "") {
+                result = l;
+                break;
+              }
+            }
+          }
+          break;
+        }
+        preline = line;
+      }
+    }
+    return result;
+  }
+  parseFileLink(link2) {
+    const info = link2.split("|")[0];
+    const items = info.split("#");
+    let path = items[0];
+    let header = null;
+    let block2 = null;
+    if (items.length == 2) {
+      if (items[1].startsWith("^")) {
+        block2 = items[1];
+      } else {
+        header = items[1];
+      }
+    }
+    return { path, head: header, block: block2 };
+  }
+  async renderFile(link2, id) {
+    let { path, head: header, block: block2 } = this.parseFileLink(link2);
+    let file = null;
+    if (path === "") {
+      file = this.app.workspace.getActiveFile();
+    } else {
+      if (!path.endsWith(".md")) {
+        path = path + ".md";
+      }
+      file = this.searchFile(path);
+    }
+    if (file == null) {
+      const msg = "\u627E\u4E0D\u5230\u6587\u4EF6\uFF1A" + path;
+      console.error(msg);
+      this.callback.updateElementByID(id, msg);
+      return;
+    }
+    const content = await this.getFileContent(file, header, block2);
+    const markedOptiones2 = {
+      gfm: true,
+      breaks: true
+    };
+    const lexer2 = new _Lexer(markedOptiones2);
+    const tokens = lexer2.lex(content);
+    const parser2 = new _Parser(markedOptiones2);
+    const body = parser2.parse(tokens);
+    this.callback.updateElementByID(id, body);
+  }
+  localImageExtension() {
+    this.allImages.clear();
+    return {
+      name: "LocalImage",
+      level: "inline",
+      start: (src) => {
+        const index = src.indexOf("![[");
+        if (index === -1)
+          return;
+        return index;
+      },
+      tokenizer: (src, tokens) => {
+        const matches = src.match(LocalImageRegex);
+        if (matches == null)
+          return;
+        const token = {
+          type: "LocalImage",
+          raw: matches[0],
+          href: matches[1],
+          text: matches[1]
+        };
+        return token;
+      },
+      renderer: (token) => {
+        let item = this.parseImageLink(token.href);
+        if (item) {
+          const src = this.getImagePath(item.path);
+          const width = item.width ? `width="${item.width}"` : "";
+          const height = item.height ? `height="${item.height}"` : "";
+          return `<img src="${src}" alt="${token.text}" ${width} ${height} />`;
+        } else {
+          const id = this.generateId();
+          this.renderFile(token.href, id);
+          const tag2 = this.callback.settings.embedStyle === "quote" ? "blockquote" : "section";
+          return `<${tag2} class="note-embed-file" id="${id}">\u6E32\u67D3\u4E2D</${tag2}>`;
+        }
+      }
+    };
+  }
+  async uploadLocalImage(token) {
+    const vault = this.app.vault;
+    const keys = this.allImages.keys();
+    for (let key of keys) {
+      const value = this.allImages.get(key);
+      if (value == null)
+        continue;
+      if (value.url != null)
+        continue;
+      const file = vault.getFileByPath(value.filePath);
+      if (file == null)
+        continue;
+      const fileData = await vault.readBinary(file);
+      const res = await wxUploadImage(new Blob([fileData]), file.name, token);
+      if (res.errcode != 0) {
+        const msg = `\u4E0A\u4F20\u56FE\u7247\u5931\u8D25: ${res.errcode} ${res.errmsg}`;
+        new import_obsidian3.Notice(msg);
+        console.error(msg);
+      }
+      value.url = res.url;
+    }
+  }
+  replaceImages(root2) {
+    const images = root2.getElementsByTagName("img");
+    const keys = this.allImages.keys();
+    for (let key of keys) {
+      const value = this.allImages.get(key);
+      if (value == null)
+        continue;
+      if (value.url == null)
+        continue;
+      for (let i = 0; i < images.length; i++) {
+        const img = images[i];
+        if (img.src.startsWith("http")) {
+          continue;
+        }
+        if (img.src === key) {
+          img.setAttribute("src", value.url);
+          break;
+        }
+      }
+    }
+  }
+  async uploadCover(file, token) {
+    const res = await wxUploadImage(file, file.name, token, "image");
+    if (res.media_id) {
+      return res.media_id;
+    }
+    console.error("upload cover fail: " + res.errmsg);
+  }
+};
+
+// src/markdown/math.ts
+var import_obsidian4 = require("obsidian");
+var inlineRule = /^(\${1,2})(?!\$)((?:\\.|[^\\\n])*?(?:\\.|[^\\\n\$]))\1/;
+var blockRule = /^(\${1,2})\n((?:\\[^]|[^\\])+?)\n\1(?:\n|$)/;
+var svgCache = /* @__PURE__ */ new Map();
+function cleanMathCache() {
+  svgCache.clear();
+}
+var MathRenderer = class {
+  constructor(callback, setting) {
+    this.callback = callback;
+    this.mathIndex = 0;
+    this.setting = setting;
+    this.rendererQueue = new RendererQueue(setting.authKey);
+  }
+  generateId() {
+    this.mathIndex += 1;
+    return `math-id-${this.mathIndex}`;
+  }
+  addToQueue(expression, inline2, type, id) {
+    this.rendererQueue.getMathSVG(expression, inline2, type, (svg) => {
+      svgCache.set(expression, svg);
+      this.callback.updateElementByID(id, svg);
+    });
+  }
+  renderer(token, inline2, type = "") {
+    if (type === "") {
+      type = this.setting.math;
+    }
+    const id = this.generateId();
+    let svg = "\u6E32\u67D3\u4E2D";
+    if (svgCache.has(token.text)) {
+      svg = svgCache.get(token.text);
+    } else {
+      this.addToQueue(token.text, false, type, id);
+    }
+    let className = inline2 ? "inline-math-svg" : "block-math-svg";
+    return `<span id="${id}" class="${className}">${svg}</span>`;
+  }
+  inlineMath() {
+    return {
+      name: "InlineMath",
+      level: "inline",
+      start(src) {
+        let index;
+        let indexSrc = src;
+        while (indexSrc) {
+          index = indexSrc.indexOf("$");
+          if (index === -1) {
+            return;
+          }
+          const possibleKatex = indexSrc.substring(index);
+          if (possibleKatex.match(inlineRule)) {
+            return index;
+          }
+          indexSrc = indexSrc.substring(index + 1).replace(/^\$+/, "");
+        }
+      },
+      tokenizer(src, tokens) {
+        const match = src.match(inlineRule);
+        if (match) {
+          return {
+            type: "InlineMath",
+            raw: match[0],
+            text: match[2].trim(),
+            displayMode: match[1].length === 2
+          };
+        }
+      },
+      renderer: (token) => {
+        return this.renderer(token, true);
+      }
+    };
+  }
+  blockMath() {
+    return {
+      name: "BlockMath",
+      level: "block",
+      tokenizer(src, tokens) {
+        const match = src.match(blockRule);
+        if (match) {
+          return {
+            type: "BlockMath",
+            raw: match[0],
+            text: match[2].trim(),
+            displayMode: match[1].length === 2
+          };
+        }
+      },
+      renderer: (token) => {
+        return this.renderer(token, false);
+      }
+    };
+  }
+};
+var RendererQueue = class {
+  constructor(authkey) {
+    this.queue = [];
+    this.isProcessing = false;
+    this.host = "https://obplugin.sunboshi.tech";
+    this.authkey = authkey;
+  }
+  getMathSVG(expression, inline2, type, callback) {
+    const req = () => {
+      return new Promise((resolve, reject) => {
+        let path = "";
+        if (type === "asciimath") {
+          path = "/math/am";
+        } else {
+          path = "/math/tex";
+        }
+        const url = `${this.host}${path}`;
+        (0, import_obsidian4.requestUrl)({
+          url,
+          method: "POST",
+          contentType: "application/json",
+          headers: {
+            authkey: this.authkey
+          },
+          body: JSON.stringify({
+            expression,
+            inline: inline2
+          })
+        }).then((res) => {
+          let svg = "";
+          if (res.status === 200) {
+            svg = res.text;
+          } else {
+            console.error("render error: " + res.json.msg);
+            svg = "\u6E32\u67D3\u5931\u8D25";
+          }
+          callback(svg);
+          resolve();
+        }).catch((err) => {
+          console.log(err.msg);
+          const svg = "\u6E32\u67D3\u5931\u8D25";
+          callback(svg);
+          resolve();
+        });
+      });
+    };
+    this.enqueue(req);
+  }
+  // 添加请求到队列
+  enqueue(request) {
+    this.queue.push(request);
+    this.processQueue();
+  }
+  // 处理队列中的请求
+  async processQueue() {
+    if (this.isProcessing) {
+      return;
+    }
+    this.isProcessing = true;
+    while (this.queue.length > 0) {
+      const request = this.queue.shift();
+      if (request) {
+        try {
+          await request();
+        } catch (error) {
+          console.error("Request failed:", error);
+        }
+      }
+    }
+    this.isProcessing = false;
+  }
+};
 
 // src/note-preview.ts
 var VIEW_TYPE_NOTE_PREVIEW = "note-preview";
 var FRONT_MATTER_REGEX = /^(---)$.+?^(---)$.+?/ims;
-var NotePreview = class extends import_obsidian3.ItemView {
+var NotePreview = class extends import_obsidian5.ItemView {
   constructor(leaf, settings, themeManager) {
     super(leaf);
+    this.mathRenderer = null;
     this.workspace = this.app.workspace;
     this.settings = settings;
     this.themeManager = themeManager;
     this.currentTheme = this.settings.defaultStyle;
     this.currentHighlight = this.settings.defaultHighlight;
+    if (settings.authKey.length > 0) {
+      this.mathRenderer = new MathRenderer(this, settings);
+    }
+    this.imageRenderer = new LocalImageRenderer(this.app, this);
+    this.codeRenderer = new CodeRenderer(settings.lineNumber, this.mathRenderer);
   }
   getViewType() {
     return VIEW_TYPE_NOTE_PREVIEW;
@@ -52723,21 +57094,25 @@ var NotePreview = class extends import_obsidian3.ItemView {
   async onClose() {
     this.listeners.forEach((listener) => this.workspace.offref(listener));
   }
+  onAppIdChanged() {
+    this.imageRenderer.allImages.clear();
+  }
   async update() {
+    this.codeRenderer.cardData = null;
     this.renderMarkdown();
   }
   errorContent(error) {
-    return `<h1>\u6E32\u67D3\u5931\u8D25!</h1><br/>\u5982\u9700\u5E2E\u52A9\u8BF7\u524D\u5F80&nbsp;&nbsp;<a href="https://github.com/sunbooshi/note-to-mp/issues">https://github.com/sunbooshi/note-to-mp/issues</a>&nbsp;&nbsp;\u53CD\u9988<br/><br/>\u5982\u679C\u65B9\u4FBF\uFF0C\u8BF7\u63D0\u4F9B\u5F15\u53D1\u9519\u8BEF\u7684\u5B8C\u6574Markdown\u5185\u5BB9\u3002<br/><br/>\u9519\u8BEF\u4FE1\u606F\uFF1A<br/>${error}`;
+    return '<h1>\u6E32\u67D3\u5931\u8D25!</h1><br/>\u5982\u9700\u5E2E\u52A9\u8BF7\u524D\u5F80&nbsp;&nbsp;<a href="https://github.com/sunbooshi/note-to-mp/issues">https://github.com/sunbooshi/note-to-mp/issues</a>&nbsp;&nbsp;\u53CD\u9988<br/><br/>\u5982\u679C\u65B9\u4FBF\uFF0C\u8BF7\u63D0\u4F9B\u5F15\u53D1\u9519\u8BEF\u7684\u5B8C\u6574Markdown\u5185\u5BB9\u3002<br/><br/><br/>Obsidian\u7248\u672C\uFF1A' + import_obsidian5.apiVersion + `<br/>\u9519\u8BEF\u4FE1\u606F\uFF1A<br/>${error}`;
   }
   async renderMarkdown() {
     try {
       const af = this.app.workspace.getActiveFile();
       let md = "";
-      if (af) {
+      if (af && af.extension.toLocaleLowerCase() === "md") {
         md = await this.app.vault.adapter.read(af.path);
         this.title = af.basename;
       } else {
-        md = "\u6CA1\u6709\u53EF\u6E32\u67D3\u7684\u7B14\u8BB0";
+        md = "\u6CA1\u6709\u53EF\u6E32\u67D3\u7684\u7B14\u8BB0\u6216\u6587\u4EF6\u4E0D\u652F\u6301\u6E32\u67D3";
       }
       if (md.startsWith("---")) {
         md = md.replace(FRONT_MATTER_REGEX, "");
@@ -52746,49 +57121,62 @@ var NotePreview = class extends import_obsidian3.ItemView {
         lineNumber: this.settings.lineNumber,
         linkStyle: this.settings.linkStyle
       };
-      this.articleHTML = await markedParse(md, op, this.app);
+      const extensions = [];
+      if (this.mathRenderer) {
+        extensions.push(this.mathRenderer.blockMath());
+        extensions.push(this.mathRenderer.inlineMath());
+      }
+      extensions.push(this.imageRenderer.localImageExtension());
+      extensions.push(this.codeRenderer.codeExtension());
+      this.articleHTML = await markedParse(md, op, extensions);
       this.setArticle(this.articleHTML);
-      this.updateCss();
     } catch (e2) {
       console.error(e2);
       this.setArticle(this.errorContent(e2));
     }
   }
+  isOldTheme() {
+    const theme = this.themeManager.getTheme(this.currentTheme);
+    if (theme) {
+      return theme.css.indexOf(".note-to-mp") < 0;
+    }
+    return false;
+  }
   setArticle(article) {
     this.articleDiv.empty();
-    const html2 = `<section class="${this.settings.defaultStyle}" id="article-section">${article}</section>`;
-    const doc = (0, import_obsidian3.sanitizeHTMLToDom)(html2);
-    if (doc.firstChild) {
-      this.articleDiv.appendChild(doc.firstChild);
-      replaceImages(this.articleDiv);
+    let className = "note-to-mp";
+    if (this.isOldTheme()) {
+      className = this.currentTheme;
     }
-  }
-  setStyle(css2) {
-    this.styleEl.empty();
-    this.styleEl.appendChild(document.createTextNode(css2));
+    const html2 = `<section class="${className}" id="article-section">${article}</section>`;
+    const node = applyCSS(html2, this.getCSS());
+    if (node) {
+      this.articleDiv.appendChild(node);
+      this.imageRenderer.replaceImages(this.articleDiv);
+    }
   }
   getArticleSection() {
     return this.articleDiv.querySelector("#article-section");
   }
   getArticleContent() {
-    CSSProcess(this.articleDiv);
     const content = this.articleDiv.innerHTML;
-    this.setArticle(this.articleHTML);
-    this.updateCss();
-    return content;
+    return this.codeRenderer.restoreCard(content);
   }
   getCSS() {
     try {
       const theme = this.themeManager.getTheme(this.currentTheme);
       const highlight = this.themeManager.getHighlight(this.currentHighlight);
-      return `${theme.css}
+      const customCSS = this.settings.useCustomCss ? this.themeManager.customCSS : "";
+      return `${inline_css_default}
 
 ${highlight.css}
 
-${callouts_css_default}`;
+${theme.css}
+
+${customCSS}`;
     } catch (error) {
       console.error(error);
-      new import_obsidian3.Notice(`\u83B7\u53D6\u6837\u5F0F\u5931\u8D25${this.currentTheme}|${this.currentHighlight}\uFF0C\u8BF7\u68C0\u67E5\u4E3B\u9898\u662F\u5426\u6B63\u786E\u5B89\u88C5\u3002`);
+      new import_obsidian5.Notice(`\u83B7\u53D6\u6837\u5F0F\u5931\u8D25${this.currentTheme}|${this.currentHighlight}\uFF0C\u8BF7\u68C0\u67E5\u4E3B\u9898\u662F\u5426\u6B63\u786E\u5B89\u88C5\u3002`);
     }
     return "";
   }
@@ -52827,6 +57215,7 @@ ${callouts_css_default}`;
     wxSelect.setAttr("style", "width: 200px");
     wxSelect.onchange = async () => {
       this.currentAppId = wxSelect.value;
+      this.onAppIdChanged();
     };
     const defautlOp = wxSelect.createEl("option");
     defautlOp.value = "";
@@ -52847,7 +57236,7 @@ ${callouts_css_default}`;
     });
     copyBtn.onclick = async () => {
       await this.copyArticle();
-      new import_obsidian3.Notice("\u590D\u5236\u6210\u529F\uFF0C\u8BF7\u5230\u516C\u4F17\u53F7\u7F16\u8F91\u5668\u7C98\u8D34\u3002");
+      new import_obsidian5.Notice("\u590D\u5236\u6210\u529F\uFF0C\u8BF7\u5230\u516C\u4F17\u53F7\u7F16\u8F91\u5668\u7C98\u8D34\u3002");
     };
     const uploadImgBtn = lineDiv.createEl("button", { cls: "copy-button" }, async (button) => {
       button.setText("\u4E0A\u4F20\u56FE\u7247");
@@ -52908,32 +57297,34 @@ ${callouts_css_default}`;
     this.coverEl.setAttr("accept", ".png, .jpg, .jpeg");
     this.coverEl.setAttr("name", "cover");
     this.coverEl.id = "cover-input";
-    lineDiv = this.toolbar.createDiv({ cls: "toolbar-line" });
-    const cssStyle = lineDiv.createDiv({ cls: "style-label" });
-    cssStyle.innerText = "\u6837\u5F0F:";
-    const selectBtn = lineDiv.createEl("select", { cls: "style-select" }, async (sel) => {
-    });
-    selectBtn.onchange = async () => {
-      this.updateStyle(selectBtn.value);
-    };
-    for (let s of this.themeManager.themes) {
-      const op = selectBtn.createEl("option");
-      op.value = s.className;
-      op.text = s.name;
-      op.selected = s.className == this.settings.defaultStyle;
-    }
-    const highlightStyle = lineDiv.createDiv({ cls: "style-label" });
-    highlightStyle.innerText = "\u4EE3\u7801\u9AD8\u4EAE:";
-    const highlightStyleBtn = lineDiv.createEl("select", { cls: "style-select" }, async (sel) => {
-    });
-    highlightStyleBtn.onchange = async () => {
-      this.updateHighLight(highlightStyleBtn.value);
-    };
-    for (let s of this.themeManager.highlights) {
-      const op = highlightStyleBtn.createEl("option");
-      op.value = s.name;
-      op.text = s.name;
-      op.selected = s.name == this.settings.defaultHighlight;
+    if (this.settings.showStyleUI) {
+      lineDiv = this.toolbar.createDiv({ cls: "toolbar-line" });
+      const cssStyle = lineDiv.createDiv({ cls: "style-label" });
+      cssStyle.innerText = "\u6837\u5F0F:";
+      const selectBtn = lineDiv.createEl("select", { cls: "style-select" }, async (sel) => {
+      });
+      selectBtn.onchange = async () => {
+        this.updateStyle(selectBtn.value);
+      };
+      for (let s of this.themeManager.themes) {
+        const op = selectBtn.createEl("option");
+        op.value = s.className;
+        op.text = s.name;
+        op.selected = s.className == this.settings.defaultStyle;
+      }
+      const highlightStyle = lineDiv.createDiv({ cls: "style-label" });
+      highlightStyle.innerText = "\u4EE3\u7801\u9AD8\u4EAE:";
+      const highlightStyleBtn = lineDiv.createEl("select", { cls: "style-select" }, async (sel) => {
+      });
+      highlightStyleBtn.onchange = async () => {
+        this.updateHighLight(highlightStyleBtn.value);
+      };
+      for (let s of this.themeManager.highlights) {
+        const op = highlightStyleBtn.createEl("option");
+        op.value = s.name;
+        op.text = s.name;
+        op.selected = s.name == this.settings.defaultHighlight;
+      }
     }
     this.buildMsgView(this.toolbar);
   }
@@ -52945,21 +57336,15 @@ ${callouts_css_default}`;
     this.renderDiv = this.mainDiv.createDiv({ cls: "render-div" });
     this.renderDiv.id = "render-div";
     this.renderDiv.setAttribute("style", "-webkit-user-select: text; user-select: text;");
-    this.styleEl = this.renderDiv.createEl("style");
-    this.styleEl.setAttr("title", "note-to-mp-style");
     this.articleDiv = this.renderDiv.createEl("div");
   }
   updateStyle(styleName) {
     this.currentTheme = styleName;
-    this.updateCss();
+    this.renderMarkdown();
   }
   updateHighLight(styleName) {
     this.currentHighlight = styleName;
-    this.updateCss();
-  }
-  updateCss() {
-    this.setStyle(this.getCSS());
-    this.getArticleSection().setAttribute("class", this.currentTheme);
+    this.renderMarkdown();
   }
   async uploadLocalCover(token) {
     const fileInput = this.coverEl;
@@ -52970,7 +57355,7 @@ ${callouts_css_default}`;
     if (!file) {
       return "";
     }
-    return await uploadCover(file, token);
+    return await this.imageRenderer.uploadCover(file, token);
   }
   async getDefaultCover(token) {
     const res = await wxBatchGetMaterial(token, "image");
@@ -52988,7 +57373,7 @@ ${callouts_css_default}`;
     }
     const token = res.json.token;
     if (token === "") {
-      this.showMsg("\u83B7\u53D6token\u5931\u8D25");
+      this.showMsg("\u83B7\u53D6token\u5931\u8D25: " + res.json.message);
     }
     return token;
   }
@@ -53006,8 +57391,8 @@ ${callouts_css_default}`;
     if (token === "") {
       return;
     }
-    await uploadLocalImage(this.app.vault, token);
-    replaceImages(this.articleDiv);
+    await this.imageRenderer.uploadLocalImage(token);
+    this.imageRenderer.replaceImages(this.articleDiv);
     await this.copyArticle();
     this.showMsg("\u56FE\u7247\u5DF2\u4E0A\u4F20\uFF0C\u5E76\u4E14\u5DF2\u590D\u5236\uFF0C\u8BF7\u5230\u516C\u4F17\u53F7\u7F16\u8F91\u5668\u7C98\u8D34\u3002");
   }
@@ -53038,11 +57423,10 @@ ${callouts_css_default}`;
     try {
       const token = await this.getToken();
       if (token === "") {
-        this.showMsg("\u83B7\u53D6token\u5931\u8D25");
         return;
       }
-      await uploadLocalImage(this.app.vault, token);
-      replaceImages(this.articleDiv);
+      await this.imageRenderer.uploadLocalImage(token);
+      this.imageRenderer.replaceImages(this.articleDiv);
       let mediaId = "";
       if (this.useLocalCover.checked) {
         mediaId = await this.uploadLocalCover(token);
@@ -53068,18 +57452,49 @@ ${callouts_css_default}`;
       this.showMsg("\u53D1\u5E03\u5931\u8D25!" + error.message);
     }
   }
+  updateMath(id, svg) {
+    const span = this.articleDiv.querySelector("#" + id);
+    if (!span)
+      return;
+    const doc = (0, import_obsidian5.sanitizeHTMLToDom)(svg);
+    span.empty();
+    if (doc.firstChild) {
+      span.appendChild(doc.firstChild);
+    } else {
+      span.innerText = "\u6E32\u67D3\u5931\u8D25";
+    }
+  }
+  updateElementByID(id, html2) {
+    const item = this.articleDiv.querySelector("#" + id);
+    if (!item)
+      return;
+    const doc = (0, import_obsidian5.sanitizeHTMLToDom)(html2);
+    item.empty();
+    if (doc.hasChildNodes()) {
+      for (const child of doc.childNodes) {
+        item.appendChild(child);
+      }
+    } else {
+      item.innerText = "\u6E32\u67D3\u5931\u8D25";
+    }
+  }
 };
 
 // src/settings.ts
 var PreviewSetting = class {
   constructor(app) {
+    this.expireat = null;
     this.app = app;
     this.defaultStyle = "obsidian-light";
     this.defaultHighlight = "\u9ED8\u8BA4";
+    this.showStyleUI = true;
     this.linkStyle = "inline";
+    this.embedStyle = "quote";
     this.lineNumber = true;
+    this.useCustomCss = false;
     this.authKey = "";
     this.wxInfo = [];
+    this.math = "latex";
   }
   resetStyelAndHighlight() {
     this.defaultStyle = "obsidian-light";
@@ -53089,15 +57504,32 @@ var PreviewSetting = class {
     if (!data) {
       return;
     }
-    const { defaultStyle, linkStyle, lineNumber, defaultHighlight, authKey, wxInfo } = data;
+    const {
+      defaultStyle,
+      linkStyle,
+      embedStyle,
+      showStyleUI,
+      lineNumber,
+      defaultHighlight,
+      authKey,
+      wxInfo,
+      math,
+      useCustomCss
+    } = data;
     if (defaultStyle) {
       this.defaultStyle = defaultStyle;
     }
     if (defaultHighlight) {
       this.defaultHighlight = defaultHighlight;
     }
+    if (showStyleUI !== void 0) {
+      this.showStyleUI = showStyleUI;
+    }
     if (linkStyle) {
       this.linkStyle = linkStyle;
+    }
+    if (embedStyle) {
+      this.embedStyle = embedStyle;
     }
     if (lineNumber !== void 0) {
       this.lineNumber = lineNumber;
@@ -53108,25 +57540,45 @@ var PreviewSetting = class {
     if (wxInfo) {
       this.wxInfo = wxInfo;
     }
+    if (math) {
+      this.math = math;
+    }
+    if (useCustomCss !== void 0) {
+      this.useCustomCss = useCustomCss;
+    }
+    this.getExpiredDate();
   }
   allSettings() {
     return {
       "defaultStyle": this.defaultStyle,
       "defaultHighlight": this.defaultHighlight,
+      "showStyleUI": this.showStyleUI,
       "linkStyle": this.linkStyle,
+      "embedStyle": this.embedStyle,
       "lineNumber": this.lineNumber,
       "authKey": this.authKey,
-      "wxInfo": this.wxInfo
+      "wxInfo": this.wxInfo,
+      "math": this.math,
+      "useCustomCss": this.useCustomCss
     };
+  }
+  getExpiredDate() {
+    if (this.authKey.length == 0)
+      return;
+    wxKeyInfo(this.authKey).then((res) => {
+      if (res.status == 200) {
+        this.expireat = new Date(res.json.expireat);
+      }
+    });
   }
 };
 
 // src/setting-tab.ts
-var import_obsidian4 = require("obsidian");
-var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
-  constructor(app, plugin) {
-    super(app, plugin);
-    this.plugin = plugin;
+var import_obsidian6 = require("obsidian");
+var NoteToMpSettingTab = class extends import_obsidian6.PluginSettingTab {
+  constructor(app, plugin2) {
+    super(app, plugin2);
+    this.plugin = plugin2;
     this.wxInfo = this.parseWXInfo();
   }
   displayWXInfo(txt) {
@@ -53148,12 +57600,12 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
   async testWXInfo() {
     const authKey = this.plugin.settings.authKey;
     if (authKey.length == 0) {
-      new import_obsidian4.Notice("\u8BF7\u5148\u8BBE\u7F6EauthKey");
+      new import_obsidian6.Notice("\u8BF7\u5148\u8BBE\u7F6EauthKey");
       return;
     }
     const wxInfo = this.plugin.settings.wxInfo;
     if (wxInfo.length == 0) {
-      new import_obsidian4.Notice("\u8BF7\u5148\u8BBE\u7F6E\u516C\u4F17\u53F7\u4FE1\u606F");
+      new import_obsidian6.Notice("\u8BF7\u5148\u8BBE\u7F6E\u516C\u4F17\u53F7\u4FE1\u606F");
       return;
     }
     try {
@@ -53161,27 +57613,27 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
         const res = await wxGetToken(authKey, wx.appid, wx.secret.replace("SECRET", ""));
         if (res.status != 200) {
           const data2 = res.json;
-          new import_obsidian4.Notice(`${wx.name}|${wx.appid} \u6D4B\u8BD5\u5931\u8D25\uFF1A${data2.message}`);
+          new import_obsidian6.Notice(`${wx.name}|${wx.appid} \u6D4B\u8BD5\u5931\u8D25\uFF1A${data2.message}`);
           break;
         }
         const data = res.json;
         if (data.token.length == 0) {
-          new import_obsidian4.Notice(`${wx.name}|${wx.appid} \u6D4B\u8BD5\u5931\u8D25`);
+          new import_obsidian6.Notice(`${wx.name}|${wx.appid} \u6D4B\u8BD5\u5931\u8D25`);
           break;
         }
-        new import_obsidian4.Notice(`${wx.name} \u6D4B\u8BD5\u901A\u8FC7`);
+        new import_obsidian6.Notice(`${wx.name} \u6D4B\u8BD5\u901A\u8FC7`);
       }
     } catch (error) {
-      new import_obsidian4.Notice(`\u6D4B\u8BD5\u5931\u8D25\uFF1A${error}`);
+      new import_obsidian6.Notice(`\u6D4B\u8BD5\u5931\u8D25\uFF1A${error}`);
     }
   }
   async encrypt() {
     if (this.wxInfo.length == 0) {
-      new import_obsidian4.Notice("\u8BF7\u8F93\u5165\u5185\u5BB9");
+      new import_obsidian6.Notice("\u8BF7\u8F93\u5165\u5185\u5BB9");
       return false;
     }
     if (this.plugin.settings.wxInfo.length > 0) {
-      new import_obsidian4.Notice("\u5DF2\u7ECF\u52A0\u5BC6\u8FC7\u4E86\uFF0C\u8BF7\u5148\u6E05\u9664\uFF01");
+      new import_obsidian6.Notice("\u5DF2\u7ECF\u52A0\u5BC6\u8FC7\u4E86\uFF0C\u8BF7\u5148\u6E05\u9664\uFF01");
       return false;
     }
     const wechat = [];
@@ -53193,7 +57645,7 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
       }
       const items = line.split("|");
       if (items.length != 3) {
-        new import_obsidian4.Notice("\u683C\u5F0F\u9519\u8BEF\uFF0C\u8BF7\u68C0\u67E5");
+        new import_obsidian6.Notice("\u683C\u5F0F\u9519\u8BEF\uFF0C\u8BF7\u68C0\u67E5");
         return false;
       }
       const name = items[0];
@@ -53208,7 +57660,7 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
       const res = await wxEncrypt(this.plugin.settings.authKey, wechat);
       if (res.status != 200) {
         const data2 = res.json;
-        new import_obsidian4.Notice(`${data2.message}`);
+        new import_obsidian6.Notice(`${data2.message}`);
         return false;
       }
       const data = res.json;
@@ -53219,10 +57671,10 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
       await this.plugin.saveSettings();
       this.wxInfo = this.parseWXInfo();
       this.displayWXInfo(this.wxInfo);
-      new import_obsidian4.Notice("\u52A0\u5BC6\u6210\u529F");
+      new import_obsidian6.Notice("\u52A0\u5BC6\u6210\u529F");
       return true;
     } catch (error) {
-      new import_obsidian4.Notice(`\u52A0\u5BC6\u5931\u8D25\uFF1A${error}`);
+      new import_obsidian6.Notice(`\u52A0\u5BC6\u5931\u8D25\uFF1A${error}`);
       console.error(error);
     }
     return false;
@@ -53237,7 +57689,7 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     this.wxInfo = this.parseWXInfo();
-    new import_obsidian4.Setting(containerEl).setName("\u9ED8\u8BA4\u6837\u5F0F").addDropdown((dropdown) => {
+    new import_obsidian6.Setting(containerEl).setName("\u9ED8\u8BA4\u6837\u5F0F").addDropdown((dropdown) => {
       const styles = this.plugin.themesManager.themes;
       for (let s of styles) {
         dropdown.addOption(s.className, s.name);
@@ -53248,7 +57700,7 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
         await this.plugin.saveSettings();
       });
     });
-    new import_obsidian4.Setting(containerEl).setName("\u4EE3\u7801\u9AD8\u4EAE").addDropdown((dropdown) => {
+    new import_obsidian6.Setting(containerEl).setName("\u4EE3\u7801\u9AD8\u4EAE").addDropdown((dropdown) => {
       const styles = this.plugin.themesManager.highlights;
       for (let s of styles) {
         dropdown.addOption(s.name, s.name);
@@ -53259,7 +57711,14 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
         await this.plugin.saveSettings();
       });
     });
-    new import_obsidian4.Setting(containerEl).setName("\u94FE\u63A5\u5C55\u793A\u6837\u5F0F").addDropdown((dropdown) => {
+    new import_obsidian6.Setting(containerEl).setName("\u5728\u5DE5\u5177\u680F\u5C55\u793A\u6837\u5F0F\u9009\u62E9").setDesc("\u5EFA\u8BAE\u5728\u79FB\u52A8\u7AEF\u5173\u95ED\uFF0C\u53EF\u4EE5\u589E\u5927\u6587\u7AE0\u9884\u89C8\u533A\u57DF").addToggle((toggle) => {
+      toggle.setValue(this.plugin.settings.showStyleUI);
+      toggle.onChange(async (value) => {
+        this.plugin.settings.showStyleUI = value;
+        await this.plugin.saveSettings();
+      });
+    });
+    new import_obsidian6.Setting(containerEl).setName("\u94FE\u63A5\u5C55\u793A\u6837\u5F0F").addDropdown((dropdown) => {
       dropdown.addOption("inline", "\u5185\u5D4C");
       dropdown.addOption("footnote", "\u811A\u6CE8");
       dropdown.setValue(this.plugin.settings.linkStyle);
@@ -53268,22 +57727,46 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
         await this.plugin.saveSettings();
       });
     });
-    new import_obsidian4.Setting(containerEl).setName("\u663E\u793A\u4EE3\u7801\u884C\u53F7").addToggle((toggle) => {
+    new import_obsidian6.Setting(containerEl).setName("\u6587\u4EF6\u5D4C\u5165\u5C55\u793A\u6837\u5F0F").addDropdown((dropdown) => {
+      dropdown.addOption("quote", "\u5F15\u7528");
+      dropdown.addOption("content", "\u6B63\u6587");
+      dropdown.setValue(this.plugin.settings.embedStyle);
+      dropdown.onChange(async (value) => {
+        this.plugin.settings.embedStyle = value;
+        await this.plugin.saveSettings();
+      });
+    });
+    new import_obsidian6.Setting(containerEl).setName("\u6570\u5B66\u516C\u5F0F\u8BED\u6CD5").addDropdown((dropdown) => {
+      dropdown.addOption("latex", "latex");
+      dropdown.addOption("asciimath", "asciimath");
+      dropdown.setValue(this.plugin.settings.math);
+      dropdown.onChange(async (value) => {
+        this.plugin.settings.math = value;
+        cleanMathCache();
+        await this.plugin.saveSettings();
+      });
+    });
+    new import_obsidian6.Setting(containerEl).setName("\u663E\u793A\u4EE3\u7801\u884C\u53F7").addToggle((toggle) => {
       toggle.setValue(this.plugin.settings.lineNumber);
       toggle.onChange(async (value) => {
         this.plugin.settings.lineNumber = value;
         await this.plugin.saveSettings();
       });
     });
-    new import_obsidian4.Setting(containerEl).setName("\u83B7\u53D6\u66F4\u591A\u4E3B\u9898").addButton((button) => {
+    new import_obsidian6.Setting(containerEl).setName("\u83B7\u53D6\u66F4\u591A\u4E3B\u9898").addButton((button) => {
       button.setButtonText("\u4E0B\u8F7D");
       button.onClick(async () => {
         button.setButtonText("\u4E0B\u8F7D\u4E2D...");
         await this.plugin.themesManager.downloadThemes();
         button.setButtonText("\u4E0B\u8F7D\u5B8C\u6210");
       });
+    }).addButton((button) => {
+      button.setIcon("folder-open");
+      button.onClick(async () => {
+        await this.plugin.themesManager.openAssets();
+      });
     });
-    new import_obsidian4.Setting(containerEl).setName("\u6E05\u7A7A\u4E3B\u9898").addButton((button) => {
+    new import_obsidian6.Setting(containerEl).setName("\u6E05\u7A7A\u4E3B\u9898").addButton((button) => {
       button.setButtonText("\u6E05\u7A7A");
       button.onClick(async () => {
         await this.plugin.themesManager.removeThemes();
@@ -53291,22 +57774,46 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
         await this.plugin.saveSettings();
       });
     });
-    new import_obsidian4.Setting(containerEl).setName("\u6CE8\u518C\u7801\uFF08AuthKey\uFF09").setDesc("\u8BE6\u60C5\u8BF7\u53C2\u8003\uFF1Ahttps://doc.booshi.tech/info.html").addText((text) => {
+    new import_obsidian6.Setting(containerEl).setName("CSS\u4EE3\u7801\u7247\u6BB5").addToggle((toggle) => {
+      toggle.setValue(this.plugin.settings.useCustomCss);
+      toggle.onChange(async (value) => {
+        this.plugin.settings.useCustomCss = value;
+        await this.plugin.saveSettings();
+      });
+    }).addButton((button) => {
+      button.setIcon("refresh-ccw");
+      button.onClick(async () => {
+        await this.plugin.themesManager.loadCustomCSS();
+        new import_obsidian6.Notice("\u5237\u65B0\u6210\u529F");
+      });
+    }).addButton((button) => {
+      button.setIcon("folder-open");
+      button.onClick(async () => {
+        await this.plugin.themesManager.openAssets();
+      });
+    });
+    let descHtml = '\u8BE6\u60C5\u8BF4\u660E\uFF1A<a href="https://mp.weixin.qq.com/s/LYujo4ODEYLuq0OkzkkoCw">https://mp.weixin.qq.com/s/LYujo4ODEYLuq0OkzkkoCw</a>';
+    if (this.plugin.settings.expireat) {
+      const timestr = this.plugin.settings.expireat.toLocaleString();
+      descHtml = `\u6709\u6548\u671F\u81F3\uFF1A${timestr} <br/>${descHtml}`;
+    }
+    new import_obsidian6.Setting(containerEl).setName("\u6CE8\u518C\u7801\uFF08AuthKey\uFF09").setDesc((0, import_obsidian6.sanitizeHTMLToDom)(descHtml)).addText((text) => {
       text.setPlaceholder("\u8BF7\u8F93\u5165\u6CE8\u518C\u7801").setValue(this.plugin.settings.authKey).onChange(async (value) => {
-        this.plugin.settings.authKey = value;
+        this.plugin.settings.authKey = value.trim();
+        this.plugin.settings.getExpiredDate();
         await this.plugin.saveSettings();
       }).inputEl.setAttr("style", "width: 320px;");
     }).descEl.setAttr("style", "-webkit-user-select: text; user-select: text;");
     let isClear = this.plugin.settings.wxInfo.length > 0;
     let isRealClear = false;
     const buttonText = isClear ? "\u6E05\u7A7A\u516C\u4F17\u53F7\u4FE1\u606F" : "\u52A0\u5BC6\u516C\u4F17\u53F7\u4FE1\u606F";
-    new import_obsidian4.Setting(containerEl).setName("\u516C\u4F17\u53F7\u4FE1\u606F").addTextArea((text) => {
+    new import_obsidian6.Setting(containerEl).setName("\u516C\u4F17\u53F7\u4FE1\u606F").addTextArea((text) => {
       this.wxTextArea = text;
       text.setPlaceholder("\u8BF7\u8F93\u5165\u516C\u4F17\u53F7\u4FE1\u606F\n\u683C\u5F0F\uFF1A\u516C\u4F17\u53F7\u540D\u79F0|\u516C\u4F17\u53F7AppID|\u516C\u4F17\u53F7AppSecret\n\u591A\u4E2A\u516C\u4F17\u53F7\u8BF7\u6362\u884C\u8F93\u5165\n\u8F93\u5165\u5B8C\u6210\u540E\u70B9\u51FB\u52A0\u5BC6\u6309\u94AE").setValue(this.wxInfo).onChange((value) => {
         this.wxInfo = value;
       }).inputEl.setAttr("style", "width: 520px; height: 120px;");
     });
-    new import_obsidian4.Setting(containerEl).addButton((button) => {
+    new import_obsidian6.Setting(containerEl).addButton((button) => {
       button.setButtonText(buttonText);
       button.onClick(async () => {
         if (isClear) {
@@ -53341,7 +57848,7 @@ var NoteToMpSettingTab = class extends import_obsidian4.PluginSettingTab {
 };
 
 // src/themes.ts
-var import_obsidian5 = require("obsidian");
+var import_obsidian7 = require("obsidian");
 
 // node_modules/@zip.js/zip.js/lib/core/streams/codecs/deflate.js
 var MAX_BITS = 15;
@@ -53467,23 +57974,23 @@ function Tree() {
       }
     }
   }
-  function bi_reverse(code2, len) {
+  function bi_reverse(code, len) {
     let res = 0;
     do {
-      res |= code2 & 1;
-      code2 >>>= 1;
+      res |= code & 1;
+      code >>>= 1;
       res <<= 1;
     } while (--len > 0);
     return res >>> 1;
   }
   function gen_codes(tree, max_code, bl_count) {
     const next_code = [];
-    let code2 = 0;
+    let code = 0;
     let bits;
     let n;
     let len;
     for (bits = 1; bits <= MAX_BITS; bits++) {
-      next_code[bits] = code2 = code2 + bl_count[bits - 1] << 1;
+      next_code[bits] = code = code + bl_count[bits - 1] << 1;
     }
     for (n = 0; n <= max_code; n++) {
       len = tree[n * 2 + 1];
@@ -54276,7 +58783,7 @@ function Deflate() {
     let dist;
     let lc;
     let lx = 0;
-    let code2;
+    let code;
     let extra;
     if (last_lit !== 0) {
       do {
@@ -54286,19 +58793,19 @@ function Deflate() {
         if (dist === 0) {
           send_code(lc, ltree);
         } else {
-          code2 = Tree._length_code[lc];
-          send_code(code2 + LITERALS + 1, ltree);
-          extra = Tree.extra_lbits[code2];
+          code = Tree._length_code[lc];
+          send_code(code + LITERALS + 1, ltree);
+          extra = Tree.extra_lbits[code];
           if (extra !== 0) {
-            lc -= Tree.base_length[code2];
+            lc -= Tree.base_length[code];
             send_bits(lc, extra);
           }
           dist--;
-          code2 = Tree.d_code(dist);
-          send_code(code2, dtree);
-          extra = Tree.extra_dbits[code2];
+          code = Tree.d_code(dist);
+          send_code(code, dtree);
+          extra = Tree.extra_dbits[code];
           if (extra !== 0) {
-            dist -= Tree.base_dist[code2];
+            dist -= Tree.base_dist[code];
             send_bits(dist, extra);
           }
         }
@@ -54891,13 +59398,13 @@ ZStream.prototype = {
     }
   }
 };
-function ZipDeflate(options3) {
+function ZipDeflate(options4) {
   const that = this;
   const z = new ZStream();
-  const bufsize = getMaximumCompressedSize(options3 && options3.chunkSize ? options3.chunkSize : 64 * 1024);
+  const bufsize = getMaximumCompressedSize(options4 && options4.chunkSize ? options4.chunkSize : 64 * 1024);
   const flush = Z_NO_FLUSH;
   const buf = new Uint8Array(bufsize);
-  let level = options3 ? options3.level : Z_DEFAULT_COMPRESSION;
+  let level = options4 ? options4.level : Z_DEFAULT_COMPRESSION;
   if (typeof level == "undefined")
     level = Z_DEFAULT_COMPRESSION;
   z.deflateInit(level);
@@ -58346,10 +62853,10 @@ ZStream2.prototype = {
     return that.next_in.subarray(start, start + size);
   }
 };
-function ZipInflate(options3) {
+function ZipInflate(options4) {
   const that = this;
   const z = new ZStream2();
-  const bufsize = options3 && options3.chunkSize ? Math.floor(options3.chunkSize * 2) : 128 * 1024;
+  const bufsize = options4 && options4.chunkSize ? Math.floor(options4.chunkSize * 2) : 128 * 1024;
   const flush = Z_NO_FLUSH2;
   const buf = new Uint8Array(bufsize);
   let nomoreinput = false;
@@ -58445,8 +62952,8 @@ var FUNCTION_TYPE = "function";
 var StreamAdapter = class {
   constructor(Codec) {
     return class extends TransformStream {
-      constructor(_format, options3) {
-        const codec2 = new Codec(options3);
+      constructor(_format, options4) {
+        const codec2 = new Codec(options4);
         super({
           transform(chunk, controller) {
             controller.enqueue(codec2.append(chunk));
@@ -61162,9 +65669,9 @@ function getInt32(number) {
 // node_modules/@zip.js/zip.js/lib/core/streams/zip-entry-stream.js
 var COMPRESSION_FORMAT = "deflate-raw";
 var DeflateStream = class extends TransformStream {
-  constructor(options3, { chunkSize, CompressionStream: CompressionStream2, CompressionStreamNative }) {
+  constructor(options4, { chunkSize, CompressionStream: CompressionStream2, CompressionStreamNative }) {
     super({});
-    const { compressed, encrypted, useCompressionStream, zipCrypto, signed, level } = options3;
+    const { compressed, encrypted, useCompressionStream, zipCrypto, signed, level } = options4;
     const stream = this;
     let crc32Stream, encryptionStream;
     let readable = filterEmptyChunks(super.readable);
@@ -61177,9 +65684,9 @@ var DeflateStream = class extends TransformStream {
     }
     if (encrypted) {
       if (zipCrypto) {
-        readable = pipeThrough(readable, new ZipCryptoEncryptionStream(options3));
+        readable = pipeThrough(readable, new ZipCryptoEncryptionStream(options4));
       } else {
-        encryptionStream = new AESEncryptionStream(options3);
+        encryptionStream = new AESEncryptionStream(options4);
         readable = pipeThrough(readable, encryptionStream);
       }
     }
@@ -61196,16 +65703,16 @@ var DeflateStream = class extends TransformStream {
   }
 };
 var InflateStream = class extends TransformStream {
-  constructor(options3, { chunkSize, DecompressionStream: DecompressionStream2, DecompressionStreamNative }) {
+  constructor(options4, { chunkSize, DecompressionStream: DecompressionStream2, DecompressionStreamNative }) {
     super({});
-    const { zipCrypto, encrypted, signed, signature, compressed, useCompressionStream } = options3;
+    const { zipCrypto, encrypted, signed, signature, compressed, useCompressionStream } = options4;
     let crc32Stream, decryptionStream;
     let readable = filterEmptyChunks(super.readable);
     if (encrypted) {
       if (zipCrypto) {
-        readable = pipeThrough(readable, new ZipCryptoDecryptionStream(options3));
+        readable = pipeThrough(readable, new ZipCryptoDecryptionStream(options4));
       } else {
-        decryptionStream = new AESDecryptionStream(options3);
+        decryptionStream = new AESDecryptionStream(options4);
         readable = pipeThrough(readable, decryptionStream);
       }
     }
@@ -61243,14 +65750,14 @@ function setReadable(stream, readable, flush) {
     }
   });
 }
-function pipeThroughCommpressionStream(readable, useCompressionStream, options3, CodecStreamNative, CodecStream2) {
+function pipeThroughCommpressionStream(readable, useCompressionStream, options4, CodecStreamNative, CodecStream2) {
   try {
     const CompressionStream2 = useCompressionStream && CodecStreamNative ? CodecStreamNative : CodecStream2;
-    readable = pipeThrough(readable, new CompressionStream2(COMPRESSION_FORMAT, options3));
+    readable = pipeThrough(readable, new CompressionStream2(COMPRESSION_FORMAT, options4));
   } catch (error) {
     if (useCompressionStream) {
       try {
-        readable = pipeThrough(readable, new CodecStream2(COMPRESSION_FORMAT, options3));
+        readable = pipeThrough(readable, new CodecStream2(COMPRESSION_FORMAT, options4));
       } catch (error2) {
         return readable;
       }
@@ -61274,10 +65781,10 @@ var MESSAGE_CLOSE = "close";
 var CODEC_DEFLATE = "deflate";
 var CODEC_INFLATE = "inflate";
 var CodecStream = class extends TransformStream {
-  constructor(options3, config2) {
+  constructor(options4, config2) {
     super({});
     const codec2 = this;
-    const { codecType } = options3;
+    const { codecType } = options4;
     let Stream2;
     if (codecType.startsWith(CODEC_DEFLATE)) {
       Stream2 = DeflateStream;
@@ -61286,7 +65793,7 @@ var CodecStream = class extends TransformStream {
     }
     let outputSize = 0;
     let inputSize = 0;
-    const stream = new Stream2(options3, config2);
+    const stream = new Stream2(options4, config2);
     const readable = super.readable;
     const inputSizeStream = new TransformStream({
       transform(chunk, controller) {
@@ -61356,13 +65863,13 @@ var ChunkStream = class extends TransformStream {
 // node_modules/@zip.js/zip.js/lib/core/codec-worker.js
 var WEB_WORKERS_SUPPORTED = typeof Worker != UNDEFINED_TYPE;
 var CodecWorker = class {
-  constructor(workerData, { readable, writable }, { options: options3, config: config2, streamOptions, useWebWorkers, transferStreams, scripts }, onTaskFinished) {
+  constructor(workerData, { readable, writable }, { options: options4, config: config2, streamOptions, useWebWorkers, transferStreams, scripts }, onTaskFinished) {
     const { signal } = streamOptions;
     Object.assign(workerData, {
       busy: true,
       readable: readable.pipeThrough(new ChunkStream(config2.chunkSize)).pipeThrough(new ProgressWatcherStream(readable, streamOptions), { signal }),
       writable,
-      options: Object.assign({}, options3),
+      options: Object.assign({}, options4),
       scripts,
       transferStreams,
       terminate() {
@@ -61451,9 +65958,9 @@ function createWebWorkerInterface(workerData, config2) {
   }
   return workerData.interface;
 }
-async function runWorker({ options: options3, readable, writable, onTaskFinished }, config2) {
+async function runWorker({ options: options4, readable, writable, onTaskFinished }, config2) {
   try {
-    const codecStream = new CodecStream(options3, config2);
+    const codecStream = new CodecStream(options4, config2);
     await readable.pipeThrough(codecStream).pipeTo(writable, { preventClose: true, preventAbort: true });
     const {
       signature,
@@ -61482,12 +65989,12 @@ async function runWebWorker(workerData, config2) {
     rejectResult,
     result
   });
-  const { readable, options: options3, scripts } = workerData;
+  const { readable, options: options4, scripts } = workerData;
   const { writable, closed } = watchClosedStream(workerData.writable);
   const streamsTransferred = sendMessage({
     type: MESSAGE_START,
     scripts: scripts.slice(1),
-    options: options3,
+    options: options4,
     config: config2,
     readable,
     writable
@@ -61598,9 +66105,9 @@ async function onMessage({ data }, workerData) {
   const { reader, writer, resolveResult, rejectResult, onTaskFinished } = workerData;
   try {
     if (error) {
-      const { message, stack, code: code2, name } = error;
+      const { message, stack, code, name } = error;
       const responseError = new Error(message);
-      Object.assign(responseError, { stack, code: code2, name });
+      Object.assign(responseError, { stack, code, name });
       close(responseError);
     } else {
       if (type == MESSAGE_PULL) {
@@ -61638,14 +66145,14 @@ var pool = [];
 var pendingRequests = [];
 var indexWorker = 0;
 async function runWorker2(stream, workerOptions) {
-  const { options: options3, config: config2 } = workerOptions;
-  const { transferStreams, useWebWorkers, useCompressionStream, codecType, compressed, signed, encrypted } = options3;
+  const { options: options4, config: config2 } = workerOptions;
+  const { transferStreams, useWebWorkers, useCompressionStream, codecType, compressed, signed, encrypted } = options4;
   const { workerScripts, maxWorkers: maxWorkers2 } = config2;
   workerOptions.transferStreams = transferStreams || transferStreams === UNDEFINED_VALUE;
   const streamCopy = !compressed && !signed && !encrypted && !workerOptions.transferStreams;
   workerOptions.useWebWorkers = !streamCopy && (useWebWorkers || useWebWorkers === UNDEFINED_VALUE && config2.useWebWorkers);
   workerOptions.scripts = workerOptions.useWebWorkers && workerScripts ? workerScripts[codecType] : [];
-  options3.useCompressionStream = useCompressionStream || useCompressionStream === UNDEFINED_VALUE && config2.useCompressionStream;
+  options4.useCompressionStream = useCompressionStream || useCompressionStream === UNDEFINED_VALUE && config2.useCompressionStream;
   return (await getWorker()).run();
   async function getWorker() {
     const workerData = pool.find((workerData2) => !workerData2.busy);
@@ -62080,14 +66587,14 @@ var ZIP64_EXTRACTION = {
   }
 };
 var ZipReader = class {
-  constructor(reader, options3 = {}) {
+  constructor(reader, options4 = {}) {
     Object.assign(this, {
       reader: initReader(reader),
-      options: options3,
+      options: options4,
       config: getConfiguration()
     });
   }
-  async *getEntriesGenerator(options3 = {}) {
+  async *getEntriesGenerator(options4 = {}) {
     const zipReader = this;
     let { reader } = zipReader;
     const { config: config2 } = zipReader;
@@ -62187,8 +66694,8 @@ var ZipReader = class {
     if (directoryDataOffset < 0 || directoryDataOffset >= reader.size) {
       throw new Error(ERR_BAD_FORMAT);
     }
-    const filenameEncoding = getOptionValue(zipReader, options3, "filenameEncoding");
-    const commentEncoding = getOptionValue(zipReader, options3, "commentEncoding");
+    const filenameEncoding = getOptionValue(zipReader, options4, "filenameEncoding");
+    const commentEncoding = getOptionValue(zipReader, options4, "commentEncoding");
     for (let indexFile = 0; indexFile < filesLength; indexFile++) {
       const fileEntry = new ZipEntry(reader, config2, zipReader.options);
       if (getUint32(directoryView, offset) != CENTRAL_FILE_HEADER_SIGNATURE) {
@@ -62225,23 +66732,23 @@ var ZipReader = class {
         commentUTF8,
         rawExtraField: directoryArray.subarray(extraFieldOffset, commentOffset2)
       });
-      const decode = getOptionValue(zipReader, options3, "decodeText") || decodeText;
-      const [filename, comment] = await Promise.all([
+      const decode = getOptionValue(zipReader, options4, "decodeText") || decodeText;
+      const [filename, comment2] = await Promise.all([
         decode(rawFilename, filenameUTF8 ? CHARSET_UTF8 : filenameEncoding || CHARSET_CP437),
         decode(rawComment, commentUTF8 ? CHARSET_UTF8 : commentEncoding || CHARSET_CP437)
       ]);
       Object.assign(fileEntry, {
         rawComment,
         filename,
-        comment,
+        comment: comment2,
         directory: directory || filename.endsWith(DIRECTORY_SIGNATURE)
       });
       startOffset = Math.max(offsetFileEntry, startOffset);
       await readCommonFooter(fileEntry, fileEntry, directoryView, offset + 6);
       const entry = new Entry(fileEntry);
-      entry.getData = (writer, options4) => fileEntry.getData(writer, entry, options4);
+      entry.getData = (writer, options5) => fileEntry.getData(writer, entry, options5);
       offset = endOffset;
-      const { onprogress } = options3;
+      const { onprogress } = options4;
       if (onprogress) {
         try {
           await onprogress(indexFile + 1, filesLength, new Entry(fileEntry));
@@ -62250,8 +66757,8 @@ var ZipReader = class {
       }
       yield entry;
     }
-    const extractPrependedData = getOptionValue(zipReader, options3, "extractPrependedData");
-    const extractAppendedData = getOptionValue(zipReader, options3, "extractAppendedData");
+    const extractPrependedData = getOptionValue(zipReader, options4, "extractPrependedData");
+    const extractAppendedData = getOptionValue(zipReader, options4, "extractAppendedData");
     if (extractPrependedData) {
       zipReader.prependedData = startOffset > 0 ? await readUint8Array(reader, 0, startOffset) : new Uint8Array();
     }
@@ -62261,9 +66768,9 @@ var ZipReader = class {
     }
     return true;
   }
-  async getEntries(options3 = {}) {
+  async getEntries(options4 = {}) {
     const entries = [];
-    for await (const entry of this.getEntriesGenerator(options3)) {
+    for await (const entry of this.getEntriesGenerator(options4)) {
       entries.push(entry);
     }
     return entries;
@@ -62272,14 +66779,14 @@ var ZipReader = class {
   }
 };
 var ZipEntry = class {
-  constructor(reader, config2, options3) {
+  constructor(reader, config2, options4) {
     Object.assign(this, {
       reader,
       config: config2,
-      options: options3
+      options: options4
     });
   }
-  async getData(writer, fileEntry, options3 = {}) {
+  async getData(writer, fileEntry, options4 = {}) {
     const zipEntry = this;
     const {
       reader,
@@ -62297,8 +66804,8 @@ var ZipEntry = class {
     const localDirectory = fileEntry.localDirectory = {};
     const dataArray = await readUint8Array(reader, offset, 30, diskNumberStart);
     const dataView = getDataView(dataArray);
-    let password = getOptionValue(zipEntry, options3, "password");
-    let rawPassword = getOptionValue(zipEntry, options3, "rawPassword");
+    let password = getOptionValue(zipEntry, options4, "password");
+    let rawPassword = getOptionValue(zipEntry, options4, "rawPassword");
     password = password && password.length && password;
     rawPassword = rawPassword && rawPassword.length && rawPassword;
     if (extraFieldAES) {
@@ -62336,15 +66843,15 @@ var ZipEntry = class {
       offset: dataOffset,
       size
     });
-    const signal = getOptionValue(zipEntry, options3, "signal");
-    const checkPasswordOnly = getOptionValue(zipEntry, options3, "checkPasswordOnly");
+    const signal = getOptionValue(zipEntry, options4, "signal");
+    const checkPasswordOnly = getOptionValue(zipEntry, options4, "checkPasswordOnly");
     if (checkPasswordOnly) {
       writer = new WritableStream();
     }
     writer = initWriter(writer);
     await initStream(writer, uncompressedSize);
     const { writable } = writer;
-    const { onstart, onprogress, onend } = options3;
+    const { onstart, onprogress, onend } = options4;
     const workerOptions = {
       options: {
         codecType: CODEC_INFLATE,
@@ -62352,14 +66859,14 @@ var ZipEntry = class {
         rawPassword,
         zipCrypto,
         encryptionStrength: extraFieldAES && extraFieldAES.strength,
-        signed: getOptionValue(zipEntry, options3, "checkSignature"),
+        signed: getOptionValue(zipEntry, options4, "checkSignature"),
         passwordVerification: zipCrypto && (bitFlag.dataDescriptor ? rawLastModDate >>> 8 & 255 : signature >>> 24 & 255),
         signature,
         compressed: compressionMethod != 0,
         encrypted,
-        useWebWorkers: getOptionValue(zipEntry, options3, "useWebWorkers"),
-        useCompressionStream: getOptionValue(zipEntry, options3, "useCompressionStream"),
-        transferStreams: getOptionValue(zipEntry, options3, "transferStreams"),
+        useWebWorkers: getOptionValue(zipEntry, options4, "useWebWorkers"),
+        useCompressionStream: getOptionValue(zipEntry, options4, "useCompressionStream"),
+        transferStreams: getOptionValue(zipEntry, options4, "transferStreams"),
         checkPasswordOnly
       },
       config: config2,
@@ -62373,7 +66880,7 @@ var ZipEntry = class {
         throw error;
       }
     } finally {
-      const preventClose = getOptionValue(zipEntry, options3, "preventClose");
+      const preventClose = getOptionValue(zipEntry, options4, "preventClose");
       writable.size += outputSize;
       if (!preventClose && !writable.locked) {
         await writable.getWriter().close();
@@ -62592,8 +67099,8 @@ async function seekSignature(reader, signature, startOffset, minimumBytes, maxim
     }
   }
 }
-function getOptionValue(zipReader, options3, name) {
-  return options3[name] === UNDEFINED_VALUE ? zipReader.options[name] : options3[name];
+function getOptionValue(zipReader, options4, name) {
+  return options4[name] === UNDEFINED_VALUE ? zipReader.options[name] : options4[name];
 }
 function getDate(timeRaw) {
   const date = (timeRaw & 4294901760) >> 16, time = timeRaw & 65535;
@@ -62645,7 +67152,7 @@ var css = `
 /* =========================================================== */
 /* Obsidian\u7684\u9ED8\u8BA4\u6837\u5F0F                                            */
 /* =========================================================== */
-.obsidian-light {
+.note-to-mp {
     padding: 20px 20px;
     user-select: text;
     -webkit-user-select: text;
@@ -62654,15 +67161,15 @@ var css = `
     font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Microsoft YaHei Light", sans-serif;
 }
 
-.obsidian-light:last-child {
+.note-to-mp:last-child {
     margin-bottom: 0;
 }
 
-.obsidian-light .fancybox-img {
+.note-to-mp .fancybox-img {
     border: none;
 }
 
-.obsidian-light .fancybox-img:hover {
+.note-to-mp .fancybox-img:hover {
     opacity: none;
     border: none;
 }
@@ -62672,7 +67179,7 @@ var css = `
 Heading 
 ==================================
 */
-.obsidian-light h1 {
+.note-to-mp h1 {
     color: #222;
     font-weight: 700;
     font-size: 1.802em;
@@ -62681,7 +67188,7 @@ Heading
     margin-block-end: 0;
 }
 
-.obsidian-light h2 {
+.note-to-mp h2 {
     color: inherit;
     font-weight: 600;
     font-size: 1.602em;
@@ -62690,7 +67197,7 @@ Heading
     margin-block-end: 0;
 }
 
-.obsidian-light h3 {
+.note-to-mp h3 {
     color: inherit;
     font-weight: 600;
     font-size: 1.424em;
@@ -62699,7 +67206,7 @@ Heading
     margin-block-end: 0;
 }
 
-.obsidian-light h4 {
+.note-to-mp h4 {
     color: inherit;
     font-weight: 600;
     font-size: 1.266em;
@@ -62708,13 +67215,13 @@ Heading
     margin-block-end: 0;
 }
 
-.obsidian-light h5 {
+.note-to-mp h5 {
     color: inherit;
     margin-block-start: 1em;
     margin-block-end: 0;
 }
 
-.obsidian-light h6 {
+.note-to-mp h6 {
     color: inherit;
     margin-block-start: 1em;
     margin-block-end: 0;
@@ -62725,7 +67232,7 @@ Heading
 Horizontal Rules
 ==================================
     */
-.obsidian-light hr {
+.note-to-mp hr {
     border-color: #e0e0e0;
     margin-top: 3em;
     margin-bottom: 3em;
@@ -62736,7 +67243,7 @@ Horizontal Rules
 Paragraphs
 ==================================
     */
-.obsidian-light p {
+.note-to-mp p {
     line-height: 1.6em;
     margin: 1em 0;
 }
@@ -62746,17 +67253,17 @@ Paragraphs
 Emphasis
 ==================================
     */
-.obsidian-light strong {
+.note-to-mp strong {
     color: #222222;
     font-weight: 600;
 }
 
-.obsidian-light em {
+.note-to-mp em {
     color: inherit;
     font-style: italic;
 }
 
-.obsidian-light s {
+.note-to-mp s {
     color: inherit;
 }
 
@@ -62765,7 +67272,7 @@ Emphasis
     Blockquotes
 ==================================
     */
-.obsidian-light blockquote {
+.note-to-mp blockquote {
     font-size: 1rem;
     display: block;
     margin: 2em 0;
@@ -62775,15 +67282,15 @@ Emphasis
     border-left: 0.15rem solid #7852ee;
 }
 
-.obsidian-light blockquote blockquote {
+.note-to-mp blockquote blockquote {
     margin: 0 0;
 }
 
-.obsidian-light blockquote p {
+.note-to-mp blockquote p {
     margin: 0;
 }
 
-.obsidian-light blockquote footer strong {
+.note-to-mp blockquote footer strong {
     margin-right: 0.5em;
 }
 
@@ -62792,29 +67299,29 @@ Emphasis
 List
 ==================================
 */
-.obsidian-light ul {
+.note-to-mp ul {
     margin: 0;
     margin-top: 1.25em;
     margin-bottom: 1.25em;
 }
 
-.obsidian-light ul>li {
+.note-to-mp ul>li {
     /* position: relative; */
     /* padding-left: 1.75rem; */
     margin-top: 0.1em;
     margin-bottom: 0.1em;
 }
 
-.obsidian-light ul>li::marker {
+.note-to-mp ul>li::marker {
     color: #ababab;
     /* font-size: 1.5em; */
 }
 
-.obsidian-light li>p {
+.note-to-mp li>p {
     margin: 0;
 }
 
-.obsidian-light ol {
+.note-to-mp ol {
     margin: 0;
     padding: 0;
     margin-top: 1.25em;
@@ -62822,7 +67329,7 @@ List
     list-style-type: decimal;
 }
 
-.obsidian-light ol>li {
+.note-to-mp ol>li {
     position: relative;
     padding-left: 0.1em;
     margin-left: 2em;
@@ -62835,7 +67342,7 @@ List
 Link
 ==================================
 */
-.obsidian-light a {
+.note-to-mp a {
     color: #7852ee;
     text-decoration: none;
     font-weight: 500;
@@ -62844,7 +67351,7 @@ Link
     transition: border 0.3s ease-in-out;
 }
 
-.obsidian-light a:hover {
+.note-to-mp a:hover {
     color: #7952eebb;
     border-bottom: 1px solid #7952eebb;
 }
@@ -62854,7 +67361,7 @@ Link
 Table
 ==================================
 */
-.obsidian-light table {
+.note-to-mp table {
     width: 100%;
     table-layout: auto;
     text-align: left;
@@ -62867,13 +67374,13 @@ Table
     text-indent: 0;
 }
 
-.obsidian-light table thead {
+.note-to-mp table thead {
     color: #000;
     font-weight: 600;
     border: #e0e0e0 1px solid;
 }
 
-.obsidian-light table thead th {
+.note-to-mp table thead th {
     vertical-align: bottom;
     padding-right: 0.5714286em;
     padding-bottom: 0.5714286em;
@@ -62881,24 +67388,24 @@ Table
     border: #e0e0e0 1px solid;
 }
 
-.obsidian-light table thead th:first-child {
+.note-to-mp table thead th:first-child {
     padding-left: 0.5em;
 }
 
-.obsidian-light table thead th:last-child {
+.note-to-mp table thead th:last-child {
     padding-right: 0.5em;
 }
 
-.obsidian-light table tbody tr {
+.note-to-mp table tbody tr {
     border-style: solid;
     border: #e0e0e0 1px solid;
 }
 
-.obsidian-light table tbody tr:last-child {
+.note-to-mp table tbody tr:last-child {
     border-bottom-width: 0;
 }
 
-.obsidian-light table tbody td {
+.note-to-mp table tbody td {
     vertical-align: top;
     padding-top: 0.5714286em;
     padding-right: 0.5714286em;
@@ -62907,11 +67414,11 @@ Table
     border: #e0e0e0 1px solid;
 }
 
-.obsidian-light table tbody td:first-child {
+.note-to-mp table tbody td:first-child {
     padding-left: 0;
 }
 
-.obsidian-light table tbody td:last-child {
+.note-to-mp table tbody td:last-child {
     padding-right: 0;
 }
 
@@ -62920,12 +67427,12 @@ Table
 Images
 ==================================
 */
-.obsidian-light img {
+.note-to-mp img {
     margin-top: 2em;
     margin-bottom: 2em;
 }
 
-.obsidian-light .footnotes hr {
+.note-to-mp .footnotes hr {
     margin-top: 4em;
     margin-bottom: 0.5em;
 }
@@ -62935,13 +67442,13 @@ Images
 Code
 ==================================
 */
-.obsidian-light .code-section {
+.note-to-mp .code-section {
     display: flex;
     background-color: rgb(250, 250, 250);
     border: rgb(240, 240, 240) 1px solid;
 }
 
-.obsidian-light section ul {
+.note-to-mp .code-section ul {
     flex-shrink: 0;
     counter-reset: line;
     margin: 0;
@@ -62950,7 +67457,7 @@ Code
     width: fit-content;
 }
 
-.obsidian-light section ul>li {
+.note-to-mp .code-section ul>li {
     font-family: Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
     position: relative;
     margin: 0;
@@ -62965,13 +67472,13 @@ Code
     text-wrap: nowrap;
 }
 
-.obsidian-light section pre {
+.note-to-mp .code-section pre {
     margin: 0;
     padding: 0;
     overflow: auto;
 }
 
-.obsidian-light code {
+.note-to-mp .code-section code {
     font-family: Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
     color: #5c5c5c;
     background-color: #fafafa;
@@ -62980,11 +67487,12 @@ Code
     padding: 0 0.5em;
 }    
 
-.obsidian-light pre code {
+.note-to-mp .code-section pre code {
     display: block;
     text-wrap: nowrap;
     line-height: 1.75em;
     padding: 1em;
+    backgroud: unset;
 }
 `;
 var default_theme_default = { name: "\u9ED8\u8BA4", className: "obsidian-light", desc: "\u9ED8\u8BA4\u4E3B\u9898", author: "SunBooshi", css };
@@ -63082,25 +67590,29 @@ XCode style (c) Angel Garcia <angelgarcia.mail@gmail.com>
 var ThemesManager = class {
   constructor(app, manifest) {
     this.defaultTheme = default_theme_default;
+    this.customCSS = "";
     this.app = app;
     this.manifest = manifest;
     this.assetsPath = this.app.vault.configDir + "/plugins/" + this.manifest.id + "/assets/";
     this.themesPath = this.assetsPath + "themes/";
     this.hilightPath = this.assetsPath + "highlights/";
+    this.themeCfg = this.assetsPath + "themes.json";
+    this.hilightCfg = this.assetsPath + "highlights.json";
+    this.customCSSPath = this.assetsPath + "custom.css";
   }
   async loadAssets() {
     await this.loadThemes();
     await this.loadHighlights();
+    await this.loadCustomCSS();
   }
   async loadThemes() {
     try {
-      const configFile = this.assetsPath + "themes.json";
-      if (!await this.app.vault.adapter.exists(configFile)) {
-        new import_obsidian5.Notice("\u4E3B\u9898\u8D44\u6E90\u672A\u4E0B\u8F7D\uFF0C\u8BF7\u524D\u5F80\u8BBE\u7F6E\u4E0B\u8F7D\uFF01");
+      if (!await this.app.vault.adapter.exists(this.themeCfg)) {
+        new import_obsidian7.Notice("\u4E3B\u9898\u8D44\u6E90\u672A\u4E0B\u8F7D\uFF0C\u8BF7\u524D\u5F80\u8BBE\u7F6E\u4E0B\u8F7D\uFF01");
         this.themes = [this.defaultTheme];
         return;
       }
-      const data = await this.app.vault.adapter.read(configFile);
+      const data = await this.app.vault.adapter.read(this.themeCfg);
       if (data) {
         const themes = JSON.parse(data);
         await this.loadCSS(themes);
@@ -63108,7 +67620,7 @@ var ThemesManager = class {
       }
     } catch (error) {
       console.error(error);
-      new import_obsidian5.Notice("themes.json\u89E3\u6790\u5931\u8D25\uFF01");
+      new import_obsidian7.Notice("themes.json\u89E3\u6790\u5931\u8D25\uFF01");
     }
   }
   async loadCSS(themes) {
@@ -63122,19 +67634,32 @@ var ThemesManager = class {
       }
     } catch (error) {
       console.error(error);
-      new import_obsidian5.Notice("\u8BFB\u53D6CSS\u5931\u8D25\uFF01");
+      new import_obsidian7.Notice("\u8BFB\u53D6CSS\u5931\u8D25\uFF01");
+    }
+  }
+  async loadCustomCSS() {
+    try {
+      if (!await this.app.vault.adapter.exists(this.customCSSPath)) {
+        return;
+      }
+      const cssContent = await this.app.vault.adapter.read(this.customCSSPath);
+      if (cssContent) {
+        this.customCSS = cssContent;
+      }
+    } catch (error) {
+      console.error(error);
+      new import_obsidian7.Notice("\u8BFB\u53D6CSS\u5931\u8D25\uFF01");
     }
   }
   async loadHighlights() {
     try {
-      const configFile = this.assetsPath + "highlights.json";
       const defaultHighlight = { name: "\u9ED8\u8BA4", url: "", css: default_highlight_default };
       this.highlights = [defaultHighlight];
-      if (!await this.app.vault.adapter.exists(configFile)) {
-        new import_obsidian5.Notice("\u9AD8\u4EAE\u8D44\u6E90\u672A\u4E0B\u8F7D\uFF0C\u8BF7\u524D\u5F80\u8BBE\u7F6E\u4E0B\u8F7D\uFF01");
+      if (!await this.app.vault.adapter.exists(this.hilightCfg)) {
+        new import_obsidian7.Notice("\u9AD8\u4EAE\u8D44\u6E90\u672A\u4E0B\u8F7D\uFF0C\u8BF7\u524D\u5F80\u8BBE\u7F6E\u4E0B\u8F7D\uFF01");
         return;
       }
-      const data = await this.app.vault.adapter.read(configFile);
+      const data = await this.app.vault.adapter.read(this.hilightCfg);
       if (data) {
         const items = JSON.parse(data);
         for (const item of items) {
@@ -63145,7 +67670,7 @@ var ThemesManager = class {
       }
     } catch (error) {
       console.error(error);
-      new import_obsidian5.Notice("highlights.json\u89E3\u6790\u5931\u8D25\uFF01");
+      new import_obsidian7.Notice("highlights.json\u89E3\u6790\u5931\u8D25\uFF01");
     }
   }
   getTheme(themeName) {
@@ -63168,26 +67693,28 @@ var ThemesManager = class {
   }
   async downloadThemes() {
     try {
-      if (await this.app.vault.adapter.exists(this.assetsPath)) {
-        new import_obsidian5.Notice("\u4E3B\u9898\u8D44\u6E90\u5DF2\u5B58\u5728\uFF01");
+      if (await this.app.vault.adapter.exists(this.themeCfg)) {
+        new import_obsidian7.Notice("\u4E3B\u9898\u8D44\u6E90\u5DF2\u5B58\u5728\uFF01");
         return;
       }
-      const res = await (0, import_obsidian5.requestUrl)(this.getThemeURL());
+      const res = await (0, import_obsidian7.requestUrl)(this.getThemeURL());
       const data = res.arrayBuffer;
       await this.unzip(new Blob([data]));
       await this.loadAssets();
-      new import_obsidian5.Notice("\u4E3B\u9898\u4E0B\u8F7D\u5B8C\u6210\uFF01");
+      new import_obsidian7.Notice("\u4E3B\u9898\u4E0B\u8F7D\u5B8C\u6210\uFF01");
     } catch (error) {
       console.error(error);
       await this.removeThemes();
-      new import_obsidian5.Notice("\u4E3B\u9898\u4E0B\u8F7D\u5931\u8D25, \u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01");
+      new import_obsidian7.Notice("\u4E3B\u9898\u4E0B\u8F7D\u5931\u8D25, \u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01");
     }
   }
   async unzip(data) {
     const zipFileReader = new BlobReader(data);
     const zipReader = new ZipReader(zipFileReader);
     const entries = await zipReader.getEntries();
-    this.app.vault.adapter.mkdir(this.assetsPath);
+    if (!await this.app.vault.adapter.exists(this.assetsPath)) {
+      this.app.vault.adapter.mkdir(this.assetsPath);
+    }
     for (const entry of entries) {
       if (entry.directory) {
         const dirPath = this.assetsPath + entry.filename;
@@ -63205,20 +67732,42 @@ var ThemesManager = class {
   }
   async removeThemes() {
     try {
-      if (await this.app.vault.adapter.exists(this.assetsPath)) {
-        this.app.vault.adapter.rmdir(this.assetsPath, true);
-        this.loadAssets();
+      const adapter = this.app.vault.adapter;
+      if (await adapter.exists(this.themeCfg)) {
+        await adapter.remove(this.themeCfg);
       }
-      new import_obsidian5.Notice("\u6E05\u7A7A\u5B8C\u6210\uFF01");
+      if (await adapter.exists(this.hilightCfg)) {
+        await adapter.remove(this.hilightCfg);
+      }
+      if (await adapter.exists(this.themesPath)) {
+        await adapter.rmdir(this.themesPath, true);
+      }
+      if (await adapter.exists(this.hilightPath)) {
+        await adapter.rmdir(this.hilightPath, true);
+      }
+      await this.loadAssets();
+      new import_obsidian7.Notice("\u6E05\u7A7A\u5B8C\u6210\uFF01");
     } catch (error) {
       console.error(error);
-      new import_obsidian5.Notice("\u6E05\u7A7A\u4E3B\u9898\u5931\u8D25\uFF01");
+      new import_obsidian7.Notice("\u6E05\u7A7A\u4E3B\u9898\u5931\u8D25\uFF01");
     }
+  }
+  async openAssets() {
+    const path = require("path");
+    const adapter = this.app.vault.adapter;
+    const vaultRoot = adapter.getBasePath();
+    const assets = this.assetsPath;
+    if (!await adapter.exists(assets)) {
+      await adapter.mkdir(assets);
+    }
+    const dst = path.join(vaultRoot, assets);
+    const { shell } = require("electron");
+    shell.openPath(dst);
   }
 };
 
 // src/main.ts
-var NoteToMpPlugin = class extends import_obsidian6.Plugin {
+var NoteToMpPlugin = class extends import_obsidian8.Plugin {
   constructor(app, manifest) {
     super(app, manifest);
     this.themesManager = new ThemesManager(app, manifest);
