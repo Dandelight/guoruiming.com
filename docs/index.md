@@ -31,7 +31,7 @@ Linear 的 1.0 版本基于微信小程序，当时想得很简单，干就完�
 升级版本有三个原因：
 
 1. 前端混乱，因为当时没有模块化的意识，也没引入 TypeScript，逐渐累积的代码让人抓狂，而 Pinia 等优秀的框架又只在 [Vue3](https://vuejs.org/) 里存在
-2. 基于 [Node.js](https://nodejs.org) 的自建框架也越来越难维护，招人也很难
+2. 基于 [Node.js](https://nodejs.org) 和 [Express.js](https://expressjs.com/) 需要手搓很多东西，比如异常处理、token 鉴权（但后来想想，Spring 恐怕是抽象得太多，有点走向另一个极端）
 3. 设计师耗时一个月打造了一套全新的，现代化的白色主题 UI
 
 因此开始用 uni-app 再做新版本，结果还是因为经验不足又把代码写烂了。
@@ -45,10 +45,11 @@ Linear 的 1.0 版本基于微信小程序，当时想得很简单，干就完�
 Action 是最早的一款语言 Cosplay 软件，不仅开创了语 C 软件的先河，而且定义了很多“术语”。但不幸的是，后起的逗戏等软件原封不动地爬 Action 的数据，之后入不敷出的 Action 不得不遗憾停服（虽然不久之后逗戏也停服了）。Action 经历了一次短暂重启-停服后，由 2020 年起重新开始内测。代码又悠久的历史，能跑,而因应用市场的要求不得不适配高 API Level，但最大的坎是 Android 10 引入的 [分区存储](https://source.android.com/docs/core/storage/scoped)。当然改完之后发现，Android 10 之后的版本都是小修小补，改 `compileSdkVersion` 和 `targetSdkVersion` 验证一下功能基本就完事了。
 
 其他的问题出在
-* 权限管理上，华米 OV 魅又进行了二次开发，二开重灾区就是软件权限。
-* 设计模式上，命令式、MVVC 模式、Flutter 都存在，就差 Compose 就真成历史书了。
-* 依赖项，依然依赖十年前的 [xUtils](https://source.android.com/docs/core/storage/scoped) 和很多 `jcenter` 中的项目，更新不及时，可能存在暗坑。
-* 低版本适配，在 Android 7 上会有渲染进程不能在子进程中运行的报错，但 Android 9 以上都没问题。
+
+- 权限管理上，华米 OV 魅又进行了二次开发，二开重灾区就是软件权限。
+- 设计模式上，命令式、MVVC 模式、Flutter 都存在，就差 Compose 就真成历史书了。
+- 依赖项，依然依赖十年前的 [xUtils](https://source.android.com/docs/core/storage/scoped) 和很多 `jcenter` 中的项目，更新不及时，可能存在暗坑。
+- 低版本适配，在 Android 7 上会有渲染进程不能在子进程中运行的报错，但 Android 9 以上都没问题。
 
 ### 重大经验教训
 
@@ -116,7 +117,7 @@ Action 是最早的一款语言 Cosplay 软件，不仅开创了语 C 软件的�
 
 ### 人工智能与高性能计算
 
-- 语言：**`Python`**、**`CUDA`**、`C++`、`Rust`、 ~~`Fortran`~~
+- 语言：**`Python`**、`CUDA`、`C++`、`Rust`
 - 数值计算：**`PyTorch`**、`NumPy`、`MATLAB`
 - 训练：`Lightning`
 - 部署：`ray.io`
@@ -124,16 +125,16 @@ Action 是最早的一款语言 Cosplay 软件，不仅开创了语 C 软件的�
 
 ### Web 前端
 
-- 语言：**`JavaScript`**、**`TypeScript`**、**`Dart`**、`CSS`、`LESS`、
+- 语言：**`JavaScript`**、**`TypeScript`**、**`Dart`**、`CSS`、`SASS`
 - 框架：**`Flutter`**、`React.js`、`Vue.js`
 - 单元测试：**`Jest`**、`Mocha`
 - 工程化：`Webpack`、`Vite`
 
 ### Web 后端
 
-- 框架：**`Spring Boot`**、`Express.js`
+- 框架：**`Spring Boot`**、`Express.js`、`Nest.js`
 - 数据库：**`MongoDB`**、`MySQL`
-- 容器：**`Docker`**、`Vagrant`
+- 容器：**`Docker`**
 - 消息队列：`RabbitMQ`
 
 ### 运维与自动化
@@ -175,6 +176,10 @@ Action 是最早的一款语言 Cosplay 软件，不仅开创了语 C 软件的�
 ## Meta：关于本站、关于我
 
 关于本站的构建原理，请见 [Meta](./meta/index.md)；关于本人，请见 [About](./about.md)。
+
+## Friends：友情链接
+
+[WhileBug Peiran Wang](https://whilebug.github.io/)
 
 ## GitHub Status
 
