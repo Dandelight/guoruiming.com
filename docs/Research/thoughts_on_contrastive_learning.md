@@ -10,9 +10,9 @@ $$
 \mathcal{L}=\frac{1}{2 N} \sum_{k=1}^N[\ell(2 k-1,2 k)+\ell(2 k, 2 k-1)]
 $$
 
-虽然原论文一句度量学习都没提，但它毕竟没投稿，如果投了我觉得肯定要引用度量学习的相关文章。
+虽然原论文一句度量学习都没提，但是度量学习常用于分类，但对比学习常用于自监督学习。
 
-但还有一种写法 `InfoNCE` loss:
+还有一种写法 `InfoNCE` loss:
 
 $$
 \mathcal{L}_{\text {InfoNCE }}=-\log \frac{\exp \left(\operatorname{sim}\left(z^a, z^p\right) / \tau\right)}{\exp \left(\operatorname{sim}\left(z^a, z^p\right) / \tau\right)+\sum_{n \in N} \exp \left(\operatorname{sim}\left(z^a, z^n\right) / \tau\right.}

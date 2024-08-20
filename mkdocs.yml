@@ -32,6 +32,7 @@ theme:
   #       name: Switch to light mode
 
 site_name: 郭睿明的小屋
+site_description: "站在科技、工程、人文的交叉点，眺望人类的未来。"
 site_url: http://guoruiming.com
 
 markdown_extensions:
@@ -59,10 +60,11 @@ markdown_extensions:
   - pymdownx.emoji:
       # emoji_generator: !!python/name:pymdownx.emoji.to_png
       emoji_generator: !!python/name:pymdownx.emoji.to_svg
-      # emoji_generator: !!python/name:pymdownx.emoji.to_png_sprite
-      # emoji_generator: !!python/name:pymdownx.emoji.to_svg_sprite
-      # emoji_generator: !!python/name:pymdownx.emoji.to_awesome
-      # emoji_generator: !!python/name:pymdownx.emoji.to_alt
+        # emoji_generator: !!python/name:pymdownx.emoji.to_png_sprite
+        # emoji_generator: !!python/name:pymdownx.emoji.to_svg_sprite
+        # emoji_generator: !!python/name:pymdownx.emoji.to_awesome
+        # emoji_generator: !!python/name:pymdownx.emoji.to_alt
+
   - pymdownx.inlinehilite
   - pymdownx.mark
   - pymdownx.smartsymbols
@@ -94,6 +96,7 @@ plugins:
   # feature of callouts plugin is covered by obsidian-support plugin
   # but it is unstable
   # - obsidian-support
+  - rss
 
 extra_css:
   # - https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css
